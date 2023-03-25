@@ -18,4 +18,6 @@ npm run build
 
 ## 📝 License
 
-**[GerardoWacker/rar.vg](https://github.com/GerardoWacker/rar.vg)** is protected by the [GNU Affero General Public Licence v3.0](https://opensource.org/licenses/GPL-3.0).
+**[GerardoWacker/rar.vg](https://github.com/GerardoWacker/rar.vg)** is protected by the [GNU Affero General Public Licence v3.0](https://opensource.org/license/agpl-v3/).
+
+Based on **[MrEmii/reactjs-boilerplate](https://github.com/MrEmii/reactjs-boilerplate)**.
