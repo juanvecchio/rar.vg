@@ -28,16 +28,14 @@ html {
     height: 100vh;
 }
 
-.error-message{
+.error-message {
     background-color: #ff8484;
-    color:#8f2929;
+    color: #8f2929;
     margin-top: 20px;
     border-radius: 5px;
     padding: 10px 40px;
     font-family: 'Raleway', sans-serif;
     border-radius: 20px;
-    
-
 }
 
 .container {
@@ -100,7 +98,7 @@ html {
 
 #log-in {
     padding-bottom: 10px;
-    
+
 }
 
 /* Remove annoying margin in paragraphs */
