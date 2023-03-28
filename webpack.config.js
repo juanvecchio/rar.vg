@@ -21,7 +21,7 @@ module.exports = function (_env, argv) {
         module: {
             rules: [
                 {
-                    test: /\.(jsx|js)$/i,
+                    test: /\.(jsx|js)?$/,
                     exclude: /node_modules/,
                     use: {
                         loader: "babel-loader",
@@ -33,12 +33,11 @@ module.exports = function (_env, argv) {
                     }
                 },
                 {
-                    test: /\.s[ac]ss$/i,
+                    test: /\.css$/,
                     use: [
                         isProduction ? MiniCssExtractPlugin.loader : "style-loader",
-                        "css-loader",
-                        "sass-loader",
-                    ],
+                        "css-loader"
+                    ]
                 },
                 {
                     test: /\.(png|jpg|jpeg|gif)$/i,
