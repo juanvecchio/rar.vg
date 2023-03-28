@@ -5,11 +5,16 @@ import { AppHome } from './pages/home'
 import { AppError } from './pages/error'
 import { RouterProvider } from './router/router';
 import { Route } from './router/route';
+import { Login } from './pages/login'
 
 export const WebRoutes = [
     {
         path: "/",
         component: <AppHome></AppHome>
+    },
+    {
+        path:"/login",
+        component: <Login></Login>
     },
     {
         path: "",
@@ -18,7 +23,6 @@ export const WebRoutes = [
     }
 
 ]
-
 
 
 const AppRoutes = () => <RouterProvider>
