@@ -20,9 +20,11 @@ html {
 
 }
 
+.smaller-input{
+    max-width: 200px;
+}
 .placeholder::after {
     position: absolute;
-    right: 1px; 
     top: 16px;
     content: attr(data-placeholder);
     pointer-events: none;
