@@ -1,5 +1,7 @@
 #Misc
 lazygit.exe
+.vscode
+.idea
 
 # Logs
 logs
