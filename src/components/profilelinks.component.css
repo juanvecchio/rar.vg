@@ -8,7 +8,7 @@
     justify-content: center;
 }
 
-.socials a, button {
+.socials a, .socials button {
     background: transparent;
 
     border: none;

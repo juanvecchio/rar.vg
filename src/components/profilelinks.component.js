@@ -21,7 +21,7 @@ import {
     BsLinkedin,
 } from "react-icons/bs";
 
-import "./profilelinks.css";
+import "./profilelinks.component.css";
 
 export default class ProfileLinks extends React.Component {
     icons = {
