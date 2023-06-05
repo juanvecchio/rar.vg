@@ -12,7 +12,7 @@ module.exports = function (_env, argv) {
     return {
         target: "web",
         devtool: 'source-map',
-        entry: argv.mode == "none" ? "./example/index.jsx" : "./src/index.js",
+        entry: argv.mode == "none" ? "./example/index.js" : "./src/index.js",
         output: {
             path: path.resolve(__dirname, "dist"),
             filename: "assets/js/[name].[contenthash:8].js",
