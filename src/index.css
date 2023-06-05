@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+html, body {
+    margin: 0 auto;
+    padding: 0;
+
+    /* Setting variables */
+    --push-link: #e077ff;
+    --push-text: rgb(241, 241, 241);
+    --push-bg1: rgb(28, 31, 37);
+
+    font-family: "Poppins", serif;
+
+    display: block;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* Remove annoying margin in paragraphs */
+.p-no-margin-top {
+    margin-block-start: 0;
+    margin-inline-start: 0;
+}
+
+.p-no-margin-bottom {
+    margin-block-end: 0;
+    margin-inline-end: 0;
+}
