@@ -71,6 +71,11 @@ html {
     width: 30%;
 }
 
+.login-form .links {
+    width: 100%;
+    text-align: left;
+}
+
 .login-form input {
     width: 90%;
     height: 20px;
@@ -89,7 +94,7 @@ html {
 }
 
 .login-button {
-    margin-top: 25px;
+    margin: 25px;
     padding: 10px 40px;
     font-family: 'Raleway', sans-serif;
     border-radius: 20px;

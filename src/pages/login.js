@@ -3,6 +3,7 @@ import {hasActiveSession, tryLogin} from "../utils/session.util";
 
 import '../index.css'
 import './form.css'
+import Link from "../router/link";
 
 export default class Login extends React.Component
 {
@@ -93,6 +94,10 @@ export default class Login extends React.Component
                     <input type="password" value={this.state.passwordField} onChange={this.handlePassChange}
                            placeholder="Password"/>
                     <button className="mm login-button">Submit</button>
+                    <div className={"links"}>
+                        <Link to={"/forgot-password"}><span className={"ss"}>Forgot your password?</span></Link><br />
+                        <Link to={"/register"}><span className={"ss"}>Dont have an account?</span></Link><br />
+                    </div>
                 </form>
             </div>
         </div>
