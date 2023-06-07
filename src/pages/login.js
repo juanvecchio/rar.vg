@@ -96,7 +96,7 @@ export default class Login extends React.Component
                     <button className="mm login-button">Submit</button>
                     <div className={"links"}>
                         <Link to={"/forgot-password"}><span className={"ss"}>Forgot your password?</span></Link><br />
-                        <Link to={"/register"}><span className={"ss"}>Dont have an account?</span></Link><br />
+                        <Link to={"/register"}><span className={"ss"}>Don't have an account?</span></Link><br />
                     </div>
                 </form>
             </div>
