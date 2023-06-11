@@ -8,9 +8,13 @@ import {Route} from './router/route';
 import Profile from "./pages/profile";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
+import Register from "./pages/register";
 
 // Get the subdomain.
 const host = window.location.host.split('.')
+
+// GET parameters.
+const getParameters = new URLSearchParams(window.location.search)
 
 export const WebRoutes = [
     {
@@ -19,7 +23,11 @@ export const WebRoutes = [
     },
     {
         path: "/login",
-        component: <Login/>
+        component: <Login justRegistered={getParameters.get("jr")}/>
+    },
+    {
+        path: "/register",
+        component: <Register/>
     },
     {
         path: "/dashboard",
