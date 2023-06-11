@@ -28,6 +28,9 @@ export default class Login extends React.Component
         {
             window.location.href = "/dashboard"
         }
+
+        if (this.props.justRegistered)
+            this.displayMessage({type: 'success', message: 'Registered successfully! Now use your credentials to log in.'})
     }
 
     handleEmailChange(event)
@@ -65,7 +68,7 @@ export default class Login extends React.Component
     drawMessage(message)
     {
         if (message) return (
-            <div className={message.type}>
+            <div className={"message " + message.type}>
                 {message.message}
             </div>
         )
@@ -83,7 +86,10 @@ export default class Login extends React.Component
 
     render()
     {
-        return <div className={"animated"}>
+        return <div className={"animated"} style={{
+            background: "linear-gradient(-45deg, #471303, #52142c, #0d3646, #0c473a)",
+            backgroundSize: "400% 400%"
+        }}>
             <div className="container">
                 <div className="logotype">👋 rar.vg</div>
                 <form className="login-form" onSubmit={this.handleSubmit}>
@@ -95,8 +101,8 @@ export default class Login extends React.Component
                            placeholder="Password"/>
                     <button className="mm login-button">Submit</button>
                     <div className={"links"}>
-                        <Link to={"/forgot-password"}><span className={"ss"}>Forgot your password?</span></Link><br />
-                        <Link to={"/register"}><span className={"ss"}>Don't have an account?</span></Link><br />
+                        <Link to={"/forgot-password"}><span className={"ss"}>Forgot your password?</span></Link><br/>
+                        <Link to={"/register"}><span className={"ss"}>Don't have an account?</span></Link><br/>
                     </div>
                 </form>
             </div>
