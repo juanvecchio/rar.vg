@@ -47,6 +47,25 @@ function performRequest(endpoint, body)
     })
 }
 
+function tryRegister(displayName, username, email, password, dateOfBirth)
+{
+    return new Promise(res =>
+    {
+        performRequest('register', {
+            displayName: displayName,
+            email: email,
+            password: password,
+            username: username,
+            dateOfBirth: dateOfBirth
+        }).then(response =>
+        {
+            if (!response.success)
+                return res(response)
+            return res({success: true, content: response.content.user})
+        })
+    })
+}
+
 function tryLogin(email, password)
 {
     return new Promise(res =>
@@ -95,5 +114,5 @@ function validateSession()
 }
 
 export {
-    tryLogin, validateSession, tryUserLoading, hasActiveSession
+    tryLogin, tryRegister, validateSession, tryUserLoading, hasActiveSession
 }
