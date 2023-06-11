@@ -95,6 +95,21 @@ function tryUserLoading()
     })
 }
 
+function updateProfile(components, sociallinks)
+{
+    return new Promise(res =>
+    {
+        const session = getCurrentSession();
+        if (!session.token || !session.clientToken)
+            return res({success: false})
+
+        performRequest('update', {...session, components: components, sociallinks: sociallinks}).then(response =>
+        {
+            return res(response)
+        })
+    })
+}
+
 function validateSession()
 {
     return new Promise(res =>
@@ -114,5 +129,5 @@ function validateSession()
 }
 
 export {
-    tryLogin, tryRegister, validateSession, tryUserLoading, hasActiveSession
+    tryLogin, tryRegister, validateSession, tryUserLoading, hasActiveSession, updateProfile
 }
