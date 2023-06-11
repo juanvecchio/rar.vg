@@ -4,6 +4,7 @@ import profileImage from '../static/profile.png'
 
 import './home.css'
 import '../index.css'
+import Link from "../router/link";
 
 export const Home = () =>
 {
@@ -16,10 +17,10 @@ export const Home = () =>
                         <h2 className="xxl p-no-margin-top p-no-margin-bottom">Create your profile.</h2>
                     </div>
                     <div className={"bottom"}>
-                        <button className="btn mm">Create your page!</button>
+                        <Link to={"/register"}><button className="btn mm">Create your page!</button></Link>
                         <br/>
                         <div className="link-log-in">
-                            <a className="s">Already have one? Log in!</a>
+                            <Link to={"/login"}><a className="s">Already have one? Log in!</a></Link>
                         </div>
                     </div>
                 </div>
@@ -31,7 +32,7 @@ export const Home = () =>
                             <h2 className={"l p-no-margin-top p-no-margin-bottom"}>Establish your online presence</h2><br />
                             <span className={"s"}>Show the world who you are and what you do.</span>
                         </div>
-                        <img src={profileImage}/>
+                        <img src={profileImage} alt={"Profile screenshot"}/>
                     </div>
                 </div>
                 <div className={"right-card"}>
