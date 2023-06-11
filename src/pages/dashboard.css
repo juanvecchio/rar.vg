@@ -81,6 +81,7 @@ body, html {
 }
 
 .profile-container {
+    overflow-y: scroll;
     background: linear-gradient(135deg, rgb(45, 18, 107) 25%, rgb(50, 15, 74) 100%);
     margin: 20px;
     border-radius: 30px;
@@ -88,7 +89,6 @@ body, html {
     width: calc(100% - 40px);
     height: calc(100% - 40px);
     color: white;
-    text-align: center;
 }
 
 p {
