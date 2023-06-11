@@ -1,8 +1,10 @@
 import React from "react";
-import {tryUserLoading} from "../utils/session.util";
+import {tryUserLoading, updateProfile} from "../utils/session.util";
 import config from '../../config/config.json'
 
 import './dashboard.css'
+import EditableProfile from "../components/editableprofile.component";
+import EditPanel from "../components/editpanel.component";
 
 export default class Dashboard extends React.Component
 {
@@ -11,7 +13,8 @@ export default class Dashboard extends React.Component
         super(props);
 
         this.state = {
-            user: null
+            user: null,
+            component: null,
         }
     }
 
@@ -26,6 +29,32 @@ export default class Dashboard extends React.Component
         })
     }
 
+    updateProfile = () =>
+    {
+        console.log(this.state.user.components, this.state.user.sociallinks)
+        updateProfile(JSON.stringify(this.state.user.components), JSON.stringify(this.state.user.sociallinks))
+            .then(response =>
+            {
+                if (!response.success)
+                    console.error(response.content)
+
+                console.log(response.content)
+            })
+    }
+
+    selectComponent = (key) =>
+    {
+        this.setState({component: key})
+    }
+
+    updateComponentLocally = (content) =>
+    {
+        const oldUser = this.state.user
+        oldUser.components[this.state.component].content = content
+        this.setState({user: oldUser})
+        console.log(this.state)
+    }
+
     render()
     {
         if (!this.state.user) return 'Loading...'
@@ -37,7 +66,7 @@ export default class Dashboard extends React.Component
                     <div className="notice">You have unsaved changes!</div>
                 </div>
                 <div className="right">
-                    <button className="publish-button">Publish</button>
+                    <button className="publish-button" onClick={() => this.updateProfile()}>Publish</button>
                     <button className="profile-button"
                             style={{backgroundImage: "url(" + config.endpoint.host + "/avatar/" + this.state.user.id + ".png"}}>.
                     </button>
@@ -45,20 +74,12 @@ export default class Dashboard extends React.Component
             </div>
             <div className="dash-container2">
                 <div className="left-component">
-                    <div className="outer-mock">
-                        <h3 className="m p-no-margin-top p-no-margin-bottom">Dummy title</h3>
-                        <h2 className="s p-no-margin-bottom p-no-margin-top title">Title:</h2>
-                        <input className="input" type="text" placeholder="Dummy title"/>
-                        <h2 className="s p-no-margin-bottom p-no-margin-top description">Description:</h2>
-                        <textarea className="description-text-box-size " type="text"
-                                  placeholder="Dummy description"></textarea>
-                        <button className="button">Done</button>
-                    </div>
+                    <EditPanel updateLocally={this.updateComponentLocally}
+                               selectedComponent={this.state.user.components[this.state.component]}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">
-                        <p>placeholder</p>
-                        <p>{JSON.stringify(this.state.user)}</p>
+                        <EditableProfile selectComponent={this.selectComponent} user={this.state.user}/>
                     </div>
                 </div>
             </div>
