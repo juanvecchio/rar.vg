@@ -73,6 +73,11 @@ a:hover {
     margin: 0 50px;
 }
 
+.card .selectableComponent:hover {
+    border: 1px solid white;
+    border-radius: 20px;
+}
+
 .card .footer {
     padding: 35px 0;
     margin: 0 50px;
