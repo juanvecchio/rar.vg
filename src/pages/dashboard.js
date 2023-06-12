@@ -47,12 +47,18 @@ export default class Dashboard extends React.Component
         this.setState({component: key})
     }
 
+    cancelSelection = () =>
+    {
+        this.setState({component: null})
+    }
+
     updateComponentLocally = (content) =>
     {
         const oldUser = this.state.user
         oldUser.components[this.state.component].content = content
         this.setState({user: oldUser})
         this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        this.cancelSelection()
     }
 
     drawMessage(message)
@@ -90,12 +96,13 @@ export default class Dashboard extends React.Component
             </div>
             <div className="dash-container2">
                 <div className="left-component">
-                    <EditPanel updateLocally={this.updateComponentLocally}
+                    <EditPanel updateLocally={this.updateComponentLocally} cancelSelection={this.cancelSelection}
                                selectedComponent={this.state.user.components[this.state.component]}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">
-                        <EditableProfile selectComponent={this.selectComponent} user={this.state.user}/>
+                        <EditableProfile selectComponent={this.selectComponent}
+                                         user={this.state.user}/>
                     </div>
                 </div>
             </div>

@@ -181,3 +181,9 @@ h3 {
     color: white;
     border: none
 }
+
+
+.unraised {
+    background-color: #b4b4b4 !important;
+    color: #000 !important;
+}

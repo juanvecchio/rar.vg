@@ -30,6 +30,11 @@ export default class EditPanel extends React.Component
         this.props.updateLocally(content)
     }
 
+    cancel = () =>
+    {
+        this.props.cancelSelection()
+    }
+
     renderFields = (component) =>
     {
         if (!component)
@@ -42,13 +47,16 @@ export default class EditPanel extends React.Component
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Title:</h2>
                     <input className="input" type="text" placeholder="Title" onChange={this.handleField1Change}/>
                     <h2 className="s p-no-margin-bottom p-no-margin-top description">Description:</h2>
-                    <textarea className="description-text-box-size " type="text"
+                    <textarea className="description-text-box-size" type="text"
                               placeholder="Description" onChange={this.handleField2Change}/>
-                    <button className="button" onClick={() => this.saveLocally({
-                        title: this.state.field1,
-                        description: this.state.field2
-                    })}>Done
-                    </button>
+                    <div className={"button-container"}>
+                        <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
+                        <button className="button" onClick={() => this.saveLocally({
+                            title: this.state.field1,
+                            description: this.state.field2
+                        })}>Done
+                        </button>
+                    </div>
                 </>
         }
     }
@@ -56,7 +64,7 @@ export default class EditPanel extends React.Component
     render()
     {
         return <div className="outer-mock">
-            {this.renderFields(this.props.selectedComponent, this.props.selectedComponent)}
+            {this.renderFields(this.props.selectedComponent)}
         </div>
     }
 }
