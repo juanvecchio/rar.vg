@@ -36,11 +36,19 @@ body, html {
 
 .notice {
     font-family: 'Raleway', sans-serif;
-    background: rgb(255, 161, 165);
-    color: rgb(84, 20, 23);
     border-radius: 10px;
     padding: 10px;
     margin: 15px;
+}
+
+.success {
+    background: #a0ff7e;
+    color: #157e00;
+}
+
+.important {
+    background: rgb(255, 161, 165);
+    color: rgb(84, 20, 23);
 }
 
 .profile-button {

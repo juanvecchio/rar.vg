@@ -15,6 +15,7 @@ export default class Dashboard extends React.Component
         this.state = {
             user: null,
             component: null,
+            unpublished: null,
         }
     }
 
@@ -31,14 +32,13 @@ export default class Dashboard extends React.Component
 
     updateProfile = () =>
     {
-        console.log(this.state.user.components, this.state.user.sociallinks)
         updateProfile(JSON.stringify(this.state.user.components), JSON.stringify(this.state.user.sociallinks))
             .then(response =>
             {
                 if (!response.success)
                     console.error(response.content)
 
-                console.log(response.content)
+                this.displayMessage({type: 'success', message: "Changes published successfully!"})
             })
     }
 
@@ -52,8 +52,24 @@ export default class Dashboard extends React.Component
         const oldUser = this.state.user
         oldUser.components[this.state.component].content = content
         this.setState({user: oldUser})
-        console.log(this.state)
+        this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
     }
+
+    drawMessage(message)
+    {
+        if (message) return (
+            <div className={"notice " + message.type}>
+                {message.message}
+            </div>
+        )
+    }
+
+    displayMessage(message, persistent)
+    {
+        this.setState({unpublished: message})
+        if (!persistent) setTimeout(() => this.setState({unpublished: null}), 5000)
+    }
+
 
     render()
     {
@@ -63,7 +79,7 @@ export default class Dashboard extends React.Component
                 <div className="left">
                     <span
                         className="mmm p-no-margin-bottom p-no-margin-top welcome">👋 Welcome back, {this.state.user.displayName}!</span>
-                    <div className="notice">You have unsaved changes!</div>
+                    {this.drawMessage(this.state.unpublished)}
                 </div>
                 <div className="right">
                     <button className="publish-button" onClick={() => this.updateProfile()}>Publish</button>
