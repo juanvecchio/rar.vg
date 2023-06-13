@@ -42,6 +42,18 @@ export default class Dashboard extends React.Component
             })
     }
 
+    updateComponentOrder = (from, to) =>
+    {
+        const oldUser = this.state.user
+        let f = oldUser.components.splice(from, 1)[0];
+        oldUser.components.splice(to, 0, f);
+        this.setState({
+            user: oldUser,
+            component: this.state.component === from ? to : this.state.component + 1
+        })
+        this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+    }
+
     selectComponent = (key) =>
     {
         this.setState({component: key})
@@ -76,6 +88,18 @@ export default class Dashboard extends React.Component
         if (!persistent) setTimeout(() => this.setState({unpublished: null}), 5000)
     }
 
+    getSelectedComponent(id)
+    {
+        switch(id)
+        {
+            case -2:
+                return {type: 'user'}
+            case -1:
+                return {type: 'sociallinks'}
+            default:
+                return this.state.user.components[id]
+        }
+    }
 
     render()
     {
@@ -97,12 +121,12 @@ export default class Dashboard extends React.Component
             <div className="dash-container2">
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally} cancelSelection={this.cancelSelection}
-                               selectedComponent={this.state.user.components[this.state.component]}/>
+                               selectedComponent={this.getSelectedComponent(this.state.component)}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">
                         <EditableProfile selectComponent={this.selectComponent}
-                                         user={this.state.user}/>
+                                         user={this.state.user} updateComponentOrder={this.updateComponentOrder}/>
                     </div>
                 </div>
             </div>
