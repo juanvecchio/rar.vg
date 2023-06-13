@@ -37,7 +37,13 @@ export default class EditPanel extends React.Component
     renderFields = (component) =>
     {
         if (!component)
-            return <span>Select a component to begin.</span>
+            return <div className={"default"}>
+                <div>
+                    <span className={"m"}>Start editing</span><br/><br/>
+                    <span className={"s"}>Click on a component to begin editing</span><br/>
+                    <span className={"s"}>Drag a component to change its position</span>
+                </div>
+            </div>
         switch (component.type)
         {
             case 'generic':
