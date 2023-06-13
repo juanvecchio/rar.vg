@@ -6,13 +6,13 @@ export default class LinklistComponent extends React.Component
 {
     constructor(props)
     {
-        super( props)
+        super(props)
     }
 
     render()
     {
         return <div className={"component"}>
-            {this.props.links.map((link, key) => <LinkListItemComponent icon={link.icon} url={link.url}
+            {this.props.links.map((link, key) => <LinkListItemComponent editing={this.props.editing} icon={link.icon} url={link.url}
                                                                         title={link.title} key={key}/>)}
         </div>
     }

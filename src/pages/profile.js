@@ -49,9 +49,7 @@ export default class Profile extends React.Component
         return <div className={"content"}>
             <div className="card">
                 <div className={"header"}>
-                    <div
-                        className={"banner"}
-                    />
+                    <div className={"banner"}/>
                     <img
                         className={"profile-picture"}
                         src={config.endpoint.host + "/avatar/" + this.state.user.id + ".png"}

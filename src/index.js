@@ -1,19 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/index.css'
-import {AppHome} from './pages/home'
+import {Home} from './pages/home'
 import {AppError} from './pages/error'
 import {RouterProvider} from './router/router';
 import {Route} from './router/route';
 import Profile from "./pages/profile";
+import Login from "./pages/login";
+import Dashboard from "./pages/dashboard";
+import Register from "./pages/register";
 
 // Get the subdomain.
 const host = window.location.host.split('.')
 
+// GET parameters.
+const getParameters = new URLSearchParams(window.location.search)
+
 export const WebRoutes = [
     {
         path: "/",
-        component: <AppHome></AppHome>
+        component: <Home/>
+    },
+    {
+        path: "/login",
+        component: <Login justRegistered={getParameters.get("jr")}/>
+    },
+    {
+        path: "/register",
+        component: <Register/>
+    },
+    {
+        path: "/dashboard",
+        component: <Dashboard/>
     },
     {
         path: "",
