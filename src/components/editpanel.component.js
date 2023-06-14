@@ -1,4 +1,5 @@
 import React from "react";
+import { AiFillEdit } from "react-icons/ai"
 import {
     FaSteam,
     FaItunesNote,
@@ -37,9 +38,9 @@ export default class EditPanel extends React.Component
     }
     
     linkEditItem = (link, key, selected) => {
-        return <div key={key} className="icon-list-div">
-            {this.icons[link.name].icon}
-            {selected ? <input value={link.content}/> : <div><span>{link.content}</span><button onClick={() => this.setState({field3: key})}>e</button></div>}
+        return <div key={key} className="inner-mock">
+            <div className="hero">{this.icons[link.name].icon}</div>
+            {selected ? <input value={link.content} className="input"/> : <div><span>{link.content}</span><button className={"icon-button"} onClick={() => this.setState({field3: key})}><AiFillEdit  /></button></div>}
         </div>
     }
 
@@ -54,37 +55,37 @@ export default class EditPanel extends React.Component
 
     icons = {
         steam: {
-            icon: <FaSteam size={15} />,
+            icon: <FaSteam  />,
             link: "https://steamcommunity.com/id/",
         },
         itunes: {
-            icon: <FaItunesNote size={15} />,
+            icon: <FaItunesNote  />,
             link: "https://music.apple.com/us/artist/",
         },
-        bitcoin: { icon: <FaBitcoin size={15} />, popup: true },
-        ethereum: { icon: <FaEthereum size={15} />, popup: true },
-        discord: { icon: <FaDiscord size={15} />, popup: true },
-        tiktok: { icon: <FaTiktok size={15} />, link: "https://www.tiktok.com/" },
-        website: { icon: <CgWebsite size={15} />, link: "" },
-        cashapp: { icon: <SiCashapp size={15} />, link: "https://cash.app/" },
+        bitcoin: { icon: <FaBitcoin  />, popup: true },
+        ethereum: { icon: <FaEthereum  />, popup: true },
+        discord: { icon: <FaDiscord  />, popup: true },
+        tiktok: { icon: <FaTiktok  />, link: "https://www.tiktok.com/" },
+        website: { icon: <CgWebsite  />, link: "" },
+        cashapp: { icon: <SiCashapp  />, link: "https://cash.app/" },
         spotify: {
-            icon: <BsSpotify size={15} />,
+            icon: <BsSpotify  />,
             link: "https://open.spotify.com/artist/",
         },
         instagram: {
-            icon: <BsInstagram size={15} />,
+            icon: <BsInstagram  />,
             link: "https://instagram.com/",
         },
-        twitter: { icon: <BsTwitter size={15} />, link: "https://twitter.com/" },
-        facebook: { icon: <BsFacebook size={15} />, link: "https://facebook.com/" },
-        github: { icon: <BsGithub size={15} />, link: "https://github.com/" },
-        twitch: { icon: <BsTwitch size={15} />, link: "https://twitch.tv/" },
+        twitter: { icon: <BsTwitter  />, link: "https://twitter.com/" },
+        facebook: { icon: <BsFacebook  />, link: "https://facebook.com/" },
+        github: { icon: <BsGithub  />, link: "https://github.com/" },
+        twitch: { icon: <BsTwitch  />, link: "https://twitch.tv/" },
         youtube: {
-            icon: <BsYoutube size={15} />,
+            icon: <BsYoutube  />,
             link: "https://youtube.com/channel/",
         },
         linkedin: {
-            icon: <BsLinkedin size={15} />,
+            icon: <BsLinkedin  />,
             link: "https://linkedin.com/in/",
         },
     };
@@ -128,7 +129,7 @@ export default class EditPanel extends React.Component
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit social links</h3>
                     <div className="icon-list-div">{this.drawIcons()}</div>
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Links:</h2>
-                    {this.state.field1.map((link, key) => (<div class="icon-div">{this.linkEditItem(link, key, this.state.field3 === key)}</div>))}
+                    {this.state.field1.map((link, key) => (<div>{this.linkEditItem(link, key, this.state.field3 === key)}</div>))}
                 </>
             case 'social-links':
                 return <>
