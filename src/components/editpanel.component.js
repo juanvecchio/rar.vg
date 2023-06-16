@@ -30,18 +30,27 @@ export default class EditPanel extends React.Component
         super(props);
         this.state = {
             field1: [],
-            
+                 
         }
 
         this.handleField1Change = this.handleField1Change.bind(this)
         this.handleField2Change = this.handleField2Change.bind(this)
+        
+
     }
+    
+    
     
     linkEditItem = (link, key, selected) => {
         return <div key={key} className="inner-mock">
             <div className="hero">{this.icons[link.name].icon}</div>
-            {selected ? <input value={link.content} className="input"/> : <div><span>{link.content}</span><button className={"icon-button"} onClick={() => this.setState({field3: key})}><AiFillEdit  /></button></div>}
+            {selected ? <input value={link.content} className="input"/> : <div><span>{link.content}</span><button className={"icon-button"} onClick={() => this.selectNewLink(key)}><AiFillEdit  /></button></div>}
         </div>
+    }
+
+    selectNewLink(key){
+        if(this.props)
+        this.setState({field3: key})
     }
 
     click(item){
@@ -126,17 +135,30 @@ export default class EditPanel extends React.Component
         {
             case 'generic':
                 return <>
+                    <h3 className="m p-no-margin-top p-no-margin-bottom">Edit generic component</h3>
+                    <h2 className="s p-no-margin-bottom p-no-margin-top title">Title:</h2>
+                    <input className="input" type="text" placeholder="Title" onChange={this.handleField1Change}/>
+                    <h2 className="s p-no-margin-bottom p-no-margin-top description">Description:</h2>
+                    <textarea className="description-text-box-size" type="text"
+                              placeholder="Description" onChange={this.handleField2Change}/>
+                    <div className={"button-container"}>
+                        <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
+                        <button className="button" onClick={() => this.saveLocally({
+                            title: this.state.field1,
+                            description: this.state.field2
+                        })}>Done
+                        </button>
+                    </div>
+                </>
+            case 'sociallinks':
+                return <>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit social links</h3>
                     <div className="icon-list-div">{this.drawIcons()}</div>
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Links:</h2>
                     {this.state.field1.map((link, key) => (<div>{this.linkEditItem(link, key, this.state.field3 === key)}</div>))}
+                    <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
+                    <button className="button" >Done</button>
                 </>
-            case 'social-links':
-                return <>
-
-                </>
-
-                break
         }
     }
 
