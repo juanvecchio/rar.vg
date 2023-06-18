@@ -1,5 +1,6 @@
 import React from "react";
 
+import { IoIosAdd } from 'react-icons/io'
 import {
     FaSteam,
     FaItunesNote,
@@ -82,6 +83,7 @@ export default class ProfileLinks extends React.Component {
         return (
             <div className={"socials"}>
                 {socials.map((social) => this.iconLink(social))}
+                {this.props.editing ? <button><IoIosAdd size={30} /></button> : <></>}
             </div>
         );
     }

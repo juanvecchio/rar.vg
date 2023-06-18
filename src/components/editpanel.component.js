@@ -1,5 +1,5 @@
 import React from "react";
-import { AiFillEdit } from "react-icons/ai"
+import {AiFillEdit, AiOutlineClose, AiOutlineCheck} from "react-icons/ai"
 import {
     FaSteam,
     FaItunesNote,
@@ -8,8 +8,8 @@ import {
     FaDiscord,
     FaTiktok,
 } from "react-icons/fa";
-import { CgWebsite } from "react-icons/cg";
-import { SiCashapp } from "react-icons/si";
+import {CgWebsite} from "react-icons/cg";
+import {SiCashapp} from "react-icons/si";
 import {
     BsSpotify,
     BsInstagram,
@@ -28,92 +28,142 @@ export default class EditPanel extends React.Component
     {
         super(props);
         this.state = {
-            field1: [],
-                 
+            title: null,
+            description: null,
+            selectedLink: null,
+            linkField: null,
+            linkList: []
         }
 
-        this.handleField1Change = this.handleField1Change.bind(this)
-        this.handleField2Change = this.handleField2Change.bind(this)
-        
-
-    }
-    
-    
-    
-    linkEditItem = (link, key, selected) => {
-        return <div key={key} className="inner-mock">
-            <div className="hero">{this.icons[link.name].icon}</div>
-            {selected ? <input value={link.content} className="input"/> : <div><span>{link.content}</span><button className={"icon-button"} onClick={() => this.selectNewLink(key)}><AiFillEdit  /></button></div>}
-        </div>
-    }
-
-    selectNewLink(key){
-        if(this.props)
-        this.setState({field3: key})
-    }
-
-    click(item){
-        const oldLinks = this.state.field1;
-        if(this.state.field1.length < 8){
-            oldLinks.push({name: item, content: ''})
-            this.setState({field1: oldLinks, field3: oldLinks.length - 1})
-        }
-        console.log(this.state.field1)
+        this.handleTitleChange = this.handleTitleChange.bind(this)
+        this.handleDescriptionChange = this.handleDescriptionChange.bind(this)
+        this.handleLinkFieldChange = this.handleLinkFieldChange.bind(this)
     }
 
     icons = {
         steam: {
-            icon: <FaSteam  />,
+            icon: <FaSteam/>,
             link: "https://steamcommunity.com/id/",
         },
         itunes: {
-            icon: <FaItunesNote  />,
+            icon: <FaItunesNote/>,
             link: "https://music.apple.com/us/artist/",
         },
-        bitcoin: { icon: <FaBitcoin  />, popup: true },
-        ethereum: { icon: <FaEthereum  />, popup: true },
-        discord: { icon: <FaDiscord  />, popup: true },
-        tiktok: { icon: <FaTiktok  />, link: "https://www.tiktok.com/" },
-        website: { icon: <CgWebsite  />, link: "" },
-        cashapp: { icon: <SiCashapp  />, link: "https://cash.app/" },
+        bitcoin: {icon: <FaBitcoin/>, popup: true},
+        ethereum: {icon: <FaEthereum/>, popup: true},
+        discord: {icon: <FaDiscord/>, popup: true},
+        tiktok: {icon: <FaTiktok/>, link: "https://www.tiktok.com/"},
+        website: {icon: <CgWebsite/>, link: ""},
+        cashapp: {icon: <SiCashapp/>, link: "https://cash.app/"},
         spotify: {
-            icon: <BsSpotify  />,
+            icon: <BsSpotify/>,
             link: "https://open.spotify.com/artist/",
         },
         instagram: {
-            icon: <BsInstagram  />,
+            icon: <BsInstagram/>,
             link: "https://instagram.com/",
         },
-        twitter: { icon: <BsTwitter  />, link: "https://twitter.com/" },
-        facebook: { icon: <BsFacebook  />, link: "https://facebook.com/" },
-        github: { icon: <BsGithub  />, link: "https://github.com/" },
-        twitch: { icon: <BsTwitch  />, link: "https://twitch.tv/" },
+        twitter: {icon: <BsTwitter/>, link: "https://twitter.com/"},
+        facebook: {icon: <BsFacebook/>, link: "https://facebook.com/"},
+        github: {icon: <BsGithub/>, link: "https://github.com/"},
+        twitch: {icon: <BsTwitch/>, link: "https://twitch.tv/"},
         youtube: {
-            icon: <BsYoutube  />,
+            icon: <BsYoutube/>,
             link: "https://youtube.com/channel/",
         },
         linkedin: {
-            icon: <BsLinkedin  />,
+            icon: <BsLinkedin/>,
             link: "https://linkedin.com/in/",
         },
     };
 
-    drawIcons = () => {
+    linkEditItem = (link, key, selected) =>
+    {
+        return <div key={key} className="inner-mock">
+            <div className="hero">{this.icons[link.name].icon}</div>
+            {selected ?
+                <div className={"link-content"}><input onChange={this.handleLinkFieldChange} defaultValue={link.content}
+                                                       className="input"/>
+                    <button className={"icon-button"} onClick={() => this.deselectItem()}><AiOutlineCheck/></button>
+                </div> :
+                <div className={"link-content"}><span>{link.content}</span>
+                    <div className={"button-container"}>
+                        <button className={"icon-button"} onClick={() => this.selectNewLink(key)}><AiFillEdit/></button>
+                        <button className={"icon-button"} onClick={() => this.deleteItem(key)}><AiOutlineClose/>
+                        </button>
+                    </div>
+                </div>}
+        </div>
+    }
+
+    deselectItem = () =>
+    {
+        const oldLinks = this.props.user.sociallinks
+        if (this.state.selectedLink !== null)
+        {
+            oldLinks[this.state.selectedLink].content = this.state.linkField
+            this.props.updateLinks(oldLinks)
+        }
+        this.setState({selectedLink: null})
+    }
+
+    deleteItem = (key) =>
+    {
+        const oldLinks = this.props.user.sociallinks
+        delete oldLinks[key]
+        console.log(oldLinks)
+        this.props.updateLinks(oldLinks)
+    }
+
+    selectNewLink = (key) =>
+    {
+        const oldLinks = this.props.user.sociallinks
+        if (this.state.selectedLink !== null)
+        {
+            oldLinks[this.state.selectedLink].content = this.state.linkField
+            this.props.updateLinks(oldLinks)
+        }
+        this.setState({linkField: oldLinks[key].content, selectedLink: key})
+    }
+
+    addNewItem = (item) =>
+    {
+        const oldLinks = this.props.user.sociallinks
+        if (this.state.selectedLink !== null)
+        {
+            oldLinks[this.state.selectedLink].content = this.state.linkField
+            this.setState({linkField: ''})
+        }
+        if (this.props.user.sociallinks.length < 8)
+        {
+            oldLinks.push({name: item, content: ''})
+            this.setState({selectedLink: (oldLinks.length - 1)}, () => this.props.updateLinks(oldLinks))
+        }
+    }
+
+    drawIcons = () =>
+    {
         return <div>
             {Object.keys(this.icons).map((item, key) => (
-                <button class="icon-button" onClick={() => this.click(item)}>{this.icons[item].icon}</button>
+                <button key={key} className="icon-button"
+                        onClick={() => this.addNewItem(item)}>{this.icons[item].icon}</button>
             ))}
         </div>
     }
 
-    handleField1Change(event)
+    handleTitleChange(event)
     {
-        this.setState({field1: event.target.value})
+        this.setState({title: event.target.value})
     }
 
-    handleField2Change(event)
+    handleDescriptionChange(event)
     {
-        this.setState({field2: event.target.value})
+        this.setState({description: event.target.value})
+    }
+
+    handleLinkFieldChange(event)
+    {
+        this.setState({linkField: event.target.value})
     }
 
     saveLocally = (content) =>
@@ -142,15 +192,15 @@ export default class EditPanel extends React.Component
                 return <>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit generic component</h3>
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Title:</h2>
-                    <input className="input" type="text" placeholder="Title" onChange={this.handleField1Change}/>
+                    <input className="input" type="text" placeholder="Title" onChange={this.handleTitleChange}/>
                     <h2 className="s p-no-margin-bottom p-no-margin-top description">Description:</h2>
                     <textarea className="description-text-box-size" type="text"
-                              placeholder="Description" onChange={this.handleField2Change}/>
+                              placeholder="Description" onChange={this.handleDescriptionChange}/>
                     <div className={"button-container"}>
                         <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
                         <button className="button" onClick={() => this.saveLocally({
-                            title: this.state.field1,
-                            description: this.state.field2
+                            title: this.state.title,
+                            description: this.state.description
                         })}>Done
                         </button>
                     </div>
@@ -160,14 +210,15 @@ export default class EditPanel extends React.Component
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit social links</h3>
                     <div className="icon-list-div">{this.drawIcons()}</div>
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Links:</h2>
-                    {this.state.field1.map((link, key) => (<div>{this.linkEditItem(link, key, this.state.field3 === key)}</div>))}
-                    <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
-                    <button className="button" >Done</button>
+                    {this.props.user.sociallinks.map((link, key) => (
+                        <div>{this.linkEditItem(link, key, this.state.selectedLink === key)}</div>))}
+                    <button className="button" onClick={() => this.cancel()}>Done< /button>
                 </>
         }
     }
 
-    render()
+    render
+    ()
     {
         return <div className="outer-mock">
             {this.renderFields(this.props.selectedComponent)}

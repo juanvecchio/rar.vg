@@ -82,6 +82,13 @@ export default class Dashboard extends React.Component
         )
     }
 
+    updateLinks = (links) =>
+    {
+        const oldUser = this.state.user
+        oldUser.sociallinks = links
+        this.setState({user: oldUser})
+    }
+
     displayMessage(message, persistent)
     {
         this.setState({unpublished: message})
@@ -121,7 +128,7 @@ export default class Dashboard extends React.Component
             <div className="dash-container2">
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally} cancelSelection={this.cancelSelection}
-                               selectedComponent={this.getSelectedComponent(this.state.component)}/>
+                               updateLinks={this.updateLinks} user={this.state.user} selectedComponent={this.getSelectedComponent(this.state.component)}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">

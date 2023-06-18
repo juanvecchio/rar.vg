@@ -2,7 +2,7 @@
 .icon-button {
     width: 30px;
     height: 30px;
-    padding: 0px;
+    padding: 0;
     border-radius: 15px;
     text-align: center;
     background-color: white;
@@ -24,28 +24,49 @@
     padding: 0px;
 }
 
-.inner-mock .icon-button{
-    margin: 10px;
+.inner-mock .icon-button {
+    min-width: 30px !important;
+    height: 30px !important;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+    margin-right: 10px;
 }
 
-.inner-mock .input{
+.inner-mock .input {
     height: 0 !important;
     margin: 8px !important;
 }
 
 .inner-mock .hero svg {
-    width: 20px !important; 
+    width: 20px !important;
     height: 20px !important;
     margin: 15px;
 }
-    /*
-    border-radius: 15px;
-    width: 30px;
-    height: 30px;
-    justify-content: center;
-    text-align: center;
-    padding: 2px;*/
-    
+
+.inner-mock .link-content {
+    display: flex;
+    justify-content: space-between;
+    text-align: right;
+    vertical-align: center;
+    align-items: center;
+    width: 100%;
+}
+
+.inner-mock .link-content .icon-button {
+    margin-top: 0;
+}
+
+/*
+border-radius: 15px;
+width: 30px;
+height: 30px;
+justify-content: center;
+text-align: center;
+padding: 2px;*/
+
 
 /*
 .icon-button svg {
@@ -61,11 +82,11 @@
 
 .icon-list-div svg {
     width: 15px;
-    height:15px;
+    height: 15px;
     margin-top: 4.5px;
 }
 
-.icon-list-div{
+.icon-list-div {
     display: flex;
     justify-content: space-between;
     border-radius: 20px;
