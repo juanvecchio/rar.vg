@@ -77,6 +77,11 @@ export default class EditPanel extends React.Component
         },
     };
 
+    displayMessageInDashboard(message)
+    {
+        this.props.displayMessage(message)
+    }
+
     linkEditItem = (link, key, selected) =>
     {
         return <div key={key} className="inner-mock">
@@ -105,6 +110,8 @@ export default class EditPanel extends React.Component
             this.props.updateLinks(oldLinks)
         }
         this.setState({selectedLink: null})
+
+        this.displayMessageInDashboard({type: 'important', message: "You've got unsaved changes!"}, true)
     }
 
     deleteItem = (key) =>
@@ -113,6 +120,8 @@ export default class EditPanel extends React.Component
         oldLinks.splice(key, 1)
         console.log(oldLinks)
         this.props.updateLinks(oldLinks)
+
+        this.displayMessageInDashboard({type: 'important', message: "You've got unsaved changes!"}, true)
     }
 
     selectNewLink = (key) =>
@@ -139,6 +148,7 @@ export default class EditPanel extends React.Component
             oldLinks.push({name: item, content: ''})
             this.setState({selectedLink: (oldLinks.length - 1)}, () => this.props.updateLinks(oldLinks))
         }
+        this.displayMessageInDashboard({type: 'important', message: "You've got unsaved changes!"}, true)
     }
 
     drawIcons = () =>

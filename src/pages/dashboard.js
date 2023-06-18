@@ -26,7 +26,7 @@ export default class Dashboard extends React.Component
             if (!response.success)
                 return window.location.href = "/login"
 
-            this.setState({user: response.content})
+            this.setState({user: response.content.user})
         })
     }
 
@@ -89,7 +89,7 @@ export default class Dashboard extends React.Component
         this.setState({user: oldUser})
     }
 
-    displayMessage(message, persistent)
+    displayMessage = (message, persistent) =>
     {
         this.setState({unpublished: message})
         if (!persistent) setTimeout(() => this.setState({unpublished: null}), 5000)
@@ -97,7 +97,7 @@ export default class Dashboard extends React.Component
 
     getSelectedComponent(id)
     {
-        switch(id)
+        switch (id)
         {
             case -2:
                 return {type: 'user'}
@@ -128,7 +128,9 @@ export default class Dashboard extends React.Component
             <div className="dash-container2">
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally} cancelSelection={this.cancelSelection}
-                               updateLinks={this.updateLinks} user={this.state.user} selectedComponent={this.getSelectedComponent(this.state.component)}/>
+                               updateLinks={this.updateLinks} displayMessage={this.displayMessage}
+                               user={this.state.user}
+                               selectedComponent={this.getSelectedComponent(this.state.component)}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">
