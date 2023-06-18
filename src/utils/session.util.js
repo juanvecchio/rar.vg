@@ -1,4 +1,4 @@
-import config from '../../config/config.json'
+import config from './config.util'
 
 function getCurrentSession()
 {
@@ -6,6 +6,12 @@ function getCurrentSession()
         token: window.localStorage.getItem("__rvst"),
         clientToken: window.localStorage.getItem("__rarvg_client")
     }
+}
+
+function destroySession()
+{
+    window.localStorage.removeItem("__rvst")
+    window.localStorage.removeItem("__rarvg_client")
 }
 
 function setCurrentSession(session)
@@ -29,7 +35,7 @@ function performRequest(endpoint, body)
 {
     return new Promise(res =>
     {
-        fetch(config.endpoint.host + '/' + endpoint,
+        fetch(config('host') + '/' + endpoint,
             {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -38,7 +44,7 @@ function performRequest(endpoint, body)
             .then(r =>
             {
                 if (r.status !== 200)
-                    return r.text().then(response => res({success: false, content: response}))
+                    return r.text().then(response => res({success: false, status: r.status, content: response}))
                 r.json().then(response =>
                 {
                     res({success: true, content: response})
@@ -90,7 +96,9 @@ function tryUserLoading()
 
         performRequest('getUser', session).then(response =>
         {
-            if (response.content.token !== session.token)
+            if (response.status === 498)
+                destroySession()
+            if (response.content.token && response.content.token !== session.token)
                 updateToken(response.content.token)
             return res(response)
         })
@@ -107,7 +115,9 @@ function updateProfile(components, sociallinks)
 
         performRequest('update', {...session, components: components, sociallinks: sociallinks}).then(response =>
         {
-            if (response.content.token !== session.token)
+            if (response.status === 498)
+                destroySession()
+            if (response.content.token && response.content.token !== session.token)
                 updateToken(response.content.token)
             return res(response)
         })
