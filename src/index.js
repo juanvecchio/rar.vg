@@ -46,7 +46,7 @@ const AppRoutes = () => <RouterProvider>
                                         path={route.path}>{route.component}</Route>)}
 </RouterProvider>
 
-if ((host.length === 2 && host[1].includes('localhost')) || (host.length === 3))
+if (((host.length === 2 && host[1].includes('localhost')) || (host.length === 3)) && host[0].length > 3)
 {
     const subdomain = host[0]
     ReactDOM.render(<Profile username={subdomain}/>, document.getElementById('root'))
