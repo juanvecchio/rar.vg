@@ -20,7 +20,6 @@ export default class Profile extends React.Component
 
     componentDidMount()
     {
-        console.log(config('HOST'))
         fetch(config('HOST') + '/profile/' + this.props.username)
             .then(r => r.json())
             .then(result => this.setState({user: result}))
