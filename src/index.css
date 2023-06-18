@@ -63,3 +63,7 @@ html, body {
     margin-block-end: 0;
     margin-inline-end: 0;
 }
+
+button {
+    cursor: pointer;
+}
