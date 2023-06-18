@@ -1,5 +1,5 @@
 import React from "react";
-import config from '../../config/config.json'
+import config from '../utils/config.util'
 import ProfileLinks from "../components/profilelinks.component";
 import GenericComponent from "../components/generic.component";
 import PDFComponent from "../components/pdf.component";
@@ -62,7 +62,7 @@ export default class EditableProfile extends React.Component
                         <div className={"banner"}/>
                         <img
                             className={"profile-picture"}
-                            src={config.endpoint.host + "/avatar/" + this.props.user.id + ".png"}
+                            src={config('host') + "/avatar/" + this.props.user.id + ".png"}
                             alt={"Profile picture"}
                         />
                         <h1 className={"p-no-margin-bottom"}>{this.props.user.displayName}</h1>

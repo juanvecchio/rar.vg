@@ -1,5 +1,5 @@
 import React from "react";
-import config from '../../config/config.json'
+import config from '../utils/config.util'
 import ProfileLinks from "../components/profilelinks.component";
 import GenericComponent from "../components/generic.component";
 import PDFComponent from "../components/pdf.component";
@@ -20,7 +20,7 @@ export default class Profile extends React.Component
 
     componentDidMount()
     {
-        fetch(config.endpoint.host + '/profile/' + this.props.username)
+        fetch(config('host') + '/profile/' + this.props.username)
             .then(r => r.json())
             .then(result => this.setState({user: result}))
     }
@@ -52,7 +52,7 @@ export default class Profile extends React.Component
                     <div className={"banner"}/>
                     <img
                         className={"profile-picture"}
-                        src={config.endpoint.host + "/avatar/" + this.state.user.id + ".png"}
+                        src={config('host') + "/avatar/" + this.state.user.id + ".png"}
                         alt={"Profile picture"}
                     />
                     <h1 className={"p-no-margin-bottom"}>{this.state.user.displayName}</h1>
