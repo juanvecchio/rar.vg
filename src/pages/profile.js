@@ -20,7 +20,8 @@ export default class Profile extends React.Component
 
     componentDidMount()
     {
-        fetch(config('host') + '/profile/' + this.props.username)
+        console.log(config('HOST'))
+        fetch(config('HOST') + '/profile/' + this.props.username)
             .then(r => r.json())
             .then(result => this.setState({user: result}))
     }
@@ -52,7 +53,7 @@ export default class Profile extends React.Component
                     <div className={"banner"}/>
                     <img
                         className={"profile-picture"}
-                        src={config('host') + "/avatar/" + this.state.user.id + ".png"}
+                        src={config('HOST') + "/avatar/" + this.state.user.id + ".png"}
                         alt={"Profile picture"}
                     />
                     <h1 className={"p-no-margin-bottom"}>{this.state.user.displayName}</h1>

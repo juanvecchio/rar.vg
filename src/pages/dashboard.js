@@ -121,7 +121,7 @@ export default class Dashboard extends React.Component
                 <div className="right">
                     <button className="publish-button" onClick={() => this.updateProfile()}>Publish</button>
                     <button className="profile-button"
-                            style={{backgroundImage: "url(" + config('host') + "/avatar/" + this.state.user.id + ".png"}}>.
+                            style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png"}}>.
                     </button>
                 </div>
             </div>

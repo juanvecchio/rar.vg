@@ -35,7 +35,7 @@ function performRequest(endpoint, body)
 {
     return new Promise(res =>
     {
-        fetch(config('host') + '/' + endpoint,
+        fetch(config('HOST') + '/' + endpoint,
             {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
