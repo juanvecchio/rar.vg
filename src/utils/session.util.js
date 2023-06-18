@@ -90,6 +90,8 @@ function tryUserLoading()
 
         performRequest('getUser', session).then(response =>
         {
+            if (response.content.token !== session.token)
+                updateToken(response.content.token)
             return res(response)
         })
     })
@@ -105,6 +107,8 @@ function updateProfile(components, sociallinks)
 
         performRequest('update', {...session, components: components, sociallinks: sociallinks}).then(response =>
         {
+            if (response.content.token !== session.token)
+                updateToken(response.content.token)
             return res(response)
         })
     })
