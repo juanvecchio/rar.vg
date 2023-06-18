@@ -110,7 +110,7 @@ export default class EditPanel extends React.Component
     deleteItem = (key) =>
     {
         const oldLinks = this.props.user.sociallinks
-        delete oldLinks[key]
+        oldLinks.splice(key, 1)
         console.log(oldLinks)
         this.props.updateLinks(oldLinks)
     }
