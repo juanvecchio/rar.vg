@@ -90,7 +90,7 @@ function tryUserLoading()
 {
     return new Promise(res =>
     {
-        const session = getCurrentSession();
+        const session = getCurrentSession()
         if (!session.token || !session.clientToken)
             return res({success: false})
 
@@ -109,7 +109,7 @@ function updateProfile(components, sociallinks)
 {
     return new Promise(res =>
     {
-        const session = getCurrentSession();
+        const session = getCurrentSession()
         if (!session.token || !session.clientToken)
             return res({success: false})
 
@@ -124,11 +124,41 @@ function updateProfile(components, sociallinks)
     })
 }
 
+function upload(file, avatar)
+{
+    console.log(file)
+    return new Promise(res =>
+    {
+        const session = getCurrentSession()
+        if (!session.token || !session.clientToken)
+            return res({success: false})
+
+        const data = new FormData()
+        data.append('theFile', file)
+        data.append('token', session.token)
+        data.append('clientToken', session.clientToken)
+        data.append('avatar', avatar ? '1' : '0')
+
+        fetch(config('HOST') + '/files/upload', {
+            method: 'POST',
+            body: data
+        }).then(r =>
+        {
+            if (r.status !== 200)
+                return r.text().then(response => res({success: false, status: r.status, content: response}))
+            r.text().then(response =>
+            {
+                return res({success: true, content: response})
+            })
+        })
+    })
+}
+
 function validateSession()
 {
     return new Promise(res =>
     {
-        const session = getCurrentSession();
+        const session = getCurrentSession()
         if (!session.token || !session.clientToken)
             return res({success: false})
 
@@ -143,5 +173,5 @@ function validateSession()
 }
 
 export {
-    tryLogin, tryRegister, validateSession, tryUserLoading, hasActiveSession, updateProfile
+    tryLogin, tryRegister, validateSession, tryUserLoading, hasActiveSession, updateProfile, upload
 }
