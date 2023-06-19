@@ -21,6 +21,7 @@ import {
     BsLinkedin,
 } from "react-icons/bs";
 import "./editpanel.component.css"
+import {upload} from "../utils/session.util";
 
 export default class EditPanel extends React.Component
 {
@@ -28,11 +29,15 @@ export default class EditPanel extends React.Component
     {
         super(props);
         this.state = {
+            // Generic component.
             title: null,
             description: null,
-            selectedLink: null,
+            // Social links.
             linkField: null,
-            linkList: []
+            selectedLink: null,
+            linkList: [],
+            // PDF file.
+            selectedFile: null,
         }
 
         this.handleTitleChange = this.handleTitleChange.bind(this)
@@ -161,6 +166,35 @@ export default class EditPanel extends React.Component
         </div>
     }
 
+    onFileChange = (event) =>
+    {
+        if (event.target.files && event.target.files[0])
+        {
+            console.log(event.target.files[0])
+            this.setState({selectedFile: URL.createObjectURL(event.target.files[0])});
+        }
+    }
+
+    uploadPDF = () =>
+    {
+        this.pdfDialog.showModal()
+        fetch(this.state.selectedFile).then(r => r.blob()).then(blob =>
+        {
+            const result = new File([blob], "theFile.pdf", {type: 'application/pdf'})
+            upload(result, false).then(result =>
+            {
+                if (result.success)
+                {
+                    this.saveLocally({
+                        fileId: result.content.split('.')[0]
+                    })
+                    console.log(result.content)
+                    this.pdfDialog.close()
+                }
+            })
+        })
+    }
+
     handleTitleChange(event)
     {
         this.setState({title: event.target.value})
@@ -224,11 +258,26 @@ export default class EditPanel extends React.Component
                         <div>{this.linkEditItem(link, key, this.state.selectedLink === key)}</div>))}
                     <button className="button" onClick={() => this.cancel()}>Done< /button>
                 </>
+            case 'pdf':
+                return <>
+                    <dialog ref={ref => this.pdfDialog = ref} className={"dashboard-modal"}>
+                        <span className={"m"}>Uploading...</span>
+                    </dialog>
+                    <h3 className="m p-no-margin-top p-no-margin-bottom">Edit component</h3>
+                    <input type={"file"} onChange={this.onFileChange} className="file-button" accept={".pdf"}/>
+                    <div className="pdf">
+                        <object data={this.state.selectedFile}
+                                type="application/pdf"></object>
+                    </div>
+                    <div className="button-container">
+                        <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
+                        <button className="button" onClick={() => this.uploadPDF()}>Upload</button>
+                    </div>
+                </>
         }
     }
 
-    render
-    ()
+    render()
     {
         return <div className="outer-mock">
             {this.renderFields(this.props.selectedComponent)}
