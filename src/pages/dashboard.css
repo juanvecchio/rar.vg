@@ -34,6 +34,29 @@ body, html {
     display: block;
 }
 
+.dashboard-container .dashboard-modal {
+    border: none;
+    border-radius: 30px;
+    padding: 50px;
+}
+
+.dashboard-container .dashboard-modal .component-types-container {
+    padding: 20px;
+    margin: 20px 0;
+    width: calc(100% - 40px);
+    background: #eee;
+    border-radius: 20px;
+}
+
+.dashboard-container .dashboard-modal .component-types-container .component-to-select {
+    width: 100%;
+    padding: 20px;
+    margin: 5px 0;
+    border-radius: 13px;
+    background: white;
+    border: black 3px solid;
+}
+
 .notice {
     font-family: 'Raleway', sans-serif;
     border-radius: 10px;

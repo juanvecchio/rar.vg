@@ -5,6 +5,7 @@ import GenericComponent from "../components/generic.component";
 import PDFComponent from "../components/pdf.component";
 import LinklistComponent from "../components/linklist.component";
 import ReactDragListView from 'react-drag-listview';
+import { IoIosAdd } from 'react-icons/io'
 
 import '../pages/profile.css'
 import '../index.css'
@@ -53,6 +54,11 @@ export default class EditableProfile extends React.Component
         </ReactDragListView>
     }
 
+    toggleModal = () =>
+    {
+        this.props.toggleModal()
+    }
+
     render()
     {
         return <div className={"content"}>
@@ -75,8 +81,10 @@ export default class EditableProfile extends React.Component
 
                 {this.loadComponents()}
 
-                <div className={"footer"}>
-                    <a href={"https://rar.vg"} style={{color: "#fff"}}>rar.vg</a> powered 2023
+                <div className={"component add-component-button-container"}>
+                    <button onClick={() => this.toggleModal()} className={"add-component-button"}>
+                        <IoIosAdd size={50}/>
+                    </button>
                 </div>
             </div>
         </div>

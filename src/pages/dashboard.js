@@ -16,6 +16,7 @@ export default class Dashboard extends React.Component
             user: null,
             component: null,
             unpublished: null,
+            showModal: false,
         }
     }
 
@@ -82,6 +83,37 @@ export default class Dashboard extends React.Component
         )
     }
 
+    addComponent(type)
+    {
+        let newComponent = {type: type, content: null}
+        switch (type)
+        {
+            case 'generic':
+                newComponent.content = {
+                    title: "This is a generic component",
+                    description: "You can edit me by filling the fields on the edition panel."
+                }
+                break;
+            case 'pdf':
+                newComponent.content = {fileId: null}
+                break;
+            case 'linklist':
+                newComponent.content = {links: [{
+                    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "title": "This is a link"
+                }]}
+                break;
+            default:
+                return;
+        }
+        const oldUser = this.state.user;
+        oldUser.components.push(newComponent)
+        this.setState({user: oldUser})
+        this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        this.toggleModal()
+        this.selectComponent(this.state.user.components.length - 1)
+    }
+
     updateLinks = (links) =>
     {
         const oldUser = this.state.user
@@ -108,11 +140,31 @@ export default class Dashboard extends React.Component
         }
     }
 
+    toggleModal = () =>
+    {
+        this.dialog.open ? this.dialog.close() : this.dialog.showModal()
+    }
+
     render()
     {
         if (!this.state.user) return 'Loading...'
         return <div className="dashboard-container">
             <div className="dash-container">
+                <dialog className={"dashboard-modal"} ref={ref => this.dialog = ref}>
+                    <span className={"m"}>Select component to add:</span>
+                    <div className={"component-types-container"}>
+                        <button onClick={() => this.addComponent('generic')} className={"component-to-select s"}>Generic
+                            component
+                        </button>
+                        <button onClick={() => this.addComponent('pdf')} className={"component-to-select s"}>PDF
+                            reader
+                        </button>
+                        <button onClick={() => this.addComponent('linklist')} className={"component-to-select s"}>Custom
+                            link list
+                        </button>
+                    </div>
+                    <button className={"publish-button"} onClick={() => this.toggleModal()}>Cancel</button>
+                </dialog>
                 <div className="left">
                     <span
                         className="mmm p-no-margin-bottom p-no-margin-top welcome">👋 Welcome back, {this.state.user.displayName}!</span>
@@ -135,7 +187,8 @@ export default class Dashboard extends React.Component
                 <div className="right-component">
                     <div className="profile-container">
                         <EditableProfile selectComponent={this.selectComponent}
-                                         user={this.state.user} updateComponentOrder={this.updateComponentOrder}/>
+                                         toggleModal={this.toggleModal} user={this.state.user}
+                                         updateComponentOrder={this.updateComponentOrder}/>
                     </div>
                 </div>
             </div>
