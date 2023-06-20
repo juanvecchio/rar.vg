@@ -68,7 +68,7 @@ export default class EditableProfile extends React.Component
                         <div className={"banner"}/>
                         <img
                             className={"profile-picture"}
-                            src={config('HOST') + "/avatar/" + this.props.user.id + ".png"}
+                            src={config('HOST') + "/avatar/" + this.props.user.id + ".png?lr=" + this.props.lastReloaded}
                             alt={"Profile picture"}
                         />
                         <h1 className={"p-no-margin-bottom"}>{this.props.user.displayName}</h1>

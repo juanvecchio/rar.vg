@@ -22,6 +22,7 @@ import {
 } from "react-icons/bs";
 import "./editpanel.component.css"
 import {upload} from "../utils/session.util";
+import config from '../utils/config.util'
 
 export default class EditPanel extends React.Component
 {
@@ -30,19 +31,23 @@ export default class EditPanel extends React.Component
         super(props);
         this.state = {
             // Generic component.
-            title: null,
-            description: null,
+            title: "",
+            description: "",
             // Social links.
-            linkField: null,
+            linkField: "",
             selectedLink: null,
             linkList: [],
             // PDF file.
             selectedFile: null,
+            // User metadata.
+            displayName: "",
+            lastReloaded: Date.now()
         }
 
         this.handleTitleChange = this.handleTitleChange.bind(this)
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this)
         this.handleLinkFieldChange = this.handleLinkFieldChange.bind(this)
+        this.handleDisplayNameChange = this.handleDisplayNameChange.bind(this)
     }
 
     icons = {
@@ -123,7 +128,6 @@ export default class EditPanel extends React.Component
     {
         const oldLinks = this.props.user.sociallinks
         oldLinks.splice(key, 1)
-        console.log(oldLinks)
         this.props.updateLinks(oldLinks)
 
         this.displayMessageInDashboard({type: 'important', message: "You've got unsaved changes!"}, true)
@@ -170,14 +174,13 @@ export default class EditPanel extends React.Component
     {
         if (event.target.files && event.target.files[0])
         {
-            console.log(event.target.files[0])
             this.setState({selectedFile: URL.createObjectURL(event.target.files[0])});
         }
     }
 
     uploadPDF = () =>
     {
-        this.pdfDialog.showModal()
+        this.uploadingDialog.showModal()
         fetch(this.state.selectedFile).then(r => r.blob()).then(blob =>
         {
             const result = new File([blob], "theFile.pdf", {type: 'application/pdf'})
@@ -188,8 +191,7 @@ export default class EditPanel extends React.Component
                     this.saveLocally({
                         fileId: result.content.split('.')[0]
                     })
-                    console.log(result.content)
-                    this.pdfDialog.close()
+                    this.uploadingDialog.close()
                 }
             })
         })
@@ -208,6 +210,28 @@ export default class EditPanel extends React.Component
     handleLinkFieldChange(event)
     {
         this.setState({linkField: event.target.value})
+    }
+
+    handleDisplayNameChange(event)
+    {
+        this.setState({displayName: event.target.value})
+    }
+
+    onProfilePictureChange = (event) =>
+    {
+        if (event.target.files && event.target.files[0])
+        {
+            this.uploadingDialog.showModal()
+            upload(event.target.files[0], true).then(result =>
+            {
+                if (result.success)
+                {
+                    this.props.reloadImage()
+                    this.setState({lastReloaded: Date.now()})
+                    this.uploadingDialog.close()
+                }
+            })
+        }
     }
 
     saveLocally = (content) =>
@@ -232,6 +256,43 @@ export default class EditPanel extends React.Component
             </div>
         switch (component.type)
         {
+            case 'user':
+                return <>
+                    <dialog ref={ref => this.uploadingDialog = ref} className={"dashboard-modal"}>
+                        <span className={"m"}>Uploading...</span>
+                    </dialog>
+                    <h3 className="m p-no-margin-top p-no-margin-bottom">Edit user metadata</h3>
+                    <div className="top">
+                        <span className={"s p-no-margin-top"}>Profile picture:</span>
+                        <div className="button-center">
+                            <label style={{cursor: "pointer"}} for={"upload-profile-picture"}>
+                                <div className="user-button"
+                                     style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.props.user.id + ".png?lr=" + this.state.lastReloaded}}/>
+                            </label>
+                            <label style={{cursor: "pointer"}} for={"upload-profile-picture"}>
+                                <div className={"button unraised"} style={{width: "150px"}}><AiFillEdit size={16}/>Change
+                                </div>
+                            </label>
+                            <input style={{display: "none"}} accept={".jpg,.png,.webp,.jpeg"} type={'file'}
+                                   id={'upload-profile-picture'} onChange={this.onProfilePictureChange}/>
+                            <span
+                                className={"ss"}>Be careful! Profile pictures are published instantly when changed.</span>
+                        </div>
+                    </div>
+                    <div className="bottom">
+                        <h2 className="s p-no-margin-top">Display name:</h2>
+                        <input className="input" type="text" defaultValue={this.props.user.displayName}
+                               onChange={this.handleDisplayNameChange}/>
+                        <div className={"button-container"}>
+                            <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
+                            <button className="button"
+                                    onClick={() => this.props.updateDisplayName(this.state.displayName)}>Done
+                            </button>
+                        </div>
+                        <h4 className={'mm p-no-margin-bottom'}>Danger zone</h4>
+                        <button className="delete-button">Delete account</button>
+                    </div>
+                </>
             case 'generic':
                 return <>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit generic component</h3>
@@ -256,11 +317,13 @@ export default class EditPanel extends React.Component
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Links:</h2>
                     {this.props.user.sociallinks.map((link, key) => (
                         <div>{this.linkEditItem(link, key, this.state.selectedLink === key)}</div>))}
-                    <button className="button" onClick={() => this.cancel()}>Done< /button>
+                    <div className={"button-container"}>
+                        <button className="button" onClick={() => this.cancel()}>Done< /button>
+                    </div>
                 </>
             case 'pdf':
                 return <>
-                    <dialog ref={ref => this.pdfDialog = ref} className={"dashboard-modal"}>
+                    <dialog ref={ref => this.uploadingDialog = ref} className={"dashboard-modal"}>
                         <span className={"m"}>Uploading...</span>
                     </dialog>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit component</h3>

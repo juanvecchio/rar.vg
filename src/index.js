@@ -41,13 +41,17 @@ export const WebRoutes = [
 
 ]
 
+const specialSubdomains = ["ge"]
+
 const AppRoutes = () => <RouterProvider>
     {WebRoutes.map((route, k) => <Route key={k} status={route.status ? route.status : 200}
                                         path={route.path}>{route.component}</Route>)}
 </RouterProvider>
 
-if (((host.length === 2 && host[1].includes('localhost')) || (host.length === 3)) && host[0].length > 3)
+if (((host.length === 2 && host[1].includes('localhost')) || (host.length === 3 && host[0] !== 'www')))
 {
+    if (host[0].length > 3 && !specialSubdomains.includes(host[0]))
+        window.location.href = 'https://www.rar.vg'
     const subdomain = host[0]
     ReactDOM.render(<Profile username={subdomain}/>, document.getElementById('root'))
 }

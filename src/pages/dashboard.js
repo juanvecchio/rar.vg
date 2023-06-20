@@ -17,6 +17,7 @@ export default class Dashboard extends React.Component
             component: null,
             unpublished: null,
             showModal: false,
+            lastReloaded: Date.now()
         }
     }
 
@@ -74,6 +75,16 @@ export default class Dashboard extends React.Component
         this.cancelSelection()
     }
 
+    updateDisplayName = (displayName) =>
+    {
+        if (displayName !== "")
+        {
+            this.setState({user: {...this.state.user, displayName: displayName}})
+            this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        }
+        this.cancelSelection()
+    }
+
     drawMessage(message)
     {
         if (message) return (
@@ -98,10 +109,12 @@ export default class Dashboard extends React.Component
                 newComponent.content = {fileId: null}
                 break;
             case 'linklist':
-                newComponent.content = {links: [{
-                    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                    "title": "This is a link"
-                }]}
+                newComponent.content = {
+                    links: [{
+                        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                        "title": "This is a link"
+                    }]
+                }
                 break;
             default:
                 return;
@@ -145,6 +158,11 @@ export default class Dashboard extends React.Component
         this.dialog.open ? this.dialog.close() : this.dialog.showModal()
     }
 
+    reloadImage = () =>
+    {
+        this.setState({lastReloaded: Date.now()})
+    }
+
     render()
     {
         if (!this.state.user) return 'Loading...'
@@ -173,7 +191,7 @@ export default class Dashboard extends React.Component
                 <div className="right">
                     <button className="publish-button" onClick={() => this.updateProfile()}>Publish</button>
                     <button className="profile-button"
-                            style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png"}}>.
+                            style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded}}>.
                     </button>
                 </div>
             </div>
@@ -181,13 +199,15 @@ export default class Dashboard extends React.Component
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally} cancelSelection={this.cancelSelection}
                                updateLinks={this.updateLinks} displayMessage={this.displayMessage}
-                               user={this.state.user}
+                               user={this.state.user} updateDisplayName={this.updateDisplayName}
+                               reloadImage={this.reloadImage}
                                selectedComponent={this.getSelectedComponent(this.state.component)}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">
                         <EditableProfile selectComponent={this.selectComponent}
                                          toggleModal={this.toggleModal} user={this.state.user}
+                                         lastReloaded={this.state.lastReloaded}
                                          updateComponentOrder={this.updateComponentOrder}/>
                     </div>
                 </div>
