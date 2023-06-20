@@ -264,8 +264,9 @@ export default class EditPanel extends React.Component
                         <span className={"m"}>Uploading...</span>
                     </dialog>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit component</h3>
-                    <input type={"file"} onChange={this.onFileChange} className="file-button" accept={".pdf"}/>
-                    <div className="pdf">
+                    <div><label for="pdf-button" className="button-label">Upload PDF</label><input type={"file"} onChange={this.onFileChange} className="file-button" accept={".pdf"} id="pdf-button"/></div>
+                    <p type="s">Only PDF files allowed!</p>
+                    <div className="pdf" >
                         <object data={this.state.selectedFile}
                                 type="application/pdf"></object>
                     </div>
