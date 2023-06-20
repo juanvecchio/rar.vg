@@ -48,9 +48,9 @@ const AppRoutes = () => <RouterProvider>
                                         path={route.path}>{route.component}</Route>)}
 </RouterProvider>
 
-if (((host.length === 2 && host[1].includes('localhost')) || (host.length === 3 && host[0] !== 'www')))
+if (((host.length === 2 && host[1].includes('localhost')) || (host.length === 3)) && host[0] !== 'www')
 {
-    if (host[0].length > 3 && !specialSubdomains.includes(host[0]))
+    if (host[0].length < 4 && !specialSubdomains.includes(host[0]))
         window.location.href = 'https://www.rar.vg'
     const subdomain = host[0]
     ReactDOM.render(<Profile username={subdomain}/>, document.getElementById('root'))
