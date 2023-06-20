@@ -262,7 +262,7 @@ export default class EditPanel extends React.Component
                         <span className={"m"}>Uploading...</span>
                     </dialog>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit user metadata</h3>
-                    <div className="top">
+                    <div className="user-top">
                         <span className={"s p-no-margin-top"}>Profile picture:</span>
                         <div className="button-center">
                             <label style={{cursor: "pointer"}} for={"upload-profile-picture"}>
@@ -279,7 +279,7 @@ export default class EditPanel extends React.Component
                                 className={"ss"}>Be careful! Profile pictures are published instantly when changed.</span>
                         </div>
                     </div>
-                    <div className="bottom">
+                    <div className="user-bottom">
                         <h2 className="s p-no-margin-top">Display name:</h2>
                         <input className="input" type="text" defaultValue={this.props.user.displayName}
                                onChange={this.handleDisplayNameChange}/>

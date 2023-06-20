@@ -172,7 +172,7 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     margin-bottom: 20px;
 }
 
-.top {
+.user-top {
     margin-bottom: 20px;
 }
 
@@ -203,7 +203,7 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     height: 100%;
 }
 
-.bottom {
+.user-bottom {
     height: calc(50% - 100px);
 }
 
@@ -219,7 +219,7 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     padding: 10px;
 }
 
-.bottom .delete-button {
+.user-bottom .delete-button {
     width: 140px;
     padding: 10px;
     font-family: 'Raleway', sans-serif;
