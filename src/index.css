@@ -53,6 +53,12 @@ html, body {
     font-weight: 700;
 }
 
+.ss {
+    font-family: 'Raleway', sans-serif;
+    font-size: calc(0.4vw + 0.7vh);
+    font-weight: 700;
+}
+
 /* Remove annoying margin in paragraphs */
 .p-no-margin-top {
     margin-block-start: 0;
