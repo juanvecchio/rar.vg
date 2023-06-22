@@ -13,8 +13,6 @@
 }
 
 
-
-
 .inner-mock {
     height: 50px;
     border-radius: 20px;
@@ -103,24 +101,26 @@ padding: 2px;*/
     margin-bottom: 20px;
 }
 
-.button-label{
-        margin-bottom: 10px;
-        padding: 10px;
-        font-family: 'Raleway', sans-serif;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 15px;
-        background-color: #6a28d3;
-        color: white;
-        border: none;
-        display: inherit;
-        text-align: center;
+.button-label {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-family: 'Raleway', sans-serif;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    background-color: #6a28d3;
+    color: white;
+    border: none;
+    display: inherit;
+    text-align: center;
 
 
 }
-.file-button{
+
+.file-button {
     display: none;
 }
+
 /*
 TEMPORARLY REMOVING FILE BUTTON STYLE
 .file-button {
@@ -246,4 +246,72 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
 
 .button-container .button {
     margin-left: 10px !important;
+}
+
+.special-mock {
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    background-color: #eee;
+    display: block;
+}
+
+.special-mock .icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+}
+
+.margin-button {
+    text-align: right;
+}
+
+.delete {
+    background-color: red !important;
+}
+
+.done-button {
+    text-align: center;
+    width: 75px;
+    padding: 10px;
+    font-family: 'Raleway', sans-serif;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    background-color: #6a28d3;
+    color: white;
+    border: none
+}
+
+.inner-mock2 {
+    padding: 10px;
+    border-radius: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #eee;
+    display: block;
+    text-align: center;
+}
+
+.hero .link-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    margin: 10px;
+}
+
+.hero .bump {
+    padding-right: 10px;
+}
+
+.inner-mock3 {
+    width: 100%;
+    border: none;
+    padding: 3px;
+    border-radius: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    display: block;
+    text-align: center;
 }

@@ -41,13 +41,40 @@ export default class EditPanel extends React.Component
             selectedFile: null,
             // User metadata.
             displayName: "",
-            lastReloaded: Date.now()
+            lastReloaded: Date.now(),
+            // Link list
+            selectedLinkListItem: null,
+            linkItemTitleField: "",
+            linkItemURLField: "",
+            linkItemSelectedImage: null,
+            linkItemMessage: null,
         }
 
         this.handleTitleChange = this.handleTitleChange.bind(this)
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this)
         this.handleLinkFieldChange = this.handleLinkFieldChange.bind(this)
         this.handleDisplayNameChange = this.handleDisplayNameChange.bind(this)
+        this.handleLinkItemURLChange = this.handleLinkItemURLChange.bind(this)
+        this.handleLinkItemTitleChange = this.handleLinkItemTitleChange.bind(this)
+    }
+
+    clearState = () =>
+    {
+        this.setState({
+            title: "",
+            description: "",
+            linkField: "",
+            selectedLink: null,
+            linkList: [],
+            selectedFile: null,
+            displayName: "",
+            lastReloaded: Date.now(),
+            selectedLinkListItem: null,
+            linkItemTitleField: "",
+            linkItemURLField: "",
+            linkItemSelectedImage: null,
+            linkItemMessage: null,
+        })
     }
 
     icons = {
@@ -92,7 +119,7 @@ export default class EditPanel extends React.Component
         this.props.displayMessage(message)
     }
 
-    linkEditItem = (link, key, selected) =>
+    socialLinkEditItem = (link, key, selected) =>
     {
         return <div key={key} className="inner-mock">
             <div className="hero">{this.icons[link.name].icon}</div>
@@ -108,6 +135,177 @@ export default class EditPanel extends React.Component
                         </button>
                     </div>
                 </div>}
+        </div>
+    }
+
+    addNewLinkItem = (component) =>
+    {
+        if (this.state.selectedLinkListItem !== null)
+        {
+            return this.displayLinkItemMessage({
+                type: 'error',
+                message: 'You must save your changes before adding another item!'
+            })
+        }
+        if (component.content.length >= 3)
+            return
+        const content = component.content
+        content.links.push({"url": "https://www.rar.vg", "icon": null, "title": "Lorem ipsum dolor sit amet"})
+        this.props.updateLocallyWithoutCancelling(content)
+        this.selectLinkItem(component, content.links.length - 1)
+    }
+
+    updateLinkItem = (component, link) =>
+    {
+        if (this.state.selectedLinkListItem !== null)
+        {
+            if (this.state.linkItemURLField === null)
+            {
+                return this.displayLinkItemMessage({type: 'error', message: 'Link field must not be empty!'})
+            }
+            const newLink = {
+                url: this.state.linkItemURLField || link.url,
+                title: this.state.linkItemTitleField || link.title,
+                icon: link.icon
+            }
+            if (this.state.linkItemSelectedImage !== null)
+            {
+                return this.uploadLinkItemIcon().then(result =>
+                    {
+                        newLink.icon = config('HOST') + "/uploads/" + result
+                        const content = component.content
+                        content.links[this.state.selectedLinkListItem] = newLink
+                        this.props.updateLocallyWithoutCancelling(content)
+                        return this.setState({
+                            selectedLinkListItem: null,
+                            linkItemTitleField: null,
+                            linkItemURLField: null,
+                            linkItemSelectedImage: null
+                        })
+                    }
+                )
+            }
+            const content = component.content
+            content.links[this.state.selectedLinkListItem] = newLink
+            this.props.updateLocallyWithoutCancelling(content)
+            return this.setState({
+                selectedLinkListItem: null,
+                linkItemTitleField: null,
+                linkItemURLField: null,
+                linkItemSelectedImage: null
+            })
+        }
+    }
+
+    deleteLinkItem = (key, component) =>
+    {
+        const content = component.content
+        content.links.splice(key, 1)
+        this.props.updateLocallyWithoutCancelling(content)
+        this.setState({
+            selectedLinkListItem: null,
+            linkItemTitleField: null,
+            linkItemURLField: null
+        })
+    }
+
+    onItemIconChange = (event) =>
+    {
+        if (event.target.files && event.target.files[0])
+        {
+            this.setState({linkItemSelectedImage: URL.createObjectURL(event.target.files[0])});
+        }
+    }
+
+    uploadLinkItemIcon = () =>
+    {
+        return new Promise(res =>
+        {
+            fetch(this.state.linkItemSelectedImage).then(r => r.blob()).then(blob =>
+            {
+                const result = new File([blob], "image.png", {type: 'application/png'})
+                upload(result, false).then(result =>
+                {
+                    if (result.success)
+                    {
+                        this.uploadingDialog.close()
+                        return res(result.content)
+                    }
+                })
+            })
+        })
+    }
+
+    selectLinkItem = (component, key) =>
+    {
+        if (this.state.selectedLinkListItem !== null)
+        {
+            return this.displayLinkItemMessage({
+                type: 'error',
+                message: 'You must save your changes before selecting another item!'
+            })
+        }
+        return this.setState({
+            selectedLinkListItem: key,
+            linkItemTitleField: component.content.links[key].title,
+            linkItemURLField: component.content.links[key].url
+        })
+    }
+
+    displayLinkItemMessage = (message) =>
+    {
+        this.setState({linkItemMessage: message})
+        setTimeout(() => this.setState({linkItemMessage: null}), 5000)
+    }
+
+    drawMessage(message)
+    {
+        if (message) return (
+            <div className={"notice " + message.type}>
+                {message.message}
+            </div>
+        )
+    }
+
+    linkEditItem = (link, key, selected, component) =>
+    {
+        if (selected)
+            return <form className="special-mock">
+                {this.drawMessage(this.state.linkItemMessage)}
+                <h2 className="s">Title:</h2>
+                <input className="input" onChange={this.handleLinkItemTitleChange}
+                       defaultValue={this.state.linkItemTitleField} type="url"
+                       placeholder="My awesome link"/>
+                <h2 className="s">Link:</h2>
+                <input className="input" required onChange={this.handleLinkItemURLChange} type="text"
+                       placeholder="https://yourwebsite.com" defaultValue={this.state.linkItemURLField}/>
+                <h2 className="s">Icon:</h2>
+                <div className={"button-center"}>
+                    {this.state.linkItemSelectedImage !== null || link.icon !== null ? (
+                        <img className={"icon"} src={this.state.linkItemSelectedImage || link.icon}/>) : <></>}
+                    <label htmlFor="link-icon-button" className="button-label">Upload icon</label>
+                    <input type={"file"} onChange={this.onItemIconChange} className="file-button"
+                           accept={".jpg,.png,.jpeg"}
+                           id="link-icon-button"/>
+                </div>
+                <div className="button-container">
+                    <button className="button delete" onClick={() => this.deleteLinkItem(key, component)}>Delete
+                    </button>
+                    <button className="button" onClick={() => this.updateLinkItem(component, link)}>Done
+                    </button>
+                </div>
+            </form>
+        else return <div className={"inner-mock"}>
+            <div className={"hero"}>
+                {link.icon !== null ? (<img className={"link-icon"} src={link.icon}/>) : <div className={"bump"}></div>}
+            </div>
+            <div className={"link-content"}>
+                <span>{link.title || link.link}</span>
+                <div className={"button-container"}>
+                    <button className={"icon-button"} onClick={() => this.selectLinkItem(component, key)}><AiFillEdit/>
+                    </button>
+                </div>
+            </div>
         </div>
     }
 
@@ -217,6 +415,16 @@ export default class EditPanel extends React.Component
         this.setState({displayName: event.target.value})
     }
 
+    handleLinkItemTitleChange(event)
+    {
+        this.setState({linkItemTitleField: event.target.value})
+    }
+
+    handleLinkItemURLChange(event)
+    {
+        this.setState({linkItemURLField: event.target.value})
+    }
+
     onProfilePictureChange = (event) =>
     {
         if (event.target.files && event.target.files[0])
@@ -316,7 +524,7 @@ export default class EditPanel extends React.Component
                     <div className="icon-list-div">{this.drawIcons()}</div>
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Links:</h2>
                     {this.props.user.sociallinks.map((link, key) => (
-                        <div>{this.linkEditItem(link, key, this.state.selectedLink === key)}</div>))}
+                        <div>{this.socialLinkEditItem(link, key, this.state.selectedLink === key)}</div>))}
                     <div className={"button-container"}>
                         <button className="button" onClick={() => this.cancel()}>Done< /button>
                     </div>
@@ -327,15 +535,34 @@ export default class EditPanel extends React.Component
                         <span className={"m"}>Uploading...</span>
                     </dialog>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit component</h3>
-                    <div><label for="pdf-button" className="button-label">Upload PDF</label><input type={"file"} onChange={this.onFileChange} className="file-button" accept={".pdf"} id="pdf-button"/></div>
+                    <div>
+                        <label for="pdf-button" className="button-label">Upload PDF</label>
+                        <input type={"file"} onChange={this.onFileChange} className="file-button" accept={".pdf"}
+                               id="pdf-button"/>
+                    </div>
                     <p type="s">Only PDF files allowed!</p>
-                    <div className="pdf" >
+                    <div className="pdf">
                         <object data={this.state.selectedFile}
                                 type="application/pdf"></object>
                     </div>
                     <div className="button-container">
                         <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
                         <button className="button" onClick={() => this.uploadPDF()}>Upload</button>
+                    </div>
+                </>
+            case 'linklist':
+                return <>
+                    <dialog ref={ref => this.uploadingDialog = ref} className={"dashboard-modal"}>
+                        <span className={"m"}>Uploading...</span>
+                    </dialog>
+                    <h3 className="m p-no-margin-top p-no-margin-bottom">Edit link list</h3>
+                    {component.content.links.map((link, key) => this.linkEditItem(link, key, this.state.selectedLinkListItem === key, component))}
+                    {component.content.links.length >= 3 ? <></> :
+                        <button className="inner-mock3" onClick={() => this.addNewLinkItem(component)}>
+                            <span className="mm p-no-margin-bottom p-no-margin-top">+</span>
+                        </button>}
+                    <div className="margin-button">
+                        <button className="done-button" onClick={() => this.cancel()}>Done</button>
                     </div>
                 </>
         }

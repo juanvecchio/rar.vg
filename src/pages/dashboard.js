@@ -19,6 +19,8 @@ export default class Dashboard extends React.Component
             showModal: false,
             lastReloaded: Date.now()
         }
+
+        this.editPanel = React.createRef()
     }
 
     componentDidMount()
@@ -58,6 +60,7 @@ export default class Dashboard extends React.Component
 
     selectComponent = (key) =>
     {
+        this.editPanel.current.clearState()
         this.setState({component: key})
     }
 
@@ -68,11 +71,16 @@ export default class Dashboard extends React.Component
 
     updateComponentLocally = (content) =>
     {
+        this.updateComponentLocallyWithoutCancelling(content)
+        this.cancelSelection()
+    }
+
+    updateComponentLocallyWithoutCancelling = (content) =>
+    {
         const oldUser = this.state.user
         oldUser.components[this.state.component].content = content
         this.setState({user: oldUser})
         this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
-        this.cancelSelection()
     }
 
     updateDisplayName = (displayName) =>
@@ -197,10 +205,12 @@ export default class Dashboard extends React.Component
             </div>
             <div className="dash-container2">
                 <div className="left-component">
-                    <EditPanel updateLocally={this.updateComponentLocally} cancelSelection={this.cancelSelection}
+                    <EditPanel updateLocally={this.updateComponentLocally}
+                               updateLocallyWithoutCancelling={this.updateComponentLocallyWithoutCancelling}
+                               cancelSelection={this.cancelSelection}
                                updateLinks={this.updateLinks} displayMessage={this.displayMessage}
                                user={this.state.user} updateDisplayName={this.updateDisplayName}
-                               reloadImage={this.reloadImage}
+                               reloadImage={this.reloadImage} ref={this.editPanel}
                                selectedComponent={this.getSelectedComponent(this.state.component)}/>
                 </div>
                 <div className="right-component">
