@@ -62,10 +62,12 @@ export default class Dashboard extends React.Component
     {
         this.editPanel.current.clearState()
         this.setState({component: key})
+        this.editPanel.current.handleNecessaryUpdates(this.getSelectedComponent(key))
     }
 
     cancelSelection = () =>
     {
+        this.editPanel.current.clearState()
         this.setState({component: null})
     }
 

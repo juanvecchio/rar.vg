@@ -77,6 +77,16 @@ export default class EditPanel extends React.Component
         })
     }
 
+    handleNecessaryUpdates = (component) =>
+    {
+        console.log(component)
+        switch(component.type)
+        {
+            case 'generic':
+                this.setState({title: component.content.title, description: component.content.description})
+        }
+    }
+
     icons = {
         steam: {
             icon: <FaSteam/>,
@@ -505,9 +515,9 @@ export default class EditPanel extends React.Component
                 return <>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit generic component</h3>
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Title:</h2>
-                    <input className="input" type="text" placeholder="Title" onChange={this.handleTitleChange}/>
+                    <input className="input" type="text" placeholder="Title" value={this.state.title} onChange={this.handleTitleChange}/>
                     <h2 className="s p-no-margin-bottom p-no-margin-top description">Description:</h2>
-                    <textarea className="description-text-box-size" type="text"
+                    <textarea className="description-text-box-size" type="text" value={this.state.description}
                               placeholder="Description" onChange={this.handleDescriptionChange}/>
                     <div className={"button-container"}>
                         <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
