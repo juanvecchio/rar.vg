@@ -39,8 +39,10 @@ export default class EditPanel extends React.Component
             linkList: [],
             // PDF file.
             selectedFile: null,
+            fileMessage: null,
             // User metadata.
             displayName: "",
+            userMessage: null,
             lastReloaded: Date.now(),
             // Link list
             selectedLinkListItem: null,
@@ -67,7 +69,9 @@ export default class EditPanel extends React.Component
             selectedLink: null,
             linkList: [],
             selectedFile: null,
+            fileMessage: null,
             displayName: "",
+            userMessage: null,
             lastReloaded: Date.now(),
             selectedLinkListItem: null,
             linkItemTitleField: "",
@@ -80,7 +84,7 @@ export default class EditPanel extends React.Component
     handleNecessaryUpdates = (component) =>
     {
         console.log(component)
-        switch(component.type)
+        switch (component.type)
         {
             case 'generic':
                 this.setState({title: component.content.title, description: component.content.description})
@@ -268,6 +272,18 @@ export default class EditPanel extends React.Component
         setTimeout(() => this.setState({linkItemMessage: null}), 5000)
     }
 
+    displayPDFMessage = (message) =>
+    {
+        this.setState({fileMessage: message})
+        setTimeout(() => this.setState({fileMessage: null}), 5000)
+    }
+
+    displayUserMessage = (message) =>
+    {
+        this.setState({userMessage: message})
+        setTimeout(() => this.setState({userMessage: null}), 5000)
+    }
+
     drawMessage(message)
     {
         if (message) return (
@@ -382,6 +398,10 @@ export default class EditPanel extends React.Component
     {
         if (event.target.files && event.target.files[0])
         {
+            if (event.target.files[0].name.split('.').pop() !== 'pdf')
+                return this.displayPDFMessage({type: 'error', message: 'The selected file is not a PDF file!'})
+            if (event.target.files[0].size / 1024 / 1024 > 1)
+                return this.displayPDFMessage({type: 'error', message: 'The selected file is too large!'})
             this.setState({selectedFile: URL.createObjectURL(event.target.files[0])});
         }
     }
@@ -437,8 +457,13 @@ export default class EditPanel extends React.Component
 
     onProfilePictureChange = (event) =>
     {
+        const allowedFiles = ['jpg', 'jpeg', 'png']
         if (event.target.files && event.target.files[0])
         {
+            if (!allowedFiles.includes(event.target.files[0].name.split('.').pop()))
+                return this.displayUserMessage({type: 'error', message: 'The selected file format is not allowed!'})
+            if (event.target.files[0].size / 1024 / 1024 > 1)
+                return this.displayUserMessage({type: 'error', message: 'The selected file is too large!'})
             this.uploadingDialog.showModal()
             upload(event.target.files[0], true).then(result =>
             {
@@ -482,6 +507,7 @@ export default class EditPanel extends React.Component
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit user metadata</h3>
                     <div className="user-top">
                         <span className={"s p-no-margin-top"}>Profile picture:</span>
+                        {this.drawMessage(this.state.userMessage)}
                         <div className="button-center">
                             <label style={{cursor: "pointer"}} for={"upload-profile-picture"}>
                                 <div className="user-button"
@@ -493,8 +519,8 @@ export default class EditPanel extends React.Component
                             </label>
                             <input style={{display: "none"}} accept={".jpg,.png,.webp,.jpeg"} type={'file'}
                                    id={'upload-profile-picture'} onChange={this.onProfilePictureChange}/>
-                            <span
-                                className={"ss"}>Be careful! Profile pictures are published instantly when changed.</span>
+                            <p className={"ss"}>Be careful! Profile pictures are published instantly when changed.</p>
+                            <p className={"ss"}>Only JPEGs and PNGs smaller than 1MB allowed.</p>
                         </div>
                     </div>
                     <div className="user-bottom">
@@ -515,7 +541,8 @@ export default class EditPanel extends React.Component
                 return <>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit generic component</h3>
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Title:</h2>
-                    <input className="input" type="text" placeholder="Title" value={this.state.title} onChange={this.handleTitleChange}/>
+                    <input className="input" type="text" placeholder="Title" value={this.state.title}
+                           onChange={this.handleTitleChange}/>
                     <h2 className="s p-no-margin-bottom p-no-margin-top description">Description:</h2>
                     <textarea className="description-text-box-size" type="text" value={this.state.description}
                               placeholder="Description" onChange={this.handleDescriptionChange}/>
@@ -545,12 +572,13 @@ export default class EditPanel extends React.Component
                         <span className={"m"}>Uploading...</span>
                     </dialog>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit component</h3>
+                    {this.drawMessage(this.state.fileMessage)}
                     <div>
                         <label for="pdf-button" className="button-label">Upload PDF</label>
                         <input type={"file"} onChange={this.onFileChange} className="file-button" accept={".pdf"}
                                id="pdf-button"/>
                     </div>
-                    <p type="s">Only PDF files allowed!</p>
+                    <p className="s">Only PDF files up to 1MB allowed!</p>
                     <div className="pdf">
                         <object data={this.state.selectedFile}
                                 type="application/pdf"></object>
