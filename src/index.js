@@ -9,6 +9,7 @@ import Profile from "./pages/profile";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import Register from "./pages/register";
+import ChangePassword from './pages/changepassword';
 
 // Get the subdomain.
 const host = window.location.host.split('.')
@@ -24,6 +25,10 @@ export const WebRoutes = [
     {
         path: "/login",
         component: <Login justRegistered={getParameters.get("jr")}/>
+    },
+    {
+        path: "/forgot-password",
+        component: <ChangePassword/>
     },
     {
         path: "/register",
