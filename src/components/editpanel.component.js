@@ -308,7 +308,7 @@ export default class EditPanel extends React.Component
                 <h2 className="s">Icon:</h2>
                 <div className={"button-center"}>
                     {this.state.linkItemSelectedImage !== null || link.icon !== null ? (
-                        <img className={"icon"} src={this.state.linkItemSelectedImage || link.icon}/>) : <></>}
+                        <img className={"icon"} src={this.state.linkItemSelectedImage || link.icon} alt={'Link icon'}/>) : <></>}
                     <label htmlFor="link-icon-button" className="button-label">Upload icon</label>
                     <input type={"file"} onChange={this.onItemIconChange} className="file-button"
                            accept={".jpg,.png,.jpeg"}
@@ -323,7 +323,7 @@ export default class EditPanel extends React.Component
             </form>
         else return <div className={"inner-mock"}>
             <div className={"hero"}>
-                {link.icon !== null ? (<img className={"link-icon"} src={link.icon}/>) : <div className={"bump"}></div>}
+                {link.icon !== null ? (<img className={"link-icon"} src={link.icon} alt={'Link icon'}/>) : <div className={"bump"}></div>}
             </div>
             <div className={"link-content"}>
                 <span>{link.title || link.link}</span>
@@ -509,11 +509,11 @@ export default class EditPanel extends React.Component
                         <span className={"s p-no-margin-top"}>Profile picture:</span>
                         {this.drawMessage(this.state.userMessage)}
                         <div className="button-center">
-                            <label style={{cursor: "pointer"}} for={"upload-profile-picture"}>
+                            <label style={{cursor: "pointer"}} htmlFor={"upload-profile-picture"}>
                                 <div className="user-button"
                                      style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.props.user.id + ".png?lr=" + this.state.lastReloaded}}/>
                             </label>
-                            <label style={{cursor: "pointer"}} for={"upload-profile-picture"}>
+                            <label style={{cursor: "pointer"}} htmlFor={"upload-profile-picture"}>
                                 <div className={"button unraised"} style={{width: "150px"}}><AiFillEdit size={16}/>Change
                                 </div>
                             </label>
@@ -544,7 +544,7 @@ export default class EditPanel extends React.Component
                     <input className="input" type="text" placeholder="Title" value={this.state.title}
                            onChange={this.handleTitleChange}/>
                     <h2 className="s p-no-margin-bottom p-no-margin-top description">Description:</h2>
-                    <textarea className="description-text-box-size" type="text" value={this.state.description}
+                    <textarea className="description-text-box-size" value={this.state.description}
                               placeholder="Description" onChange={this.handleDescriptionChange}/>
                     <div className={"button-container"}>
                         <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
@@ -574,7 +574,7 @@ export default class EditPanel extends React.Component
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit component</h3>
                     {this.drawMessage(this.state.fileMessage)}
                     <div>
-                        <label for="pdf-button" className="button-label">Upload PDF</label>
+                        <label htmlFor="pdf-button" className="button-label">Upload PDF</label>
                         <input type={"file"} onChange={this.onFileChange} className="file-button" accept={".pdf"}
                                id="pdf-button"/>
                     </div>
