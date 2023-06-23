@@ -27,11 +27,11 @@ export default class Verify extends React.Component
         if(verified === null)
             return <h3 className='mm'>Loading...</h3>
         
-        return verified.success ? <form onSubmit={this.handleSubmit} class="login-form">
-            <h1 class="m p-no-margin-top">Your account has been verified.</h1>
-            <button class="mm login-button">Log in</button>
-        </form> : <div class="login-form">
-            <h1 class="m p-no-margin-top">{verified.content}</h1>
+        return verified.success ? <form onSubmit={this.handleSubmit} className="login-form">
+            <h1 className="m p-no-margin-top">Your account has been verified.</h1>
+            <button className="mm login-button">Log in</button>
+        </form> : <div className="login-form">
+            <h1 className="m p-no-margin-top">{verified.content}</h1>
         </div> 
     }
 
@@ -41,8 +41,8 @@ export default class Verify extends React.Component
             background: "linear-gradient(-45deg, #381b12, #3b0f38, #02394d, #462506)",
             backgroundSize: "400% 400%"
         }}>
-            <div class="container">
-                <div class="logotype">👋 rar.vg</div>
+            <div className="container">
+                <div className="logotype">👋 rar.vg</div>
                     {this.renderFields(this.state.verified)}
             </div>
         </div>   
