@@ -19,6 +19,7 @@ export default class Register extends React.Component
             dateField: null,
             usernameField: null,
             message: null,
+            sent: false,
         }
 
         this.handleEmailChange = this.handleEmailChange.bind(this)
@@ -123,8 +124,37 @@ export default class Register extends React.Component
                         message: 'That username has already been chosen!'
                     })
             }
-            window.location.href = '/login?jr=1'
+            this.setState({sent: true})
         })
+    }
+
+    renderFields = sent => {
+        return sent ? <div class="login-form">
+            <h1 class="mm code-title p-no-margin-top">We sent you a link to your email in order to verify your account.
+                Please check both your inbox and spam folder.</h1>
+            <h1 class="m code-title p-no-margin-bottom">You may close this tab.</h1>
+        </div> : <form className="login-form" onSubmit={this.handleSubmit}>
+            {this.drawMessage(this.state.message)}
+            <h1 className="l p-no-margin-top">Sign up</h1>
+            <input type="text" placeholder="Display name" value={this.state.nameField}
+                onChange={this.handleNameChange}/>
+            <input type={"email"} placeholder={"Email"} value={this.state.emailField}
+                onChange={this.handleEmailChange}/>
+            <div className="placeholder text smaller-input" data-placeholder=".rar.vg">
+                <input type="text" placeholder="Username / Domain" value={this.state.usernameField}
+                    onChange={this.handleUsernameChange}/>
+            </div>
+            <input type="date" placeholder="Date of Birth" value={this.state.dateField}
+                onChange={this.handleDateChange}/>
+            <input type="password" placeholder="Password" value={this.state.passwordField}
+                onChange={this.handlePassChange}/>
+            <input className="input-no-margin" type="password" placeholder="Repeat your password"
+                value={this.state.passConfField} onChange={this.handlePassConfChange}/>
+            <button className="mm login-button">Submit</button>
+            <div className={"links"}>
+                <Link to={"/login"}><span className={"ss"}>Already have an account?</span></Link><br/>
+            </div>
+        </form>
     }
 
     render()
@@ -135,28 +165,7 @@ export default class Register extends React.Component
         }}>
             <div className="container">
                 <div className="logotype">👋 rar.vg</div>
-                <form className="login-form" onSubmit={this.handleSubmit}>
-                    {this.drawMessage(this.state.message)}
-                    <h1 className="l p-no-margin-top">Sign up</h1>
-                    <input type="text" placeholder="Display name" value={this.state.nameField}
-                           onChange={this.handleNameChange}/>
-                    <input type={"email"} placeholder={"Email"} value={this.state.emailField}
-                           onChange={this.handleEmailChange}/>
-                    <div className="placeholder text smaller-input" data-placeholder=".rar.vg">
-                        <input type="text" placeholder="Username / Domain" value={this.state.usernameField}
-                               onChange={this.handleUsernameChange}/>
-                    </div>
-                    <input type="date" placeholder="Date of Birth" value={this.state.dateField}
-                           onChange={this.handleDateChange}/>
-                    <input type="password" placeholder="Password" value={this.state.passwordField}
-                           onChange={this.handlePassChange}/>
-                    <input className="input-no-margin" type="password" placeholder="Repeat your password"
-                           value={this.state.passConfField} onChange={this.handlePassConfChange}/>
-                    <button className="mm login-button">Submit</button>
-                    <div className={"links"}>
-                        <Link to={"/login"}><span className={"ss"}>Already have an account?</span></Link><br/>
-                    </div>
-                </form>
+                {this.renderFields(this.state.sent)}
             </div>
         </div>
     }
