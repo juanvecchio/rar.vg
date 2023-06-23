@@ -10,6 +10,7 @@ import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import Register from "./pages/register";
 import ChangePassword from './pages/changepassword';
+import Verify from './pages/verify';
 
 // Get the subdomain.
 const host = window.location.host.split('.')
@@ -27,6 +28,10 @@ export const WebRoutes = [
         component: <Login justRegistered={getParameters.get("jr")}/>
     },
     {
+        path: "/verify",
+        component: <Verify token={getParameters.get("vt")}/>
+    },
+    {
         path: "/forgot-password",
         component: <ChangePassword/>
     },
@@ -42,7 +47,7 @@ export const WebRoutes = [
         path: "",
         component: <AppError></AppError>,
         status: 404
-    }
+    },
 
 ]
 
