@@ -595,7 +595,7 @@ export default class EditPanel extends React.Component
                     </dialog>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit link list</h3>
                     {component.content.links.map((link, key) => this.linkEditItem(link, key, this.state.selectedLinkListItem === key, component))}
-                    {component.content.links.length >= 3 ? <></> :
+                    {component.content.links.length >= 5 ? <></> :
                         <button className="inner-mock3" onClick={() => this.addNewLinkItem(component)}>
                             <span className="mm p-no-margin-bottom p-no-margin-top">+</span>
                         </button>}
