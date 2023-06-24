@@ -20,6 +20,7 @@ export default class Register extends React.Component
             usernameField: null,
             message: null,
             sent: false,
+            requestDone: true,
         }
 
         this.handleEmailChange = this.handleEmailChange.bind(this)
@@ -103,8 +104,10 @@ export default class Register extends React.Component
 
     register(username, displayName, email, password, dateOfBirth)
     {
+        this.setState({requestDone: false})
         tryRegister(displayName, username, email, password, dateOfBirth).then(response =>
         {
+            this.setState({requestDone: true})
             if (!response.success)
             {
                 const parsedResponse = JSON.parse(response.content)
@@ -128,29 +131,32 @@ export default class Register extends React.Component
         })
     }
 
-    renderFields = sent => {
+    renderFields = sent =>
+    {
         return sent ? <div className="login-form">
-            <h1 className="mm code-title p-no-margin-top">We sent you a link to your email in order to verify your account.
+            <h1 className="mm p-no-margin-top">We sent you a link to your email in order to verify your
+                account.
                 Please check both your inbox and spam folder.</h1>
-            <h1 className="m code-title p-no-margin-bottom">You may close this tab.</h1>
+            <h1 className="m p-no-margin-bottom">You may close this tab.</h1>
         </div> : <form className="login-form" onSubmit={this.handleSubmit}>
             {this.drawMessage(this.state.message)}
             <h1 className="l p-no-margin-top">Sign up</h1>
             <input type="text" placeholder="Display name" value={this.state.nameField}
-                onChange={this.handleNameChange}/>
+                   onChange={this.handleNameChange} disabled={!this.state.requestDone}/>
             <input type={"email"} placeholder={"Email"} value={this.state.emailField}
-                onChange={this.handleEmailChange}/>
+                   onChange={this.handleEmailChange} disabled={!this.state.requestDone}/>
             <div className="placeholder text smaller-input" data-placeholder=".rar.vg">
                 <input type="text" placeholder="Username / Domain" value={this.state.usernameField}
-                    onChange={this.handleUsernameChange}/>
+                       onChange={this.handleUsernameChange} disabled={!this.state.requestDone}/>
             </div>
             <input type="date" placeholder="Date of Birth" value={this.state.dateField}
-                onChange={this.handleDateChange}/>
+                   onChange={this.handleDateChange} disabled={!this.state.requestDone}/>
             <input type="password" placeholder="Password" value={this.state.passwordField}
-                onChange={this.handlePassChange}/>
+                   onChange={this.handlePassChange} disabled={!this.state.requestDone}/>
             <input className="input-no-margin" type="password" placeholder="Repeat your password"
-                value={this.state.passConfField} onChange={this.handlePassConfChange}/>
-            <button className="mm login-button">Submit</button>
+                   value={this.state.passConfField} onChange={this.handlePassConfChange}
+                   disabled={!this.state.requestDone}/>
+            <button className="mm login-button" disabled={!this.state.requestDone}>Submit</button>
             <div className={"links"}>
                 <Link to={"/login"}><span className={"ss"}>Already have an account?</span></Link><br/>
             </div>
