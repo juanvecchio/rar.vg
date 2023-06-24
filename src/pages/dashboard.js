@@ -23,8 +23,23 @@ export default class Dashboard extends React.Component
         this.editPanel = React.createRef()
     }
 
+    onUnload = e =>
+    {
+        if(this.state.unpublished)
+        {
+            e.preventDefault();
+            e.returnValue = 'You\'ve got unsaved changes! Are your sure you want to close?';
+        }
+    }
+
+    componentWillUnmount()
+    {
+        window.removeEventListener("beforeunload", this.onUnload);
+    }
+
     componentDidMount()
     {
+        window.addEventListener("beforeunload", this.onUnload);
         tryUserLoading().then(response =>
         {
             if (!response.success)
