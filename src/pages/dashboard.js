@@ -137,6 +137,7 @@ export default class Dashboard extends React.Component
                 newComponent.content = {
                     links: [{
                         "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                        "icon": null,
                         "title": "This is a link"
                     }]
                 }
