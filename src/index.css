@@ -73,3 +73,9 @@ html, body {
 button {
     cursor: pointer;
 }
+
+button:disabled {
+    cursor: default;
+    background-color: #b4b4b4 !important;
+    color: #000 !important;
+}
