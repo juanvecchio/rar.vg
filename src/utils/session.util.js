@@ -154,6 +154,22 @@ function upload(file, avatar)
     })
 }
 
+function verifyAccount(token)
+{
+    return new Promise(res =>
+    {
+        if (!token)
+            return res({success: false, content: "Missing token."})
+
+        performRequest('verify', {token: token}).then(response =>
+        {
+            if (!response.success)
+                return res(response)
+            return res({success: true, content: response.content.response})
+        })
+    })
+}
+
 function validateSession()
 {
     return new Promise(res =>
@@ -173,5 +189,5 @@ function validateSession()
 }
 
 export {
-    tryLogin, tryRegister, validateSession, tryUserLoading, hasActiveSession, updateProfile, upload
+    tryLogin, tryRegister, validateSession, tryUserLoading, hasActiveSession, updateProfile, upload, verifyAccount
 }
