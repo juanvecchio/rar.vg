@@ -129,10 +129,10 @@ export default class Register extends React.Component
     }
 
     renderFields = sent => {
-        return sent ? <div class="login-form">
-            <h1 class="mm code-title p-no-margin-top">We sent you a link to your email in order to verify your account.
+        return sent ? <div className="login-form">
+            <h1 className="mm code-title p-no-margin-top">We sent you a link to your email in order to verify your account.
                 Please check both your inbox and spam folder.</h1>
-            <h1 class="m code-title p-no-margin-bottom">You may close this tab.</h1>
+            <h1 className="m code-title p-no-margin-bottom">You may close this tab.</h1>
         </div> : <form className="login-form" onSubmit={this.handleSubmit}>
             {this.drawMessage(this.state.message)}
             <h1 className="l p-no-margin-top">Sign up</h1>
