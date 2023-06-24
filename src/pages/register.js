@@ -84,6 +84,22 @@ export default class Register extends React.Component
         {
             if (this.state.passwordField !== this.state.passConfField)
                 return this.displayMessage({type: "error", message: "Passwords don't match! Try again."})
+
+            if (this.state.passwordField.length < 8 || !/\d/.test(this.state.passwordField))
+                return this.displayMessage({
+                    type: "error",
+                    message: "Password must be composed of at least 8 characters and one number."
+                })
+
+            if (this.state.usernameField.length <= 3)
+                return this.displayMessage({type: "error", message: "Username must be, at least, 4 characters long."})
+
+            const date13YearsPrior = new Date();
+            date13YearsPrior.setFullYear(date13YearsPrior.getFullYear() - 13);
+
+            if (new Date(this.state.dateField) > date13YearsPrior)
+                return this.displayMessage({type: "error", message: "You must be, at least, 13 years old to register."})
+
             this.register(this.state.usernameField, this.state.nameField, this.state.emailField, this.state.passwordField, this.state.dateField)
         }
         else
