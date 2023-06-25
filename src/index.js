@@ -11,6 +11,7 @@ import Dashboard from "./pages/dashboard";
 import Register from "./pages/register";
 import ChangePassword from './pages/changepassword';
 import Verify from './pages/verify';
+import VerifyPasswordChange from "./pages/verifypasswordchange";
 
 // Get the subdomain.
 const host = window.location.host.split('.')
@@ -30,6 +31,10 @@ export const WebRoutes = [
     {
         path: "/verify",
         component: <Verify token={getParameters.get("vt")}/>
+    },
+    {
+        path: "/change-password",
+        component: <VerifyPasswordChange token={getParameters.get("t")}/>
     },
     {
         path: "/forgot-password",
