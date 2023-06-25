@@ -170,6 +170,54 @@ function verifyAccount(token)
     })
 }
 
+function requestPasswordChange(email)
+{
+    return new Promise(res =>
+    {
+        if (!email)
+            return res({success: false, content: "Missing email,"})
+
+        performRequest('request-password-change', {email: email}).then(response =>
+        {
+            if (!response.success)
+                return res(response)
+            return res({success: true, content: response.content.response})
+        })
+    })
+}
+
+function verifyPasswordToken(token)
+{
+    return new Promise(res =>
+    {
+        if (!token)
+            return res({success: false, content: "Missing token."})
+
+        performRequest('verify-password-token', {token: token}).then(response =>
+        {
+            if (!response.success)
+                return res(response)
+            return res({success: true, content: response.content.response})
+        })
+    })
+}
+
+function updatePassword(token, password)
+{
+    return new Promise(res =>
+    {
+        if (!token || !password)
+            return res({success: false, content: "Missing parameters."})
+
+        performRequest('update-password', {token: token, password: password}).then(response =>
+        {
+            if (!response.success)
+                return res(response)
+            return res({success: true, content: response.content.response})
+        })
+    })
+}
+
 function validateSession()
 {
     return new Promise(res =>
@@ -189,5 +237,6 @@ function validateSession()
 }
 
 export {
-    tryLogin, tryRegister, validateSession, tryUserLoading, hasActiveSession, updateProfile, upload, verifyAccount
+    tryLogin, tryRegister, validateSession, tryUserLoading, hasActiveSession, updateProfile, upload, verifyAccount,
+    updatePassword, requestPasswordChange, verifyPasswordToken
 }
