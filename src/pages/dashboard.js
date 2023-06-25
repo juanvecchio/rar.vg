@@ -95,6 +95,8 @@ export default class Dashboard extends React.Component
     updateComponentLocallyWithoutCancelling = (content) =>
     {
         const oldUser = this.state.user
+        oldUser.components[this.state.component].content = null
+        this.setState({user: oldUser})
         oldUser.components[this.state.component].content = content
         this.setState({user: oldUser})
         this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)

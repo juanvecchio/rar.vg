@@ -14,7 +14,9 @@ export default class EditableProfile extends React.Component
 {
     component = (component, key) =>
     {
-        if (component.type && component.content)
+        if (component.content === null)
+            return <div style={{display: 'none'}}></div>
+        if (component.type)
             switch (component.type)
             {
                 case "generic":
