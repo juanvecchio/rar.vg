@@ -427,10 +427,10 @@ export default class EditPanel extends React.Component
             {
                 if (result.success)
                 {
+                    this.uploadingDialog.close()
                     this.saveLocally({
                         fileId: result.content.split('.')[0]
                     })
-                    this.uploadingDialog.close()
                 }
             })
         })
