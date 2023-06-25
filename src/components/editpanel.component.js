@@ -304,7 +304,7 @@ export default class EditPanel extends React.Component
     linkEditItem = (link, key, selected, component) =>
     {
         if (selected)
-            return <form className="special-mock">
+            return <div className="special-mock">
                 {this.drawMessage(this.state.linkItemMessage)}
                 <h2 className="s">Title:</h2>
                 <input className="input" onChange={this.handleLinkItemTitleChange}
@@ -329,7 +329,7 @@ export default class EditPanel extends React.Component
                     <button className="button" onClick={() => this.updateLinkItem(component, link)}>Done
                     </button>
                 </div>
-            </form>
+            </div>
         else return <div className={"inner-mock"}>
             <div className={"hero"}>
                 {link.icon !== null ? (<img className={"link-icon"} src={link.icon} alt={'Link icon'}/>) :
