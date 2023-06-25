@@ -227,7 +227,15 @@ export default class EditPanel extends React.Component
     {
         if (event.target.files && event.target.files[0])
         {
-            this.setState({linkItemSelectedImage: URL.createObjectURL(event.target.files[0])});
+            const allowedFiles = ['jpg', 'jpeg', 'png']
+            if (event.target.files && event.target.files[0])
+            {
+                if (!allowedFiles.includes(event.target.files[0].name.split('.').pop()))
+                    return this.displayLinkItemMessage({type: 'error', message: 'The selected file format is not allowed!'})
+                if (event.target.files[0].size / 1024 / 1024 > 1)
+                    return this.displayLinkItemMessage({type: 'error', message: 'The selected file is too large!'})
+                this.setState({linkItemSelectedImage: URL.createObjectURL(event.target.files[0])});
+            }
         }
     }
 
@@ -300,15 +308,16 @@ export default class EditPanel extends React.Component
                 {this.drawMessage(this.state.linkItemMessage)}
                 <h2 className="s">Title:</h2>
                 <input className="input" onChange={this.handleLinkItemTitleChange}
-                       defaultValue={this.state.linkItemTitleField} type="url"
+                       defaultValue={this.state.linkItemTitleField} type="text"
                        placeholder="My awesome link"/>
                 <h2 className="s">Link:</h2>
-                <input className="input" required onChange={this.handleLinkItemURLChange} type="text"
+                <input className="input" required onChange={this.handleLinkItemURLChange} type="url"
                        placeholder="https://yourwebsite.com" defaultValue={this.state.linkItemURLField}/>
                 <h2 className="s">Icon:</h2>
                 <div className={"button-center"}>
                     {this.state.linkItemSelectedImage !== null || link.icon !== null ? (
-                        <img className={"icon"} src={this.state.linkItemSelectedImage || link.icon} alt={'Link icon'}/>) : <></>}
+                        <img className={"icon"} src={this.state.linkItemSelectedImage || link.icon}
+                             alt={'Link icon'}/>) : <></>}
                     <label htmlFor="link-icon-button" className="button-label">Upload icon</label>
                     <input type={"file"} onChange={this.onItemIconChange} className="file-button"
                            accept={".jpg,.png,.jpeg"}
@@ -323,12 +332,14 @@ export default class EditPanel extends React.Component
             </form>
         else return <div className={"inner-mock"}>
             <div className={"hero"}>
-                {link.icon !== null ? (<img className={"link-icon"} src={link.icon} alt={'Link icon'}/>) : <div className={"bump"}></div>}
+                {link.icon !== null ? (<img className={"link-icon"} src={link.icon} alt={'Link icon'}/>) :
+                    <div className={"bump"}></div>}
             </div>
             <div className={"link-content"}>
                 <span>{link.title || link.link}</span>
                 <div className={"button-container"}>
-                    <button className={"icon-button"} onClick={() => this.selectLinkItem(component, key)}><AiFillEdit/>
+                    <button className={"icon-button"} onClick={() => this.selectLinkItem(component, key)}>
+                        <AiFillEdit/>
                     </button>
                 </div>
             </div>
@@ -519,7 +530,8 @@ export default class EditPanel extends React.Component
                             </label>
                             <input style={{display: "none"}} accept={".jpg,.png,.webp,.jpeg"} type={'file'}
                                    id={'upload-profile-picture'} onChange={this.onProfilePictureChange}/>
-                            <p className={"ss"}>Be careful! Profile pictures are published instantly when changed.</p>
+                            <p className={"ss"}>Be careful! Profile pictures are published instantly when
+                                changed.</p>
                             <p className={"ss"}>Only JPEGs and PNGs smaller than 1MB allowed.</p>
                         </div>
                     </div>
