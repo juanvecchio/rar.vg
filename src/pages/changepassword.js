@@ -1,5 +1,5 @@
 import React from 'react'
-import {hasActiveSession, tryRegister} from "../utils/session.util";
+import {hasActiveSession, requestPasswordChange, tryRegister} from "../utils/session.util";
 
 import '../index.css'
 import './form.css'
@@ -15,6 +15,7 @@ export default class ChangePassword extends React.Component
             emailField: null,
             message: null,
             sent: false,
+            requestDone: false,
         }
 
         this.handleEmailChange = this.handleEmailChange.bind(this)
@@ -37,11 +38,19 @@ export default class ChangePassword extends React.Component
         event.preventDefault()
         if (this.state.emailField)
         {
-            //TODO: change password
+            this.setState({requestDone: true})
+            requestPasswordChange(this.state.emailField).then(response =>
+            {
+                this.setState({requestDone: false})
+                if (!response.success)
+                    this.displayMessage({type: 'error', message: response.content})
+
+                this.setState({sent: true})
+            })
         }
         else
         {
-            this.displayMessage({type: "error", message: "Please complete every field before registering."})
+            this.displayMessage({type: "error", message: "Please complete every field."})
         }
 
     }
@@ -55,17 +64,21 @@ export default class ChangePassword extends React.Component
         )
     }
 
-    renderFields = sent => {
+    renderFields = sent =>
+    {
         return sent ? <div className='login-form'>
-            <h1 class="mm code-title p-no-margin-top">We sent you a link to your email in order to reset your password.
+            <h1 className="mm p-no-margin-top">
+                If an account is associated with that address, an email with a link has been sent in order to reset your
+                password.
                 Please check both your inbox and spam folder.</h1>
-            <h1 class="m code-title p-no-margin-bottom">You may close this tab.</h1>
+            <h1 className="m p-no-margin-bottom">You may close this tab.</h1>
         </div> : <form onSubmit={this.handleSubmit} className="login-form">
-                {this.drawMessage(this.state.message)}
-                <h1 class="l p-no-margin-top">Request a new password</h1>
-                <input className="m" type="text" placeholder="Email" onChange={this.handleEmailChange}/>
-                <button className="mm login-button">Next</button>
-            </form>
+            {this.drawMessage(this.state.message)}
+            <h1 className="l p-no-margin-top">Request a new password</h1>
+            <input className="m" type="email" placeholder="Email" onChange={this.handleEmailChange}
+                   disabled={this.state.requestDone}/>
+            <button className="mm login-button" disabled={this.state.requestDone}>Send request</button>
+        </form>
     }
 
     render()
@@ -74,9 +87,9 @@ export default class ChangePassword extends React.Component
             background: "linear-gradient(-45deg, #332b10, #521448, #0d460d, #0c4730)",
             backgroundSize: "400% 400%"
         }}>
-            <div class="container">
-                <div class="logotype">👋 rar.vg</div>
-                    {this.renderFields(this.state.sent)}
+            <div className="container">
+                <div className="logotype">👋 rar.vg</div>
+                {this.renderFields(this.state.sent)}
             </div>
         </div>
     }
