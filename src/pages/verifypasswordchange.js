@@ -1,27 +1,34 @@
 import React from 'react'
-import {verifyAccount} from "../utils/session.util";
+import {updatePassword, verifyPasswordToken} from "../utils/session.util";
 
 import '../index.css'
 import './form.css'
 
-export default class VerifyPaswordChange extends React.Component
+export default class VerifyPasswordChange extends React.Component
 {
     constructor(props)
     {
         super(props)
+
         this.state = {
             verified: null,
-            passRes: null
+            passRes: null,
+            passwordField: null,
+            passConfField: null,
+            message: null,
         }
+
         this.handlePassChange = this.handlePassChange.bind(this)
         this.handlePassConfChange = this.handlePassConfChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     componentDidMount()
     {
         const token = this.props.token
-        verifyAccount(token).then(response =>
+        verifyPasswordToken(token).then(response =>
         {
+            console.log(response)
             this.setState({verified: response})
         })
     }
@@ -39,10 +46,18 @@ export default class VerifyPaswordChange extends React.Component
                     type: "error",
                     message: "Password must be composed of at least 8 characters and one number."
                 })
-            //TODO: request
+
+            updatePassword(this.props.token, this.state.passwordField).then(response =>
+            {
+                if (!response.success)
+                    return this.displayMessage({type: 'error', message: response.content})
+
+                window.location.href = '/login?jr=2'
+            })
         }
         else
         {
+            console.log(this.state)
             this.displayMessage({type: "error", message: "Please complete every field before registering."})
         }
     }
@@ -57,19 +72,40 @@ export default class VerifyPaswordChange extends React.Component
         this.setState({passConfField: event.target.value})
     }
 
+    drawMessage(message)
+    {
+        if (message) return (
+            <div className={"message " + message.type}>
+                {message.message}
+            </div>
+        )
+    }
+
+    displayMessage(message)
+    {
+        this.setState({message: message})
+        setTimeout(() => this.setState({message: null}), 10000)
+    }
+
     renderFields = verified =>
     {
         if (verified === null)
             return <div className={"login-form"}><h3 className='mm'>Loading...</h3></div>
 
-        return verified.success ? <form onSubmit={this.handleSubmit} className="login-form">
-            <h1 class="l p-no-margin-top">Please, insert new password</h1>
-            <input type="m password" placeholder="Insert your password" onChange={this.handlePassChange}/>
-            <input type="m password" placeholder="Repeat your password" onChange={this.handlePassConfChange}/>
-            <button class="mm login-button">Confirm</button>
-        </form> : <div className="login-form">
-            <h1 className="m p-no-margin-top">{verified.content}</h1>
-        </div>
+        if (verified.success)
+            return <form onSubmit={this.handleSubmit} className="login-form">
+                {this.drawMessage(this.state.message)}
+                <h1 className="l p-no-margin-top">Please, insert new password</h1>
+                <input className={"m"} type="password" placeholder="Insert your password"
+                       onChange={this.handlePassChange}/>
+                <input className={"m"} type="password" placeholder="Repeat your password"
+                       onChange={this.handlePassConfChange}/>
+                <button className="mm login-button">Confirm</button>
+            </form>
+        else
+            return <div className="login-form">
+                <h1 className="m p-no-margin-top">{verified.content}</h1>
+            </div>
     }
 
     render()
