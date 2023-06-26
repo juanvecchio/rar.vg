@@ -489,6 +489,14 @@ export default class EditPanel extends React.Component
         }
     }
 
+    updateDisplayName = (displayName) =>
+    {
+        if (displayName.length > 32)
+            return this.displayUserMessage({type: 'error', message: 'The display name mustn\'t be longer than 32 characters'})
+
+        this.props.updateDisplayName(displayName)
+    }
+
     saveLocally = (content) =>
     {
         this.props.updateLocally(content)
@@ -543,7 +551,7 @@ export default class EditPanel extends React.Component
                         <div className={"button-container"}>
                             <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
                             <button className="button"
-                                    onClick={() => this.props.updateDisplayName(this.state.displayName)}>Done
+                                    onClick={() => this.updateDisplayName(this.state.displayName)}>Done
                             </button>
                         </div>
                         <h4 className={'mm p-no-margin-bottom'}>Danger zone</h4>
