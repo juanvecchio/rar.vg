@@ -28,17 +28,29 @@ export default class Login extends React.Component
         {
             window.location.href = "/dashboard"
         }
-        
-        switch(this.props.justRegistered){
-            case 1:
-                return this.displayMessage({type: 'success', message: 'Registered successfully! Now use your credentials to log in.'})
-            case 2:
-                return this.displayMessage({type: 'success', message: 'Password has been changed successfully! Now use your new credentials to log in.'})
+
+        switch (this.props.justRegistered)
+        {
+            case '1':
+                return this.displayMessage({
+                    type: 'success',
+                    message: 'Registered successfully! Now use your credentials to log in.'
+                })
+            case '2':
+                return this.displayMessage({
+                    type: 'success',
+                    message: 'Password has been changed successfully! Now use your new credentials to log in.'
+                })
+            case '3':
+                return this.displayMessage({
+                    type: 'success',
+                    message: 'It\'s sad to watch you go. Your account has been deleted.'
+                })
             default:
                 return
         }
 
-            
+
     }
 
     handleEmailChange(event)
