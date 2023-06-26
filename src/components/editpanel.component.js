@@ -23,6 +23,7 @@ import {
 import "./editpanel.component.css"
 import {upload} from "../utils/session.util";
 import config from '../utils/config.util'
+import Link from "../router/link";
 
 export default class EditPanel extends React.Component
 {
@@ -546,7 +547,7 @@ export default class EditPanel extends React.Component
                             </button>
                         </div>
                         <h4 className={'mm p-no-margin-bottom'}>Danger zone</h4>
-                        <button className="delete-button">Delete account</button>
+                        <Link to={"/delete-account"}><button className="delete-button">Delete account</button></Link>
                     </div>
                 </>
             case 'generic':
