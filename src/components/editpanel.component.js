@@ -501,7 +501,7 @@ export default class EditPanel extends React.Component
 
     updateDisplayName = (displayName) =>
     {
-        if (displayName.length > 32)
+        if (displayName.length > 64)
             return this.displayUserMessage({
                 type: 'error',
                 message: 'The display name mustn\'t be longer than 32 characters'

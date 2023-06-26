@@ -97,6 +97,9 @@ export default class Register extends React.Component
             if (this.state.usernameField.length <= 3)
                 return this.displayMessage({type: "error", message: "Username must be, at least, 4 characters long."})
 
+            if (this.state.nameField.length > 64)
+                return this.displayMessage({type: "error", message: "Display name should be 64 characters maximum."})
+
             const date13YearsPrior = new Date();
             date13YearsPrior.setFullYear(date13YearsPrior.getFullYear() - 13);
 
