@@ -218,6 +218,57 @@ function updatePassword(token, password)
     })
 }
 
+function deletionRequest(password){
+    return new Promise(res =>
+        {
+            if (!password)
+                return res({success: false, content: "Missing parameters."})
+            
+            const session = getCurrentSession()
+            if (!session.token || !session.clientToken)
+                return res({success: false})    
+            
+            performRequest('deletion-request', {...session, password: password}).then(response =>
+            {
+                if (!response.success)
+                    return res(response)
+                return res({success: true, content: response.content.response})
+            })
+        })
+}
+
+function verifyDeletionToken(token)
+{
+    return new Promise(res =>
+    {
+        if (!token)
+            return res({success: false, content: "Missing token."})
+
+        performRequest('verify-deletion-token', {token: token}).then(response =>
+        {
+            if (!response.success)
+                return res(response)
+            return res({success: true, content: response.content.response})
+        })
+    })
+}
+
+function deleteAccount(token)
+{
+    return new Promise(res =>
+    {
+        if (!token)
+            return res({success: false, content: "Missing token."})
+
+        performRequest('delete-account', {token: token}).then(response =>
+        {
+            if (!response.success)
+                return res(response)
+            return res({success: true, content: response.content.response})
+        })
+    })
+}
+
 function validateSession()
 {
     return new Promise(res =>
@@ -238,5 +289,5 @@ function validateSession()
 
 export {
     tryLogin, tryRegister, validateSession, tryUserLoading, hasActiveSession, updateProfile, upload, verifyAccount,
-    updatePassword, requestPasswordChange, verifyPasswordToken
+    updatePassword, requestPasswordChange, verifyPasswordToken, deletionRequest, verifyDeletionToken, deleteAccount
 }
