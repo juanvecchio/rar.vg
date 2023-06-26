@@ -53,6 +53,14 @@ export const WebRoutes = [
         component: <AppError></AppError>,
         status: 404
     },
+    {
+        path: "/delete-account",
+        component: <DeleteAccount/>,
+    },
+    {
+        path: "/verify-account-deletion",
+        component: <VerifyAccountDeletion token={getParameters.get("t")}/>,
+    },
 
 ]
 
