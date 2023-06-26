@@ -20,7 +20,7 @@ export default class EditableProfile extends React.Component
             switch (component.type)
             {
                 case "generic":
-                    return <GenericComponent title={component.content.title} description={component.content.description}
+                    return <GenericComponent editing={true} title={component.content.title} description={component.content.description}
                                              key={key}/>
                 case "pdf":
                     return <PDFComponent editing={true} fileId={component.content.fileId} key={key}/>

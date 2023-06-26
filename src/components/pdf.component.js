@@ -11,7 +11,7 @@ export default class PDFComponent extends React.Component
 
     render()
     {
-        return <div className={"component"}>
+        return <div className={this.props.editing ? 'component editing' : 'component'}>
             <object className={"pdf"} type={"application/pdf"}
                     data={config('HOST') + "/uploads/" + this.props.fileId + ".pdf#toolbar=0&navpanes=0&scrollbar=0\""}/>
         </div>

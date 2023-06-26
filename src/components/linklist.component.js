@@ -11,7 +11,7 @@ export default class LinklistComponent extends React.Component
 
     render()
     {
-        return <div className={"component"}>
+        return <div className={this.props.editing ? 'component editing' : 'component'}>
             {this.props.links.map((link, key) => <LinkListItemComponent editing={this.props.editing} icon={link.icon} url={link.url}
                                                                         title={link.title} key={key}/>)}
         </div>
