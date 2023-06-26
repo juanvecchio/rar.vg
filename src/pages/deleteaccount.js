@@ -1,5 +1,5 @@
 import React from 'react'
-import {deletionRequest} from "../utils/session.util";
+import {deletionRequest, hasActiveSession} from "../utils/session.util";
 
 import '../index.css'
 import './form.css'
@@ -14,10 +14,17 @@ export default class DeleteAccount extends React.Component
             sent: null,
             passwordField: null,
             message: null,
+            requestDone: null,
         }
 
         this.handlePassChange = this.handlePassChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    componentDidMount()
+    {
+        if(!hasActiveSession())
+            return window.location.href = "/login"
     }
 
     handleSubmit(event)
@@ -26,7 +33,7 @@ export default class DeleteAccount extends React.Component
         if (this.state.passwordField)
         {
             this.setState({requestDone: true})
-            deletionRequest(this.state.passwordField).then(response => 
+            deletionRequest(this.state.passwordField).then(response =>
             {
                 this.setState({requestDone: false})
                 if (!response.success)
@@ -37,7 +44,6 @@ export default class DeleteAccount extends React.Component
         }
         else
         {
-            console.log(this.state)
             this.displayMessage({type: "error", message: "Please complete every field before registering."})
         }
     }
@@ -65,22 +71,19 @@ export default class DeleteAccount extends React.Component
 
     renderFields = sent =>
     {
-        if (!sent)
-            return <form onSubmit={this.handleSubmit} className="login-form">
-                {this.drawMessage(this.state.message)}
-                <h1 className="l p-no-margin-top">Please, insert new password</h1>
-                <input className={"m"} type="password" placeholder="Insert your password"
-                       onChange={this.handlePassChange}/>
-        
-        
-                <button className="mm login-button">Confirm</button>
-            </form>
-        return <div className="login-form">
+        return sent ? <div className="login-form">
             <h1 className="mm p-no-margin-top">
                 An email with a link has been sent in order to delete your account.
                 Please check both your inbox and spam folder.</h1>
             <h1 className="m p-no-margin-bottom">You may close this tab.</h1>
-        </div>
+        </div> : <form onSubmit={this.handleSubmit} className="login-form">
+            {this.drawMessage(this.state.message)}
+            <h1 className="m p-no-margin-top">Insert your password</h1>
+            <h3 className="s p-no-margin-top">In order to delete your account, we need to verify that it's you.</h3>
+            <input className={"m"} type="password" placeholder="Insert your password"
+                   onChange={this.handlePassChange} disabled={this.state.requestDone}/>
+            <button className="mm login-button" disabled={this.state.requestDone}>Send deletion request</button>
+        </form>
     }
 
     render()
@@ -91,7 +94,7 @@ export default class DeleteAccount extends React.Component
         }}>
             <div className="container">
                 <div className="logotype">👋 rar.vg</div>
-                {this.renderFields(this.state.verified)}
+                {this.renderFields(this.state.sent)}
             </div>
         </div>
     }
