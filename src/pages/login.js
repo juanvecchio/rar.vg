@@ -115,9 +115,9 @@ export default class Login extends React.Component
                 <form className="login-form" onSubmit={this.handleSubmit}>
                     {this.drawMessage(this.state.message)}
                     <h1 className="l p-no-margin-top">Log in</h1>
-                    <input type="text" value={this.state.emailField} onChange={this.handleEmailChange}
+                    <input type="text" onChange={this.handleEmailChange}
                            placeholder="Email"/>
-                    <input type="password" value={this.state.passwordField} onChange={this.handlePassChange}
+                    <input type="password" onChange={this.handlePassChange}
                            placeholder="Password"/>
                     <button className="mm login-button">Submit</button>
                     <div className={"links"}>
