@@ -51,7 +51,7 @@ export default class Dashboard extends React.Component
 
     updateProfile = () =>
     {
-        updateProfile(JSON.stringify(this.state.user.components), JSON.stringify(this.state.user.sociallinks))
+        updateProfile(this.state.user.displayName, JSON.stringify(this.state.user.components), JSON.stringify(this.state.user.sociallinks))
             .then(response =>
             {
                 if (!response.success)
