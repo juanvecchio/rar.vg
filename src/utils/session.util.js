@@ -264,6 +264,8 @@ function deleteAccount(token)
         {
             if (!response.success)
                 return res(response)
+
+            destroySession()
             return res({success: true, content: response.content.response})
         })
     })
