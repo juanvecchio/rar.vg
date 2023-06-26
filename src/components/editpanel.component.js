@@ -34,6 +34,7 @@ export default class EditPanel extends React.Component
             // Generic component.
             title: "",
             description: "",
+            genericMessage: null,
             // Social links.
             linkField: "",
             selectedLink: null,
@@ -232,7 +233,10 @@ export default class EditPanel extends React.Component
             if (event.target.files && event.target.files[0])
             {
                 if (!allowedFiles.includes(event.target.files[0].name.split('.').pop()))
-                    return this.displayLinkItemMessage({type: 'error', message: 'The selected file format is not allowed!'})
+                    return this.displayLinkItemMessage({
+                        type: 'error',
+                        message: 'The selected file format is not allowed!'
+                    })
                 if (event.target.files[0].size / 1024 / 1024 > 1)
                     return this.displayLinkItemMessage({type: 'error', message: 'The selected file is too large!'})
                 this.setState({linkItemSelectedImage: URL.createObjectURL(event.target.files[0])});
@@ -291,6 +295,12 @@ export default class EditPanel extends React.Component
     {
         this.setState({userMessage: message})
         setTimeout(() => this.setState({userMessage: null}), 5000)
+    }
+
+    displayGenericMessage = (message) =>
+    {
+        this.setState({genericMessage: message})
+        setTimeout(() => this.setState({genericMessage: null}), 5000)
     }
 
     drawMessage(message)
@@ -492,9 +502,20 @@ export default class EditPanel extends React.Component
     updateDisplayName = (displayName) =>
     {
         if (displayName.length > 32)
-            return this.displayUserMessage({type: 'error', message: 'The display name mustn\'t be longer than 32 characters'})
+            return this.displayUserMessage({
+                type: 'error',
+                message: 'The display name mustn\'t be longer than 32 characters'
+            })
 
         this.props.updateDisplayName(displayName)
+    }
+
+    updateGenericComponent = (title, description) =>
+    {
+        if (!description)
+            return this.displayGenericMessage({type: 'error', message: 'Description should not be empty!'})
+
+        this.saveLocally({title: title, description: description})
     }
 
     saveLocally = (content) =>
@@ -555,12 +576,15 @@ export default class EditPanel extends React.Component
                             </button>
                         </div>
                         <h4 className={'mm p-no-margin-bottom'}>Danger zone</h4>
-                        <Link to={"/delete-account"}><button className="delete-button">Delete account</button></Link>
+                        <Link to={"/delete-account"}>
+                            <button className="delete-button">Delete account</button>
+                        </Link>
                     </div>
                 </>
             case 'generic':
                 return <>
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit generic component</h3>
+                    {this.drawMessage(this.state.genericMessage)}
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Title:</h2>
                     <input className="input" type="text" placeholder="Title" value={this.state.title}
                            onChange={this.handleTitleChange}/>
@@ -569,10 +593,8 @@ export default class EditPanel extends React.Component
                               placeholder="Description" onChange={this.handleDescriptionChange}/>
                     <div className={"button-container"}>
                         <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
-                        <button className="button" onClick={() => this.saveLocally({
-                            title: this.state.title,
-                            description: this.state.description
-                        })}>Done
+                        <button className="button"
+                                onClick={() => this.updateGenericComponent(this.state.title, this.state.description)}>Done
                         </button>
                     </div>
                 </>
