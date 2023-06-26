@@ -58,6 +58,8 @@
         "dotenv": "^16.3.1",
         "dotenv-webpack": "^8.0.1",
         "react-drag-listview": "^2.0.0",
-        "react-icons": "^4.3.1"
+        "react-icons": "^4.3.1",
+        "react-markdown": "^8.0.7",
+        "remark-gfm": "^3.0.1"
     }
 }
