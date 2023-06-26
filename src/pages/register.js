@@ -91,6 +91,9 @@ export default class Register extends React.Component
                     message: "Password must be composed of at least 8 characters and one number."
                 })
 
+            if (this.state.usernameField.includes(' '))
+                return this.displayMessage({type: "error", message: "Username mustn't include spaces!"})
+
             if (this.state.usernameField.length <= 3)
                 return this.displayMessage({type: "error", message: "Username must be, at least, 4 characters long."})
 
