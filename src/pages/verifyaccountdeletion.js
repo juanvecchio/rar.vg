@@ -23,7 +23,6 @@ export default class VerifyAccountDeletion extends React.Component
         const token = this.props.token
         verifyDeletionToken(token).then(response =>
         {
-            console.log(response)
             this.setState({verified: response})
         })
     }
@@ -31,10 +30,11 @@ export default class VerifyAccountDeletion extends React.Component
     handleSubmit(event)
     {
         event.preventDefault()
-        updatePassword(this.props.token, this.state.passwordField).then(response =>
+        deleteAccount(this.props.token).then(response =>
         {
             if (!response.success)
                 return this.displayMessage({type: 'error', message: response.content})
+
             window.location.href = '/login?jr=3'
         })
     }
@@ -62,9 +62,9 @@ export default class VerifyAccountDeletion extends React.Component
         if (verified.success)
             return <form onSubmit={this.handleSubmit} className="login-form">
                 {this.drawMessage(this.state.message)}
-                <h1 class="l p-no-margin-top">Do you want to confirm account deletion?</h1>
-                <h1 class="m p-no-margin-top">This action can't be undone!</h1>
-                <button class="mm login-button">Yes, I want to delete my account</button>
+                <h1 className="l p-no-margin-top">Do you want to confirm account deletion?</h1>
+                <h1 className="m p-no-margin-top">This action can't be undone!</h1>
+                <button className="mm login-button">Yes, I want to delete my account</button>
             </form>
         else
             return <div className="login-form">
