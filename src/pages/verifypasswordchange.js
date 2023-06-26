@@ -28,7 +28,6 @@ export default class VerifyPasswordChange extends React.Component
         const token = this.props.token
         verifyPasswordToken(token).then(response =>
         {
-            console.log(response)
             this.setState({verified: response})
         })
     }
