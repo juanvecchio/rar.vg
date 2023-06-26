@@ -65,8 +65,6 @@ export const WebRoutes = [
     },
 ]
 
-const specialSubdomains = ["ge"]
-
 const AppRoutes = () => <RouterProvider>
     {WebRoutes.map((route, k) => <Route key={k} status={route.status ? route.status : 200}
                                         path={route.path}>{route.component}</Route>)}
@@ -74,8 +72,6 @@ const AppRoutes = () => <RouterProvider>
 
 if (((host.length === 2 && host[1].includes('localhost')) || (host.length === 3)) && host[0] !== 'www')
 {
-    if (host[0].length < 4 && !specialSubdomains.includes(host[0]))
-        console.log('Will be redirected.')
     const subdomain = host[0]
     ReactDOM.render(<Profile username={subdomain}/>, document.getElementById('root'))
 }

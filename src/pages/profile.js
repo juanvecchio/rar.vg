@@ -21,8 +21,14 @@ export default class Profile extends React.Component
     componentDidMount()
     {
         fetch(config('HOST') + '/profile/' + this.props.username)
-            .then(r => r.json())
-            .then(result => this.setState({user: result}))
+            .then(r => {
+                if (r.status !== 200)
+                    window.location.href = "https://www.rar.vg"
+                r.json().then(response =>
+                {
+                    this.setState({user: response})
+                })
+            })
     }
 
     component = (component, key) =>
