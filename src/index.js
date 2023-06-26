@@ -12,6 +12,8 @@ import Register from "./pages/register";
 import ChangePassword from './pages/changepassword';
 import Verify from './pages/verify';
 import VerifyPasswordChange from "./pages/verifypasswordchange";
+import DeleteAccount from "./pages/deleteaccount";
+import VerifyAccountDeletion from "./pages/verifyaccountdeletion";
 
 // Get the subdomain.
 const host = window.location.host.split('.')
@@ -49,19 +51,18 @@ export const WebRoutes = [
         component: <Dashboard/>
     },
     {
-        path: "",
-        component: <AppError></AppError>,
-        status: 404
-    },
-    {
         path: "/delete-account",
-        component: <DeleteAccount/>,
+        component: <DeleteAccount />,
     },
     {
         path: "/verify-account-deletion",
         component: <VerifyAccountDeletion token={getParameters.get("t")}/>,
     },
-
+    {
+        path: "",
+        component: <AppError></AppError>,
+        status: 404
+    },
 ]
 
 const specialSubdomains = ["ge"]
