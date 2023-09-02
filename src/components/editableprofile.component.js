@@ -25,7 +25,7 @@ export default class EditableProfile extends React.Component
                 case "pdf":
                     return <PDFComponent editing={true} fileId={component.content.fileId} key={key}/>
                 case "linklist":
-                    return <LinklistComponent editing={true} links={component.content.links} key={key}/>
+                    return <LinklistComponent editing={true} vertical={component.content.vertical} links={component.content.links} key={key}/>
             }
     }
 
