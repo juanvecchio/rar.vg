@@ -644,6 +644,7 @@ export default class EditPanel extends React.Component
                         <button className="inner-mock3" onClick={() => this.addNewLinkItem(component)}>
                             <span className="mm p-no-margin-bottom p-no-margin-top">+</span>
                         </button> : <></>}
+						{/**
                         <p className="mm p-no-margin-top p-no-margin-bottom">Change list design</p>
                         <div className='list-button-container'>
                         <button className="button unraised link-img" type="button">
@@ -652,7 +653,7 @@ export default class EditPanel extends React.Component
                         <button style={{marginLeft: "10%"}} className="button unraised link-img">
                             <img src={linkV}/>
                         </button>
-                        </div>
+                        </div> **/}
                     <div className="margin-button">
                         <button className="done-button" onClick={() => this.cancel()}>Done</button>
                     </div>
