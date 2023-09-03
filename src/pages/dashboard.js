@@ -187,6 +187,7 @@ export default class Dashboard extends React.Component
     showProfOptions = () =>
     {
         this.profOptions.open ? this.profOptions.close() : this.profOptions.showModal()
+        console.log(this.state.user)
     }
 
     toggleModal = () =>
@@ -234,8 +235,18 @@ export default class Dashboard extends React.Component
             </div>
             <div className="dash-container2">
             <dialog className={"dialog"} ref={ref => this.profOptions = ref}>
-                <div>Logged in as</div><hr></hr>
-                <button className="cancel-button">Logout</button> 
+                <div><button className="profile-picture-dialog" onClick={() => {
+                    this.showProfOptions()
+                    this.selectComponent(-2)
+                }}
+                            style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded}}>.
+                    </button></div>
+                <div>{this.state.user.displayName}</div>
+                <div><span className="s">{this.state.user.username}</span></div>
+                <span className="ss" style={{color:"#5A5A5A"}}>{(this.state.user.email.length < 25) ? this.state.user.email : (this.state.user.email.substring(0, 25) + "...")}</span>
+                <hr></hr>
+                <div></div>
+                <button className="cancel-button">Log out</button> 
             </dialog>
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally}

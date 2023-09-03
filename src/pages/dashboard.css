@@ -84,6 +84,15 @@ body, html {
     color: transparent;
 }
 
+.profile-picture-dialog{
+    border-radius: 50px;
+    width: 90px;
+    height: 90px;
+    margin: 15px;
+    border: none;
+    background-size: contain;
+    color: transparent;
+}
 .publish-button {
     padding: 10px;
     font-family: 'Raleway', sans-serif;
@@ -227,14 +236,15 @@ h3 {
 .dialog{
     position: absolute;
     text-align: center;
-    top: -58%;
-    left: 78%;
-    width: 300px;
+    top: -33%;
+    left: 83%;
+    width: 200px;
     border: none;
     border: none;
     border-radius: 25px;
     padding-top: 20px;
     padding-bottom: 60px;
+    
 }
 
 .cancel-button{
