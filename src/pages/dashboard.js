@@ -18,9 +18,12 @@ export default class Dashboard extends React.Component
             unpublished: null,
             showModal: false,
             lastReloaded: Date.now()
+            
         }
 
         this.editPanel = React.createRef()
+
+        
     }
 
     onUnload = e =>
@@ -181,6 +184,11 @@ export default class Dashboard extends React.Component
         }
     }
 
+    showProfOptions = () =>
+    {
+        this.profOptions.open ? this.profOptions.close() : this.profOptions.showModal()
+    }
+
     toggleModal = () =>
     {
         this.dialog.open ? this.dialog.close() : this.dialog.showModal()
@@ -193,6 +201,7 @@ export default class Dashboard extends React.Component
 
     render()
     {
+        const firstPosition = { X: 160, Y: 14 };
         if (!this.state.user) return 'Loading...'
         return <div className="dashboard-container">
             <div className="dash-container">
@@ -218,12 +227,16 @@ export default class Dashboard extends React.Component
                 </div>
                 <div className="right">
                     <button className="publish-button" onClick={() => this.updateProfile()}>Publish</button>
-                    <button className="profile-button"
+                    <button className="profile-button" onClick={() => this.showProfOptions()}
                             style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded}}>.
                     </button>
                 </div>
             </div>
             <div className="dash-container2">
+            <dialog className={"dialog"} ref={ref => this.profOptions = ref}>
+                <div>Logged in as</div><hr></hr>
+                <button className="cancel-button">Logout</button> 
+            </dialog>
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally}
                                updateLocallyWithoutCancelling={this.updateComponentLocallyWithoutCancelling}
