@@ -315,3 +315,18 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     display: block;
     text-align: center;
 }
+
+.link-img{
+    text-align: center;
+    width: 45% !important;
+    padding: 5px !important;
+    margin-top: 20px !important;
+}
+ .link-img img {
+    width: 100% 
+ }
+
+ .list-button-container{
+     display: flex;
+   
+ }
