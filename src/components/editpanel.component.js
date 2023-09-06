@@ -646,7 +646,7 @@ export default class EditPanel extends React.Component
                         </button> : <></>}
                         <p className="mm p-no-margin-top p-no-margin-bottom">Change list design</p>
                         <div className='list-button-container'>
-                        <button className="button unraised link-img" type="button">
+                        <button className="button unraised link-img border-color" type="button">
                             <img src={linkH}/>                            
                         </button>
                         <button style={{marginLeft: "10%"}} className="button unraised link-img">
