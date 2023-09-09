@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/index.css'
-import {Home} from './pages/home'
 import {AppError} from './pages/error'
 import {RouterProvider} from './router/router';
 import {Route} from './router/route';
+import Home from './pages/home'
 import Profile from "./pages/profile";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
@@ -14,6 +14,7 @@ import Verify from './pages/verify';
 import VerifyPasswordChange from "./pages/verifypasswordchange";
 import DeleteAccount from "./pages/deleteaccount";
 import VerifyAccountDeletion from "./pages/verifyaccountdeletion";
+import Post from "./pages/post";
 
 // Get the subdomain.
 const host = window.location.host.split('.')
@@ -52,11 +53,15 @@ export const WebRoutes = [
     },
     {
         path: "/delete-account",
-        component: <DeleteAccount />,
+        component: <DeleteAccount/>,
     },
     {
         path: "/verify-account-deletion",
         component: <VerifyAccountDeletion token={getParameters.get("t")}/>,
+    },
+    {
+        path: "/post",
+        component: <Post post={getParameters.get('p')}/>
     },
     {
         path: "",
