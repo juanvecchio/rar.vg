@@ -4,7 +4,7 @@ export default class LinkListItemComponent extends React.Component
 {
     icon = (icon) =>
     {
-        if (icon) return (
+        if (icon || this.props.vertical) return (
             <div
                 className={"image"}
                 style={{
