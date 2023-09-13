@@ -23,23 +23,51 @@ export default class Post extends React.Component
 
         this.state = {
             post: null,
-            posts: [],
+            posts: null,
         }
     }
 
     async componentDidMount()
     {
-        const post = require('../news/' + this.props.post + '.md')
-        this.setState({post: post.default})
+        if (this.state.post == null)
+        {
+            const post = require('../news/' + this.props.post + '.md')
+            this.setState({post: post.default})
+        }
 
-        const posts = await Promise.all(postFiles.map((file) => file.default)
-        ).catch((err) => console.error(err));
+        if (this.state.posts == null)
+        {
+            const posts = await Promise.all(postFiles.map((file) => file.default)
+            ).catch((err) => console.error(err));
 
-        posts.slice(0, 1)
+            posts.slice(0, 1)
 
-        this.setState((state) => ({...state, posts}));
+            this.setState((state) => ({...state, posts}));
+        }
     }
 
+    latestPosts = (posts) =>
+    {
+        return <div className={"latest-posts"}>
+            <div className="lp-header">
+                <Link className="post-link" to="/">Posts</Link> {"> Latest"}
+            </div>
+            <div className={"lp-cont"}>
+                {posts != null ? posts.map((post, key) => (
+                    <a key={key} href={"/post?p=" + parseMD(post).metadata.id}>
+                        <div className={"entry"}>
+                            <span>{parseMD(post).metadata.title}</span><br/>
+                        </div>
+                    </a>
+                )) : <></>}
+                <a href={"/news"}>
+                    <div className={"entry alternative"}>
+                        <span>More news 👉</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    }
 
     render()
     {
@@ -67,25 +95,7 @@ export default class Post extends React.Component
                         <ReactMarkdown className={"post-content"}
                                        remarkPlugins={[gfm]}>{parsedContent.content}</ReactMarkdown>
                     </div>
-                    <div className={"latest-posts"}>
-                        <div className="lp-header">
-                            <Link className="post-link" to="/">Posts</Link> {"> Latest"}
-                        </div>
-                        <div className={"lp-cont"}>
-                            {this.state.posts.map((post, key) => (
-                                <a key={key} href={"/post?p=" + parseMD(post).metadata.id}>
-                                    <div className={"entry"}>
-                                        <span>{parseMD(post).metadata.title}</span><br/>
-                                    </div>
-                                </a>
-                            ))}
-                            <a href={"/news"}>
-                                <div className={"entry alternative"}>
-                                    <span>More news 👉</span>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                    {this.latestPosts(this.state.posts)}
                 </div>
                 <Footer/>
             </div>
