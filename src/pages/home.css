@@ -3,7 +3,7 @@
     background-size: 400% 400%;
     animation: gradient 7s ease infinite;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 @keyframes gradient {
