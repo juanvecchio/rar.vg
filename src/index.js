@@ -15,6 +15,7 @@ import VerifyPasswordChange from "./pages/verifypasswordchange";
 import DeleteAccount from "./pages/deleteaccount";
 import VerifyAccountDeletion from "./pages/verifyaccountdeletion";
 import Post from "./pages/post";
+import News from "./pages/news";
 
 // Get the subdomain.
 const host = window.location.host.split('.')
@@ -26,6 +27,10 @@ export const WebRoutes = [
     {
         path: "/",
         component: <Home/>
+    },
+    {
+        path: "/posts",
+        component: <News />
     },
     {
         path: "/login",
