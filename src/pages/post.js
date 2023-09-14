@@ -61,7 +61,7 @@ export default class Post extends React.Component
                         </div>
                     </a>
                 )) : <></>}
-                <a href={"/news"}>
+                <a href={"/posts"}>
                     <div className={"entry alternative"}>
                         <span>More news 👉</span>
                     </div>
@@ -80,8 +80,8 @@ export default class Post extends React.Component
                 <div className={"post-container"}>
                     <div className="post">
                         <div className="post-header">
-                            <Link className="post-link" to="/">Posts</Link> {"> "} <Link
-                            to={"/news/" + parsedContent.metadata.id}>{parsedContent.metadata.title}</Link>
+                            <Link className="post-link" to="/posts">Posts</Link> {"> "} <Link
+                            to={"/post?p=" + parsedContent.metadata.id}>{parsedContent.metadata.title}</Link>
                         </div>
                         <div className="banner" style={{backgroundImage: `url(${parsedContent.metadata.banner})`}}>
                             <div className="banner-content">
