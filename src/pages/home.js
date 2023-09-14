@@ -69,24 +69,28 @@ export default class Home extends React.Component
                     </div>
                     <div className={"right-card"}>
                         <div className={"right-posts-header"}>
-                            <span className={"ll"}>Latest news</span>
+                            <span className={"ll"}>Latest posts</span>
                         </div>
                         {this.state.posts.map((post, key) => (
                             <a key={key} href={"/post?p=" + parseMD(post).metadata.id}>
-                                <div style={{backgroundImage: `url(${parseMD(post).metadata.banner})`}} className={"card green"}>
+                                <div style={{backgroundImage: `url(${parseMD(post).metadata.banner})`}}
+                                     className={"card green"}>
                                     <div className={"top"}>
                                         <span className={"m"}>{parseMD(post).metadata.title}</span><br/>
-                                        <span className={"s"}>Written by {parseMD(post).metadata.author_displayname}</span>
+                                        <span
+                                            className={"s"}>Written by {parseMD(post).metadata.author_displayname}</span>
                                     </div>
                                     <img src={""}/>
                                 </div>
                             </a>
                         ))}
-                        <div className={"card orange"}>
-                            <div className={"top"}>
-                                <span className={"m"}>More posts 👉</span><br/>
+                        <Link to={'/posts'}>
+                            <div className={"card orange"}>
+                                <div className={"top"}>
+                                    <span className={"m"}>More posts 👉</span><br/>
+                                </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </div>
