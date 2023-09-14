@@ -26,6 +26,12 @@ import "./editpanel.component.css"
 import {upload} from "../utils/session.util";
 import config from '../utils/config.util'
 import Link from "../router/link";
+import parseMD from "parse-md";
+
+const importAll = (r) => r.keys().map(r);
+const postFiles = importAll(require.context("../news/", true, /\.md$/))
+    .sort()
+    .reverse();
 
 export default class EditPanel extends React.Component
 {
@@ -33,6 +39,8 @@ export default class EditPanel extends React.Component
     {
         super(props);
         this.state = {
+            // Posts
+            posts: null,
             // Generic component.
             title: "",
             description: "",
@@ -64,6 +72,37 @@ export default class EditPanel extends React.Component
         this.handleLinkItemTitleChange = this.handleLinkItemTitleChange.bind(this)
     }
 
+    async componentDidMount()
+    {
+        if (this.state.posts == null)
+        {
+            let _posts = await Promise.all(postFiles.map((file) => file.default)
+            ).catch((err) => console.error(err));
+
+            let posts = _posts.slice(0, 4)
+
+            this.setState((state) => ({...state, posts}));
+        }
+    }
+
+    latestPosts = (posts) =>
+    {
+        return <div className={"lp-cont"}>
+            <span className={'m'}>Latest news</span>
+            {posts != null ? posts.map((post, key) => (
+                <a key={key} href={"/post?p=" + parseMD(post).metadata.id}>
+                    <div className={"entry"} style={{backgroundImage: `url(${parseMD(post).metadata.banner})`}}>
+                        <span className={"mm"}>{parseMD(post).metadata.title}</span><br/>
+                    </div>
+                </a>
+            )) : <></>}
+            <a href={"/posts"}>
+                <div className={"entry alternative"}>
+                    <span className={"mm"}>More news 👉</span>
+                </div>
+            </a>
+        </div>
+    }
     clearState = () =>
     {
         this.setState({
@@ -539,6 +578,9 @@ export default class EditPanel extends React.Component
                     <span className={"s"}>Click on a component to begin editing</span><br/>
                     <span className={"s"}>Drag a component to change its position</span>
                 </div>
+                <div>
+                    {this.latestPosts(this.state.posts)}
+                </div>
             </div>
         switch (component.type)
         {
@@ -644,16 +686,16 @@ export default class EditPanel extends React.Component
                         <button className="inner-mock3" onClick={() => this.addNewLinkItem(component)}>
                             <span className="mm p-no-margin-bottom p-no-margin-top">+</span>
                         </button> : <></>}
-						{/**
-                        <p className="mm p-no-margin-top p-no-margin-bottom">Change list design</p>
-                        <div className='list-button-container'>
-                        <button className="button unraised link-img" type="button">
-                            <img src={linkH}/>                            
-                        </button>
-                        <button style={{marginLeft: "10%"}} className="button unraised link-img">
-                            <img src={linkV}/>
-                        </button>
-                        </div> **/}
+                    {/**
+                     <p className="mm p-no-margin-top p-no-margin-bottom">Change list design</p>
+                     <div className='list-button-container'>
+                     <button className="button unraised link-img" type="button">
+                     <img src={linkH}/>
+                     </button>
+                     <button style={{marginLeft: "10%"}} className="button unraised link-img">
+                     <img src={linkV}/>
+                     </button>
+                     </div> **/}
                     <div className="margin-button">
                         <button className="done-button" onClick={() => this.cancel()}>Done</button>
                     </div>

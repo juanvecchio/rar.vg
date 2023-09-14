@@ -316,17 +316,32 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     text-align: center;
 }
 
-.link-img{
+.link-img {
     text-align: center;
     width: 45% !important;
     padding: 5px !important;
     margin-top: 20px !important;
 }
- .link-img img {
-    width: 100% 
- }
 
- .list-button-container{
-     display: flex;
-   
- }
+.link-img img {
+    width: 100%
+}
+
+.list-button-container {
+    display: flex;
+}
+
+.default .entry {
+    color: white;
+    margin: 15px auto;
+    background-size: cover;
+    background-position: center;
+    padding: 25px;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .2), 0 6px 8px 0 rgba(0, 0, 0, .19);
+    border-radius: 20px;
+    text-align: center;
+}
+
+.default .alternative {
+    background: linear-gradient(135deg, rgba(117, 159, 6, 1) 0%, rgba(17, 101, 87, 1) 78%) !important;
+}
