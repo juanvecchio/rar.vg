@@ -15,7 +15,7 @@ export default class Footer extends React.Component
                     <path
                         d="M0,0 C6.83050094,50 15.1638343,75 25,75 C41.4957514,75 62.4956597,0 81.2456597,0 C93.7456597,0 99.9971065,0 100,0 L100,100 L0,100"/>
                 </svg>
-                <div className="footer" style={{marginTop: "-10px"}}>
+                <div className="page-footer" style={{marginTop: "-10px"}}>
                     <div style={{minHeight: "auto"}} className="view-model footer-content">
                         <div className="footer-column">
                             <p className={"p-no-margin-bottom p-no-margin-top"}>
