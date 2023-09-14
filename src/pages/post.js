@@ -4,6 +4,7 @@ import Footer from "../components/footer";
 import Link from "../router/link";
 import parseMD from "parse-md";
 import gfm from "remark-gfm";
+import reactBreaks from 'remark-breaks'
 import ReactMarkdown from "react-markdown";
 
 import './home.css'
@@ -86,14 +87,15 @@ export default class Post extends React.Component
                             <div className="banner-content">
                                 <span className="ll">{parsedContent.metadata.title}</span><br/>
                                 <span className="s">
-                                    Written by <a href={`https://${parsedContent.metadata.author_username}`}>
+                                    Written by <a href={`https://${parsedContent.metadata.author_username}.rar.vg`}>
                                         {parsedContent.metadata.author_displayname}
                                     </a>
                             </span>
                             </div>
                         </div>
                         <ReactMarkdown className={"post-content"}
-                                       remarkPlugins={[gfm]}>{parsedContent.content}</ReactMarkdown>
+                                       remarkPlugins={[gfm, reactBreaks]}
+                                       children={parsedContent.content.replace(/\n/gi, "&nbsp; \n")}/>
                     </div>
                     {this.latestPosts(this.state.posts)}
                 </div>
