@@ -213,10 +213,12 @@ h3 {
     display: flex;
     flex-direction: column;
     height: 100%;
-    justify-content: space-around;
     vertical-align: center;
-    align-items: center;
     text-align: center;
+}
+
+.outer-mock .default div {
+    margin-top: 20px;
 }
 
 .unraised {
