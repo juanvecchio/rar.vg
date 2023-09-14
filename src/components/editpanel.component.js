@@ -1,3 +1,5 @@
+import linkV from '../static/linklist-type1.png'
+import linkH from '../static/linklist-type2.png'
 import React from "react";
 import {AiFillEdit, AiOutlineClose, AiOutlineCheck} from "react-icons/ai"
 import {
@@ -606,7 +608,7 @@ export default class EditPanel extends React.Component
                     {this.props.user.sociallinks.map((link, key) => (
                         <div>{this.socialLinkEditItem(link, key, this.state.selectedLink === key)}</div>))}
                     <div className={"button-container"}>
-                        <button className="button" onClick={() => this.cancel()}>Done< /button>
+                        <button className="button" onClick={() => this.cancel()}>Done</button>
                     </div>
                 </>
             case 'pdf':
@@ -642,6 +644,16 @@ export default class EditPanel extends React.Component
                         <button className="inner-mock3" onClick={() => this.addNewLinkItem(component)}>
                             <span className="mm p-no-margin-bottom p-no-margin-top">+</span>
                         </button> : <></>}
+						{/**
+                        <p className="mm p-no-margin-top p-no-margin-bottom">Change list design</p>
+                        <div className='list-button-container'>
+                        <button className="button unraised link-img" type="button">
+                            <img src={linkH}/>                            
+                        </button>
+                        <button style={{marginLeft: "10%"}} className="button unraised link-img">
+                            <img src={linkV}/>
+                        </button>
+                        </div> **/}
                     <div className="margin-button">
                         <button className="done-button" onClick={() => this.cancel()}>Done</button>
                     </div>

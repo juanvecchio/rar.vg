@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
 import './styles/index.css'
 import {AppError} from './pages/error'
 import {RouterProvider} from './router/router';
@@ -75,17 +75,37 @@ const AppRoutes = () => <RouterProvider>
                                         path={route.path}>{route.component}</Route>)}
 </RouterProvider>
 
-if (((host.length === 2 && host[1].includes('localhost')) || (host.length === 3)) && host[0] !== 'www')
+if (host[1] === 'b' || host[0] === 'b')
 {
-    const subdomain = host[0]
-    ReactDOM.render(<Profile username={subdomain}/>, document.getElementById('root'))
+    // Testing environment.
+    if (((host.length === 3 && host[2].includes('localhost')) || (host.length === 4)) && host[0] !== 'www')
+    {
+        const subdomain = host[0]
+        ReactDOM.render(<Profile username={subdomain}/>, document.getElementById('root'))
+    }
+    else
+    {
+        ReactDOM.render(
+            <AppRoutes></AppRoutes>,
+            document.getElementById("root")
+        );
+    }
 }
 else
 {
-    ReactDOM.render(
-        <AppRoutes></AppRoutes>,
-        document.getElementById("root")
-    );
+
+    if (((host.length === 2 && host[1].includes('localhost')) || (host.length === 3)) && host[0] !== 'www')
+    {
+        const subdomain = host[0]
+        ReactDOM.render(<Profile username={subdomain}/>, document.getElementById('root'))
+    }
+    else
+    {
+        ReactDOM.render(
+            <AppRoutes></AppRoutes>,
+            document.getElementById("root")
+        );
+    }
 }
 
 export default AppRoutes;
