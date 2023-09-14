@@ -38,10 +38,10 @@ export default class Post extends React.Component
 
         if (this.state.posts == null)
         {
-            const posts = await Promise.all(postFiles.map((file) => file.default)
+            let _posts = await Promise.all(postFiles.map((file) => file.default)
             ).catch((err) => console.error(err));
 
-            posts.slice(0, 1)
+            let posts = _posts.slice(0, 4)
 
             this.setState((state) => ({...state, posts}));
         }

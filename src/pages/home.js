@@ -25,12 +25,10 @@ export default class Home extends React.Component
 
     async componentDidMount()
     {
-        console.log(postFiles)
-
-        let posts = await Promise.all(postFiles.map((file) => file.default)
+        let _posts = await Promise.all(postFiles.map((file) => file.default)
         ).catch((err) => console.error(err));
 
-        posts = posts.slice(0, 4)
+        let posts = _posts.slice(0, 4)
 
         this.setState((state) => ({...state, posts}));
     }
