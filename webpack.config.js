@@ -39,7 +39,7 @@ module.exports = function (_env, argv)
                 {
                     test: /\.md$/,
                     use: {
-                        loader: "html-loader",
+                        loader: "raw-loader",
                     },
                 },
                 {
