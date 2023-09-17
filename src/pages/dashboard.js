@@ -234,8 +234,13 @@ export default class Dashboard extends React.Component
             </div>
             <div className="dash-container2">
             <dialog className={"dialog"} ref={ref => this.profOptions = ref}>
-                <div>Logged in as</div><hr></hr>
-                <button className="cancel-button">Logout</button> 
+                <button className="profile-button" onClick={() => this.showProfOptions()}
+                            style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded}}>.
+                </button><div></div>
+                {this.state.user.displayName}<div></div>
+                {this.state.user.email}
+                <hr></hr>
+                <button className="cancel-button">Log out</button> 
             </dialog>
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally}
