@@ -375,7 +375,7 @@ export default class EditPanel extends React.Component
                            accept={".jpg,.png,.jpeg"}
                            id="link-icon-button"/>
                 </div>
-                <div className="button-container">
+                <div className="link-list-btn-container">
                     <button className="button delete" onClick={() => this.deleteLinkItem(key, component)}>Delete
                     </button>
                     <button className="button" onClick={() => this.updateLinkItem(component, link)}>Done
@@ -389,7 +389,7 @@ export default class EditPanel extends React.Component
             </div>
             <div className={"link-content"}>
                 <span>{link.title || link.link}</span>
-                <div className={"button-container"}>
+                <div className={"link-list-btn-container"}>
                     <button className={"icon-button"} onClick={() => this.selectLinkItem(component, key)}>
                         <AiFillEdit/>
                     </button>
@@ -621,7 +621,7 @@ export default class EditPanel extends React.Component
                         </div>
                         <h4 className={'mm p-no-margin-bottom'}>Danger zone</h4>
                         <Link to={"/delete-account"}>
-                            <button className="delete-button">Delete account</button>
+                            <button className="button delete-button">Delete account</button>
                         </Link>
                     </div>
                 </>
@@ -636,6 +636,9 @@ export default class EditPanel extends React.Component
                     <textarea className="description-text-box-size" value={this.state.description}
                               placeholder="Description" onChange={this.handleDescriptionChange}/>
                     <div className={"button-container"}>
+                        <button className="button delete-button"
+                                onClick={() => this.props.deleteSelectedComponent()}>Delete component
+                        </button>
                         <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
                         <button className="button"
                                 onClick={() => this.updateGenericComponent(this.state.title, this.state.description)}>Done
@@ -650,6 +653,9 @@ export default class EditPanel extends React.Component
                     {this.props.user.sociallinks.map((link, key) => (
                         <div>{this.socialLinkEditItem(link, key, this.state.selectedLink === key)}</div>))}
                     <div className={"button-container"}>
+                        <button className="button delete-button"
+                                onClick={() => this.props.deleteSelectedComponent()}>Delete component
+                        </button>
                         <button className="button" onClick={() => this.cancel()}>Done</button>
                     </div>
                 </>
@@ -671,6 +677,9 @@ export default class EditPanel extends React.Component
                                 type="application/pdf"></object>
                     </div>
                     <div className="button-container">
+                        <button className="button delete-button"
+                                onClick={() => this.props.deleteSelectedComponent()}>Delete component
+                        </button>
                         <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
                         <button className="button" onClick={() => this.uploadPDF()}>Upload</button>
                     </div>
@@ -696,8 +705,11 @@ export default class EditPanel extends React.Component
                      <img src={linkV}/>
                      </button>
                      </div> **/}
-                    <div className="margin-button">
-                        <button className="done-button" onClick={() => this.cancel()}>Done</button>
+                    <div className={"button-container"}>
+                        <button className="button delete-button"
+                                onClick={() => this.props.deleteSelectedComponent()}>Delete component
+                        </button>
+                        <button className="button" onClick={() => this.cancel()}>Done</button>
                     </div>
                 </>
         }
