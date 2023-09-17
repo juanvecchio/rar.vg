@@ -18,17 +18,17 @@ export default class Dashboard extends React.Component
             unpublished: null,
             showModal: false,
             lastReloaded: Date.now()
-            
+
         }
 
         this.editPanel = React.createRef()
 
-        
+
     }
 
     onUnload = e =>
     {
-        if(this.state.unpublished)
+        if (this.state.unpublished)
         {
             e.preventDefault();
             e.returnValue = 'You\'ve got unsaved changes! Are your sure you want to close?';
@@ -184,6 +184,15 @@ export default class Dashboard extends React.Component
         }
     }
 
+    deleteSelectedComponent = () =>
+    {
+        const oldUser = this.state.user;
+        oldUser.components.splice(this.state.component, 1);
+        this.setState({user: oldUser});
+        this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        this.cancelSelection()
+    }
+
     showProfOptions = () =>
     {
         this.profOptions.open ? this.profOptions.close() : this.profOptions.showModal()
@@ -201,7 +210,6 @@ export default class Dashboard extends React.Component
 
     render()
     {
-        const firstPosition = { X: 160, Y: 14 };
         if (!this.state.user) return 'Loading...'
         return <div className="dashboard-container">
             <div className="dash-container">
@@ -233,10 +241,11 @@ export default class Dashboard extends React.Component
                 </div>
             </div>
             <div className="dash-container2">
-            <dialog className={"dialog"} ref={ref => this.profOptions = ref}>
-                <div>Logged in as</div><hr></hr>
-                <button className="cancel-button">Logout</button> 
-            </dialog>
+                <dialog className={"dialog"} ref={ref => this.profOptions = ref}>
+                    <div>Logged in as</div>
+                    <hr></hr>
+                    <button className="cancel-button">Logout</button>
+                </dialog>
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally}
                                updateLocallyWithoutCancelling={this.updateComponentLocallyWithoutCancelling}
@@ -244,7 +253,8 @@ export default class Dashboard extends React.Component
                                updateLinks={this.updateLinks} displayMessage={this.displayMessage}
                                user={this.state.user} updateDisplayName={this.updateDisplayName}
                                reloadImage={this.reloadImage} ref={this.editPanel}
-                               selectedComponent={this.getSelectedComponent(this.state.component)}/>
+                               selectedComponent={this.getSelectedComponent(this.state.component)}
+                               deleteSelectedComponent={this.deleteSelectedComponent}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">
