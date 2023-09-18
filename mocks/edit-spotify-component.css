@@ -14,6 +14,7 @@
     text-align: right;
     margin-top: 10px;
 }
+
 .delete-component{
     /*text-align: center;*/
     text-align:center;
@@ -69,3 +70,6 @@
     border: none
 }
 
+.spotify-iframe {
+    height: 351px;
+}

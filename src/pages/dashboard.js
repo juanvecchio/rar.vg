@@ -233,14 +233,21 @@ export default class Dashboard extends React.Component
                 </div>
             </div>
             <div className="dash-container2">
-            <dialog className={"dialog"} ref={ref => this.profOptions = ref}>
-                <button className="profile-button" onClick={() => this.showProfOptions()}
+            <dialog className="profile-popup" ref={ref => this.profOptions = ref}>
+                <div className="photo-dialog-div">
+                <button className="profile-button-dialog button unraised" onClick={() => {
+                    this.selectComponent(-2)
+                    this.profOptions.close()
+                } }
                             style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded}}>.
-                </button><div></div>
-                {this.state.user.displayName}<div></div>
-                {this.state.user.email}
-                <hr></hr>
-                <button className="cancel-button">Log out</button> 
+                </button></div><br></br>
+                <div className="user-info">
+                <span className="mm">{this.state.user.displayName}</span><br></br>
+                <span className="s">@{this.state.user.username}</span><br></br>
+                <span className="ss" style={{color: '#666'}}>{this.state.user.email.length < 25 ? this.state.user.email : this.state.user.email.slice(0,25)}</span>
+                </div>
+                <hr style={{width: '100%'}}/>
+                <div><button className="button unraised cancel-button-dialog" >Log out</button></div> 
             </dialog>
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally}
