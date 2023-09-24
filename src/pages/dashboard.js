@@ -22,9 +22,15 @@ export default class Dashboard extends React.Component
         }
 
         this.editPanel = React.createRef()
-
+        this.handleClickOutside = this.handleClickOutside.bind(this);
         
     }
+
+    handleClickOutside(event) {
+        if (this.profOptions.current && !this.profOptions.current.contains(event.target)) {
+          this.props.onClickOutside && this.props.onClickOutside();
+        }
+      };
 
     onUnload = e =>
     {
@@ -38,6 +44,7 @@ export default class Dashboard extends React.Component
     componentWillUnmount()
     {
         window.removeEventListener("beforeunload", this.onUnload);
+        document.addEventListener('click', this.handleClickOutside, true);
     }
 
     componentDidMount()
@@ -50,6 +57,8 @@ export default class Dashboard extends React.Component
 
             this.setState({user: response.content.user})
         })
+        document.addEventListener('click', this.handleClickOutside, true);
+        
     }
 
     updateProfile = () =>
@@ -198,6 +207,12 @@ export default class Dashboard extends React.Component
     {
         this.setState({lastReloaded: Date.now()})
     }
+
+    handleClickOutside(event) {
+        if (this.ref.current && !this.ref.current.contains(event.target)) {
+          this.props.onClickOutside && this.props.onClickOutside();
+        }
+      };
 
     render()
     {
