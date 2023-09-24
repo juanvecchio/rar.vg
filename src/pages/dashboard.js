@@ -1,5 +1,5 @@
 import React from "react";
-import {tryUserLoading, updateProfile} from "../utils/session.util";
+import {tryLogout, tryUserLoading, updateProfile} from "../utils/session.util";
 import config from '../utils/config.util'
 
 import './dashboard.css'
@@ -270,7 +270,7 @@ export default class Dashboard extends React.Component
                     <span className="ss" style={{color: '#666'}}>{this.state.user.email.length < 25 ? this.state.user.email : this.state.user.email.slice(0,25)}</span>
                 </div>
                 <hr style={{width: '100%'}}/>
-                <div><button className="button unraised cancel-button-dialog" >Log out</button></div> 
+                <div><button className="button unraised cancel-button-dialog" onClick={() => tryLogout()}>Log out</button></div> 
             </dialog>
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally}
