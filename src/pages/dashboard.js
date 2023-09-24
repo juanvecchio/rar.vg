@@ -132,6 +132,15 @@ export default class Dashboard extends React.Component
             </div>
         )
     }
+    
+    deleteSelectedComponent = () =>
+    {
+        const oldUser = this.state.user;
+        oldUser.components.splice(this.state.component, 1);
+        this.setState({user: oldUser});
+        this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        this.cancelSelection()
+    }
 
     addComponent(type)
     {
@@ -270,7 +279,8 @@ export default class Dashboard extends React.Component
                                updateLinks={this.updateLinks} displayMessage={this.displayMessage}
                                user={this.state.user} updateDisplayName={this.updateDisplayName}
                                reloadImage={this.reloadImage} ref={this.editPanel}
-                               selectedComponent={this.getSelectedComponent(this.state.component)}/>
+                               selectedComponent={this.getSelectedComponent(this.state.component)}
+                               deleteSelectedComponent={this.deleteSelectedComponent}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">
