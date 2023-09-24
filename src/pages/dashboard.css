@@ -253,8 +253,8 @@ h3 {
 .profile-popup{
     position: absolute;
     text-align: center;
-    top: -43%;
-    left: 85%;
+    top: -50%;
+    left: calc(100% - 270px);
     width: 180px;
     border: none;
     border: none;

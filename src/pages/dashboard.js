@@ -216,7 +216,6 @@ export default class Dashboard extends React.Component
 
     render()
     {
-        const firstPosition = { X: 160, Y: 14 };
         if (!this.state.user) return 'Loading...'
         return <div className="dashboard-container">
             <div className="dash-container">
@@ -257,9 +256,9 @@ export default class Dashboard extends React.Component
                             style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded}}>.
                 </button></div><br></br>
                 <div className="user-info">
-                <span className="mm">{this.state.user.displayName}</span><br></br>
-                <span className="s">@{this.state.user.username}</span><br></br>
-                <span className="ss" style={{color: '#666'}}>{this.state.user.email.length < 25 ? this.state.user.email : this.state.user.email.slice(0,25)}</span>
+                    <span className="mm">{this.state.user.displayName}</span>
+                    <span className="s">@{this.state.user.username}</span>
+                    <span className="ss" style={{color: '#666'}}>{this.state.user.email.length < 25 ? this.state.user.email : this.state.user.email.slice(0,25)}</span>
                 </div>
                 <hr style={{width: '100%'}}/>
                 <div><button className="button unraised cancel-button-dialog" >Log out</button></div> 
