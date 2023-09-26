@@ -226,7 +226,7 @@ h3 {
     color: #000 !important;
 }
 
-.dialog{
+.dialog {
     position: absolute;
     text-align: center;
     top: -58%;
@@ -239,17 +239,17 @@ h3 {
     padding-bottom: 60px;
 }
 
-.cancel-button{
+.cancel-button {
     display: block;
     width: 100%;
-    text-align:center;
+    text-align: center;
     font-family: 'Raleway', sans-serif;
     padding: 10px;
     border-radius: 8px;
     font-weight: 600;
     font-size: 15px;
     background-color: #CFCFCF;
-    
+
 }
 
 .user-info {
@@ -304,4 +304,81 @@ h3 {
     background-size: contain;
     color: transparent;
     margin: 0px;
+}
+
+.logout-modal {
+    width: 600px;
+    border-radius: 25px;
+    padding: 20px;
+    border: none;
+}
+
+.question-logout {
+    font-family: 'Raleway', sans-serif;
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 20px;
+    margin-left: 15px;
+    margin-top: 10px;
+}
+
+.circle-opt {
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+    background-color: white;
+    border: solid 3px black;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.logout-option {
+    display: flex;
+    text-align: left;
+    padding: 15px;
+    margin: 8px 10px;
+    width: calc(100% - 60px);
+    background: white;
+    border-radius: 10px;
+    border: solid black 3px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.logout-modal-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.logout-modal-button.cancel {
+    padding: 10px;
+    font-family: 'Raleway', sans-serif;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    background-color: #b4b4b4 !important;
+    color: #000 !important;
+}
+
+.logout-modal-button.done {
+    padding: 10px;
+    font-family: 'Raleway', sans-serif;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    background-color: #6a28d3;
+    color: white;
+    border: none;
+}
+
+.logout-modal-buttons-container {
+    text-align: right;
+    justify-content: right;
+    padding: 10px 0 0 0;
 }
