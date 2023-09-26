@@ -145,6 +145,7 @@ export default class Dashboard extends React.Component
         this.setState({user: oldUser});
         this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
         this.cancelSelection()
+        this.toggleRemoveComponentModal()
     }
 
     addComponent(type)
@@ -223,6 +224,11 @@ export default class Dashboard extends React.Component
         this.logoutConfirmation.open ? this.logoutConfirmation.close() : this.logoutConfirmation.showModal()
     }
 
+    toggleRemoveComponentModal = () =>
+    {
+        this.removeComponentModal.open ? this.removeComponentModal.close() : this.removeComponentModal.showModal()
+    }
+
     reloadImage = () =>
     {
         this.setState({lastReloaded: Date.now()})
@@ -246,6 +252,15 @@ export default class Dashboard extends React.Component
     {
         if (!this.state.user) return 'Loading...'
         return <div className="dashboard-container">
+            <dialog className={"remove-component-modal"} ref={ref => this.removeComponentModal = ref}>
+                <div className="question-remove">
+                    <strong>Do you want to delete this component?</strong>
+                </div>
+                <div className="remove-component-modal-buttons-container">
+                    <button className="remove-component-modal-button cancel" onClick={() => this.toggleRemoveComponentModal()}>No, keep it</button>
+                    <button className="remove-component-modal-button done" onClick={() => this.deleteSelectedComponent()}>Yes, delete</button>
+                </div>
+            </dialog>
             <dialog className={"logout-modal"} ref={ref => this.logoutConfirmation = ref}>
                 <div className="question-logout">
                     <span className={"m"}>Do you want to log out?</span>
@@ -253,19 +268,23 @@ export default class Dashboard extends React.Component
 
                 <div className={"inner-mock2"}>
                     <label className="logout-option">
-                        <input onChange={this.changeInputValueRadio} value={"only"} checked={this.state.single === "only"} type={"radio"} name={"logout-options"}
+                        <input onChange={this.changeInputValueRadio} value={"only"}
+                               checked={this.state.single === "only"} type={"radio"} name={"logout-options"}
                                className="circle-opt"></input>
                         <span className={"s"}>Log out of this device only</span>
                     </label>
                     <label className="logout-option">
-                        <input onChange={this.changeInputValueRadio} value={"all"} checked={this.state.single === "all"} type={"radio"} name={"logout-options"} className="circle-opt"></input>
+                        <input onChange={this.changeInputValueRadio} value={"all"} checked={this.state.single === "all"}
+                               type={"radio"} name={"logout-options"} className="circle-opt"></input>
                         <span className={"s"}>Log out of all devices (will close all of your sessions!)</span>
                     </label>
                 </div>
                 <div className="logout-modal-buttons-container">
                     <button className="logout-modal-button cancel" onClick={() => this.toggleLogOutModal()}>Cancel
                     </button>
-                    <button className="logout-modal-button done" onClick={() => tryLogout(this.state.single === "only")}>Done</button>
+                    <button className="logout-modal-button done"
+                            onClick={() => tryLogout(this.state.single === "only")}>Done
+                    </button>
                 </div>
             </dialog>
             <div className="dash-container">
@@ -329,7 +348,7 @@ export default class Dashboard extends React.Component
                                user={this.state.user} updateDisplayName={this.updateDisplayName}
                                reloadImage={this.reloadImage} ref={this.editPanel}
                                selectedComponent={this.getSelectedComponent(this.state.component)}
-                               deleteSelectedComponent={this.deleteSelectedComponent}/>
+                               deleteSelectedComponent={this.toggleRemoveComponentModal}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">

@@ -382,3 +382,46 @@ h3 {
     justify-content: right;
     padding: 10px 0 0 0;
 }
+
+
+.remove-component-modal {
+    border: none;
+    text-align: center;
+    border-radius: 25px;
+    padding: 60px;
+}
+
+.question-remove {
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+    font-size: 25px;
+    padding-bottom: 30px;
+}
+
+
+.remove-component-modal-button.cancel {
+    padding: 10px;
+    font-family: 'Raleway', sans-serif;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    width: 200px;
+    margin-left: 50px;
+    background-color: #b4b4b4 !important;
+    color: #000 !important;
+}
+
+.remove-component-modal-button.done {
+    padding: 10px;
+    font-family: 'Raleway', sans-serif;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 17px;
+    background-color: #6a28d3;
+    color: white;
+    border: none;
+    width: 200px;
+    margin-left: 100px;
+    margin-right: 50px;
+}
