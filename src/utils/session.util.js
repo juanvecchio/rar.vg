@@ -100,7 +100,7 @@ function tryLogout(single)
         performRequest('logout', {...session, single: single}).then(response =>
         {
             destroySession()
-            return res({success: response.status === 200, content: response.content})
+            return res(response)
         })
     })
 }
