@@ -49,12 +49,12 @@ export default class Login extends React.Component
             case '4':
                 return this.displayMessage({
                     type: 'success',
-                    message: 'You\'ve logged out of all devices. Wait up until 30 minutes for the changes to take effect.'
+                    message: 'You\'ve logged out. The session was deleted successfully.'
                 })
             case '5':
                 return this.displayMessage({
                     type: 'success',
-                    message: 'You\'ve logged out. The session was deleted successfully.'
+                    message: 'You\'ve logged out of all devices. Wait up until 30 minutes for the changes to take effect.'
                 })
             default:
                 return
