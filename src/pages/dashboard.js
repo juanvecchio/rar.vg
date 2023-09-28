@@ -252,7 +252,7 @@ export default class Dashboard extends React.Component
     {
         tryLogout(this.state.single === 'only').then(response =>
         {
-            window.location.href = '/login?jr=' + (response.code || 4)
+            window.location.href = '/login?jr=' + (response.content.code || 4)
         })
     }
 
