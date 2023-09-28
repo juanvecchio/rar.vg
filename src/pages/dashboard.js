@@ -248,6 +248,14 @@ export default class Dashboard extends React.Component
         this.setState({single: event.target.value})
     }
 
+    logout()
+    {
+        tryLogout(this.state.single === 'only').then(response =>
+        {
+            window.location.href = '/login?jr=' + (response.code || 4)
+        })
+    }
+
     render()
     {
         if (!this.state.user) return 'Loading...'
@@ -283,7 +291,7 @@ export default class Dashboard extends React.Component
                     <button className="logout-modal-button cancel" onClick={() => this.toggleLogOutModal()}>Cancel
                     </button>
                     <button className="logout-modal-button done"
-                            onClick={() => tryLogout(this.state.single === "only")}>Done
+                            onClick={() => this.logout()}>Done
                     </button>
                 </div>
             </dialog>
