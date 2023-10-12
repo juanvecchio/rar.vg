@@ -23,7 +23,8 @@ export default class Profile extends React.Component
     componentDidMount()
     {
         fetch(config('HOST') + '/profile/' + this.props.username)
-            .then(r => {
+            .then(r =>
+            {
                 if (r.status !== 200)
                     window.location.href = "https://www.rar.vg"
                 r.json().then(response =>
@@ -44,7 +45,8 @@ export default class Profile extends React.Component
                 case "pdf":
                     return <PDFComponent fileId={component.content.fileId} key={key}/>
                 case "linklist":
-                    return <LinklistComponent links={component.content.links} key={key}/>
+                    return <LinklistComponent vertical={component.content.vertical} links={component.content.links}
+                                              key={key}/>
                 case 'spotify':
                     return <SpotifyComponent id={component.content} key={key}/>
                 case 'youtube':
