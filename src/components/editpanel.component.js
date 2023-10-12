@@ -361,7 +361,7 @@ export default class EditPanel extends React.Component
         this.setState({spotifyMessage: message})
         setTimeout(() => this.setState({spotifyMessage: null}), 5000)
     }
-    
+
     displayYouTubeMessage = (message) =>
     {
         this.setState({youtubeMessage: message})
@@ -546,7 +546,7 @@ export default class EditPanel extends React.Component
     {
         this.setState({spotifyLink: event.target.value})
     }
-    
+
     handleYouTubeLinkChange(event)
     {
         this.setState({youtubeLink: event.target.value})
@@ -593,15 +593,16 @@ export default class EditPanel extends React.Component
         this.saveLocally({title: title, description: description})
     }
 
-    updateSpotifyLink = (link) => {
+    updateSpotifyLink = (link) =>
+    {
         const regex = /^(https:\/\/open.spotify.com\/playlist\/|https:\/\/open.spotify.com\/user\/[a-zA-Z0-9]+\/playlist\/|spotify:user:[a-zA-Z0-9]+:playlist:|spotify:playlist:37i9dQZF1DZ06evO2ZpGiQ)([a-zA-Z0-9]+)(.*)$/
         let match = link.match(regex)
         if (!match)
             return this.displaySpotifyMessage({type: 'error', message: 'The provided Spotify link is invalid.'})
-        
+
         this.props.updateLocallyWithoutCancelling(match[2])
     }
-    
+
     updateYouTubeLink = (link) =>
     {
         const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?$/
@@ -770,14 +771,22 @@ export default class EditPanel extends React.Component
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit YouTube video</h3>
                     {this.drawMessage(this.state.youtubeMessage)}
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Import a YouTube video link:</h2>
-                    <input className="input" type="text" placeholder="https://www.youtube.com/watch?v=DgKpLoz29jo" 
-                        value={this.state.youtubeLink} onChange={this.handleYouTubeLinkChange}/>
-                    <div><button className="load-button" onClick={() => this.updateYouTubeLink(this.state.youtubeLink)}>Load video</button></div>
-                    <iframe style={{borderRadius: "12px"}} src={"https://www.youtube-nocookie.com/embed/" + component.content}
-                        width={"100%"} height={400} frameBorder={"0"} allowFullScreen={true}
-                        allow={"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"} loading={"lazy"}></iframe>
-                    <div class="margin-button">    
-                        <button className="delete-component">Delete component</button>
+                    <input className="input" type="text" placeholder="https://www.youtube.com/watch?v=DgKpLoz29jo"
+                           value={this.state.youtubeLink} onChange={this.handleYouTubeLinkChange}/>
+                    <div>
+                        <button className="load-button"
+                                onClick={() => this.updateYouTubeLink(this.state.youtubeLink)}>Load video
+                        </button>
+                    </div>
+                    <iframe style={{borderRadius: "12px"}}
+                            src={"https://www.youtube-nocookie.com/embed/" + component.content}
+                            width={"100%"} height={400} frameBorder={"0"} allowFullScreen={true}
+                            allow={"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"}
+                            loading={"lazy"}></iframe>
+                    <div class="margin-button">
+                        <button className="delete-component"
+                                onClick={() => this.props.deleteSelectedComponent()}>Delete component
+                        </button>
                         <button className="done-button" onClick={() => this.cancel()}>Done</button>
                     </div>
                 </>
@@ -786,14 +795,23 @@ export default class EditPanel extends React.Component
                     <h3 className="m p-no-margin-top p-no-margin-bottom">Edit Spotify playlist</h3>
                     {this.drawMessage(this.state.spotifyMessage)}
                     <h2 className="s p-no-margin-bottom p-no-margin-top title">Import a Spotify playlist link:</h2>
-                    <input className="input" type="text" placeholder="https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M?si=6d5152d5b4454b4f" 
-                        value={this.state.spotifyLink} onChange={this.handleSpotifyLinkChange}/>
-                    <div><button className="load-button" onClick={() => this.updateSpotifyLink(this.state.spotifyLink)}>Load playlist</button></div>
-                    <iframe style={{borderRadius: "12px" }} src={"https://open.spotify.com/embed/playlist/" + component.content}
-                        width={"100%"} frameBorder={0} height={"400"} allowFullScreen={true} allow={"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"}  
-                        loading={"lazy"}></iframe>
-                    <div className="margin-button">    
-                        <button className="delete-component">Delete component</button>
+                    <input className="input" type="text"
+                           placeholder="https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M?si=6d5152d5b4454b4f"
+                           value={this.state.spotifyLink} onChange={this.handleSpotifyLinkChange}/>
+                    <div>
+                        <button className="load-button"
+                                onClick={() => this.updateSpotifyLink(this.state.spotifyLink)}>Load playlist
+                        </button>
+                    </div>
+                    <iframe style={{borderRadius: "12px"}}
+                            src={"https://open.spotify.com/embed/playlist/" + component.content}
+                            width={"100%"} frameBorder={0} height={"400"} allowFullScreen={true}
+                            allow={"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"}
+                            loading={"lazy"}></iframe>
+                    <div className="margin-button">
+                        <button className="delete-component"
+                                onClick={() => this.props.deleteSelectedComponent()}>Delete component
+                        </button>
                         <button className="done-button" onClick={() => this.cancel()}>Done</button>
                     </div>
                 </>
