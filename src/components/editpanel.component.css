@@ -330,6 +330,7 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
 }
 
 .link-img {
+    border-radius: 13px !important;
     text-align: center;
     width: 45% !important;
     padding: 5px !important;
