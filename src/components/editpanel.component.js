@@ -26,6 +26,12 @@ import "./editpanel.component.css"
 import {upload} from "../utils/session.util";
 import config from '../utils/config.util'
 import Link from "../router/link";
+import parseMD from "parse-md";
+
+const importAll = (r) => r.keys().map(r);
+const postFiles = importAll(require.context("../news/", true, /\.md$/))
+    .sort()
+    .reverse();
 
 export default class EditPanel extends React.Component
 {
@@ -33,6 +39,8 @@ export default class EditPanel extends React.Component
     {
         super(props);
         this.state = {
+            // Posts
+            posts: null,
             // Generic component.
             title: "",
             description: "",
@@ -57,6 +65,9 @@ export default class EditPanel extends React.Component
             // Spotify
             spotifyMessage: null,
             spotifyLink: "",
+            // YouTube
+            youtubeMessage: null,
+            youtubeLink: "",
         }
 
         this.handleTitleChange = this.handleTitleChange.bind(this)
@@ -66,8 +77,40 @@ export default class EditPanel extends React.Component
         this.handleLinkItemURLChange = this.handleLinkItemURLChange.bind(this)
         this.handleLinkItemTitleChange = this.handleLinkItemTitleChange.bind(this)
         this.handleSpotifyLinkChange = this.handleSpotifyLinkChange.bind(this)
+        this.handleYouTubeLinkChange = this.handleYouTubeLinkChange.bind(this)
     }
 
+    async componentDidMount()
+    {
+        if (this.state.posts == null)
+        {
+            let _posts = await Promise.all(postFiles.map((file) => file.default)
+            ).catch((err) => console.error(err));
+
+            let posts = _posts.slice(0, 4)
+
+            this.setState((state) => ({...state, posts}));
+        }
+    }
+
+    latestPosts = (posts) =>
+    {
+        return <div className={"lp-cont"}>
+            <span className={'m'}>Latest news</span>
+            {posts != null ? posts.map((post, key) => (
+                <a key={key} href={"/post?p=" + parseMD(post).metadata.id}>
+                    <div className={"entry"} style={{backgroundImage: `url(${parseMD(post).metadata.banner})`}}>
+                        <span className={"mm"}>{parseMD(post).metadata.title}</span><br/>
+                    </div>
+                </a>
+            )) : <></>}
+            <a href={"/posts"}>
+                <div className={"entry alternative"}>
+                    <span className={"mm"}>More news 👉</span>
+                </div>
+            </a>
+        </div>
+    }
     clearState = () =>
     {
         this.setState({
@@ -88,6 +131,8 @@ export default class EditPanel extends React.Component
             linkItemMessage: null,
             spotifyMessage: null,
             spotifyLink: "",
+            youtubeMessage: null,
+            youtubeLink: "",
         })
     }
 
@@ -316,6 +361,12 @@ export default class EditPanel extends React.Component
         this.setState({spotifyMessage: message})
         setTimeout(() => this.setState({spotifyMessage: null}), 5000)
     }
+    
+    displayYouTubeMessage = (message) =>
+    {
+        this.setState({youtubeMessage: message})
+        setTimeout(() => this.setState({youtubeMessage: null}), 5000)
+    }
 
     drawMessage(message)
     {
@@ -348,7 +399,7 @@ export default class EditPanel extends React.Component
                            accept={".jpg,.png,.jpeg"}
                            id="link-icon-button"/>
                 </div>
-                <div className="button-container">
+                <div className="link-list-btn-container">
                     <button className="button delete" onClick={() => this.deleteLinkItem(key, component)}>Delete
                     </button>
                     <button className="button" onClick={() => this.updateLinkItem(component, link)}>Done
@@ -362,7 +413,7 @@ export default class EditPanel extends React.Component
             </div>
             <div className={"link-content"}>
                 <span>{link.title || link.link}</span>
-                <div className={"button-container"}>
+                <div className={"link-list-btn-container"}>
                     <button className={"icon-button"} onClick={() => this.selectLinkItem(component, key)}>
                         <AiFillEdit/>
                     </button>
@@ -495,6 +546,11 @@ export default class EditPanel extends React.Component
     {
         this.setState({spotifyLink: event.target.value})
     }
+    
+    handleYouTubeLinkChange(event)
+    {
+        this.setState({youtubeLink: event.target.value})
+    }
 
     onProfilePictureChange = (event) =>
     {
@@ -545,6 +601,16 @@ export default class EditPanel extends React.Component
         
         this.props.updateLocallyWithoutCancelling(match[2])
     }
+    
+    updateYouTubeLink = (link) =>
+    {
+        const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?$/
+        let match = link.match(regex)
+        if (!match)
+            return this.displayYouTubeMessage({type: 'error', message: 'The provided YouTube link is invalid.'})
+
+        this.props.updateLocallyWithoutCancelling(match[6])
+    }
 
     saveLocally = (content) =>
     {
@@ -564,6 +630,9 @@ export default class EditPanel extends React.Component
                     <span className={"m"}>Start editing</span><br/><br/>
                     <span className={"s"}>Click on a component to begin editing</span><br/>
                     <span className={"s"}>Drag a component to change its position</span>
+                </div>
+                <div>
+                    {this.latestPosts(this.state.posts)}
                 </div>
             </div>
         switch (component.type)
@@ -605,7 +674,7 @@ export default class EditPanel extends React.Component
                         </div>
                         <h4 className={'mm p-no-margin-bottom'}>Danger zone</h4>
                         <Link to={"/delete-account"}>
-                            <button className="delete-button">Delete account</button>
+                            <button className="button delete-button">Delete account</button>
                         </Link>
                     </div>
                 </>
@@ -620,6 +689,9 @@ export default class EditPanel extends React.Component
                     <textarea className="description-text-box-size" value={this.state.description}
                               placeholder="Description" onChange={this.handleDescriptionChange}/>
                     <div className={"button-container"}>
+                        <button className="button delete-button"
+                                onClick={() => this.props.deleteSelectedComponent()}>Delete component
+                        </button>
                         <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
                         <button className="button"
                                 onClick={() => this.updateGenericComponent(this.state.title, this.state.description)}>Done
@@ -634,6 +706,9 @@ export default class EditPanel extends React.Component
                     {this.props.user.sociallinks.map((link, key) => (
                         <div>{this.socialLinkEditItem(link, key, this.state.selectedLink === key)}</div>))}
                     <div className={"button-container"}>
+                        <button className="button delete-button"
+                                onClick={() => this.props.deleteSelectedComponent()}>Delete component
+                        </button>
                         <button className="button" onClick={() => this.cancel()}>Done</button>
                     </div>
                 </>
@@ -655,6 +730,9 @@ export default class EditPanel extends React.Component
                                 type="application/pdf"></object>
                     </div>
                     <div className="button-container">
+                        <button className="button delete-button"
+                                onClick={() => this.props.deleteSelectedComponent()}>Delete component
+                        </button>
                         <button className="button unraised" onClick={() => this.cancel()}>Cancel</button>
                         <button className="button" onClick={() => this.uploadPDF()}>Upload</button>
                     </div>
@@ -670,17 +748,36 @@ export default class EditPanel extends React.Component
                         <button className="inner-mock3" onClick={() => this.addNewLinkItem(component)}>
                             <span className="mm p-no-margin-bottom p-no-margin-top">+</span>
                         </button> : <></>}
-						{/**
-                        <p className="mm p-no-margin-top p-no-margin-bottom">Change list design</p>
-                        <div className='list-button-container'>
-                        <button className="button unraised link-img" type="button">
-                            <img src={linkH}/>                            
+                    {/**
+                     <p className="mm p-no-margin-top p-no-margin-bottom">Change list design</p>
+                     <div className='list-button-container'>
+                     <button className="button unraised link-img" type="button">
+                     <img src={linkH}/>
+                     </button>
+                     <button style={{marginLeft: "10%"}} className="button unraised link-img">
+                     <img src={linkV}/>
+                     </button>
+                     </div> **/}
+                    <div className={"button-container"}>
+                        <button className="button delete-button"
+                                onClick={() => this.props.deleteSelectedComponent()}>Delete component
                         </button>
-                        <button style={{marginLeft: "10%"}} className="button unraised link-img">
-                            <img src={linkV}/>
-                        </button>
-                        </div> **/}
-                    <div className="margin-button">
+                        <button className="button" onClick={() => this.cancel()}>Done</button>
+                    </div>
+                </>
+            case 'youtube':
+                return <>
+                    <h3 className="m p-no-margin-top p-no-margin-bottom">Edit YouTube video</h3>
+                    {this.drawMessage(this.state.youtubeMessage)}
+                    <h2 className="s p-no-margin-bottom p-no-margin-top title">Import a YouTube video link:</h2>
+                    <input className="input" type="text" placeholder="https://www.youtube.com/watch?v=DgKpLoz29jo" 
+                        value={this.state.youtubeLink} onChange={this.handleYouTubeLinkChange}/>
+                    <div><button className="load-button" onClick={() => this.updateYouTubeLink(this.state.youtubeLink)}>Load video</button></div>
+                    <iframe style={{borderRadius: "12px"}} src={"https://www.youtube-nocookie.com/embed/" + component.content}
+                        width={"100%"} height={400} frameBorder={"0"} allowFullScreen={true}
+                        allow={"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"} loading={"lazy"}></iframe>
+                    <div class="margin-button">    
+                        <button className="delete-component">Delete component</button>
                         <button className="done-button" onClick={() => this.cancel()}>Done</button>
                     </div>
                 </>
