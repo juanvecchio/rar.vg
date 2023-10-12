@@ -62,6 +62,9 @@ export default class EditPanel extends React.Component
             linkItemURLField: "",
             linkItemSelectedImage: null,
             linkItemMessage: null,
+            // YouTube
+            youtubeMessage: null,
+            youtubeLink: "",
         }
 
         this.handleTitleChange = this.handleTitleChange.bind(this)
@@ -70,6 +73,7 @@ export default class EditPanel extends React.Component
         this.handleDisplayNameChange = this.handleDisplayNameChange.bind(this)
         this.handleLinkItemURLChange = this.handleLinkItemURLChange.bind(this)
         this.handleLinkItemTitleChange = this.handleLinkItemTitleChange.bind(this)
+        this.handleYouTubeLinkChange = this.handleYouTubeLinkChange.bind(this)
     }
 
     async componentDidMount()
@@ -121,6 +125,8 @@ export default class EditPanel extends React.Component
             linkItemURLField: "",
             linkItemSelectedImage: null,
             linkItemMessage: null,
+            youtubeMessage: null,
+            youtubeLink: "",
         })
     }
 
@@ -344,6 +350,12 @@ export default class EditPanel extends React.Component
         setTimeout(() => this.setState({genericMessage: null}), 5000)
     }
 
+    displayYouTubeMessage = (message) =>
+    {
+        this.setState({youtubeMessage: message})
+        setTimeout(() => this.setState({youtubeMessage: null}), 5000)
+    }
+
     drawMessage(message)
     {
         if (message) return (
@@ -518,6 +530,11 @@ export default class EditPanel extends React.Component
         this.setState({linkItemURLField: event.target.value})
     }
 
+    handleYouTubeLinkChange(event)
+    {
+        this.setState({youtubeLink: event.target.value})
+    }
+
     onProfilePictureChange = (event) =>
     {
         const allowedFiles = ['jpg', 'jpeg', 'png']
@@ -557,6 +574,16 @@ export default class EditPanel extends React.Component
             return this.displayGenericMessage({type: 'error', message: 'Description should not be empty!'})
 
         this.saveLocally({title: title, description: description})
+    }
+
+    updateYouTubeLink = (link) =>
+    {
+        const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?$/
+        let match = link.match(regex)
+        if (!match)
+            return this.displayYouTubeMessage({type: 'error', message: 'The provided YouTube link is invalid.'})
+
+        this.props.updateLocallyWithoutCancelling(match[6])
     }
 
     saveLocally = (content) =>
@@ -710,6 +737,22 @@ export default class EditPanel extends React.Component
                                 onClick={() => this.props.deleteSelectedComponent()}>Delete component
                         </button>
                         <button className="button" onClick={() => this.cancel()}>Done</button>
+                    </div>
+                </>
+            case 'youtube':
+                return <>
+                    <h3 className="m p-no-margin-top p-no-margin-bottom">Edit YouTube video</h3>
+                    {this.drawMessage(this.state.youtubeMessage)}
+                    <h2 className="s p-no-margin-bottom p-no-margin-top title">Import a YouTube video link:</h2>
+                    <input className="input" type="text" placeholder="https://www.youtube.com/watch?v=DgKpLoz29jo" 
+                        value={this.state.youtubeLink} onChange={this.handleYouTubeLinkChange}/>
+                    <div><button className="load-button" onClick={() => this.updateYouTubeLink(this.state.youtubeLink)}>Load video</button></div>
+                    <iframe style={{borderRadius: "12px"}} src={"https://www.youtube-nocookie.com/embed/" + component.content}
+                        width={"100%"} height={400} frameBorder={"0"} allowFullScreen={true}
+                        allow={"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"} loading={"lazy"}></iframe>
+                    <div class="margin-button">    
+                        <button className="delete-component">Delete component</button>
+                        <button className="done-button" onClick={() => this.cancel()}>Done</button>
                     </div>
                 </>
         }
