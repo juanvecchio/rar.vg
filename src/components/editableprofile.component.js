@@ -9,6 +9,7 @@ import {IoIosAdd} from 'react-icons/io'
 
 import '../pages/profile.css'
 import '../index.css'
+import SpotifyComponent from "./spotify.component";
 import YouTubeComponent from "./youtube.component";
 
 export default class EditableProfile extends React.Component
@@ -27,6 +28,8 @@ export default class EditableProfile extends React.Component
                     return <PDFComponent editing={true} fileId={component.content.fileId} key={key}/>
                 case "linklist":
                     return <LinklistComponent editing={true} links={component.content.links} key={key}/>
+                case "spotify":
+                    return <SpotifyComponent editing={true} id={component.content} key={key}/>
                 case 'youtube':
                     return <YouTubeComponent editing={true} id={component.content} key={key}/>
             }
