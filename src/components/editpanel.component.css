@@ -334,19 +334,20 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     text-align: center;
     width: 45% !important;
     padding: 5px !important;
-    margin-top: 20px !important;   
+    margin-top: 20px !important;
 }
 
- .list-button-container{
-    display: flex; 
- } 
- .border-color {
-    background-color: #000000 !important;
- }
+.list-button-container {
+    display: flex;
+}
 
- .delete-component{
+.border-color {
+    background-color: #000000 !important;
+}
+
+.delete-component {
     /*text-align: center;*/
-    text-align:center;
+    text-align: center;
     padding: 10px;
     margin-right: auto;
     font-family: 'Raleway', sans-serif;
@@ -359,9 +360,9 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     border-radius: 8px;
 }
 
-.cancel-button{
-    text-align:center;
-    width:75px;
+.cancel-button {
+    text-align: center;
+    width: 75px;
     padding: 10px;
     font-family: 'Raleway', sans-serif;
     border-radius: 8px;
@@ -370,9 +371,10 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     background-color: #CFCFCF;
     border: none
 }
-.done-button{
-    text-align:center;
-    width:75px;
+
+.done-button {
+    text-align: center;
+    width: 75px;
     padding: 10px;
     font-family: 'Raleway', sans-serif;
     border-radius: 8px;
@@ -384,8 +386,8 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
 }
 
 .load-button {
-    text-align:center;
-    width:75px;
+    text-align: center;
+    width: 75px;
     padding: 10px;
     margin: 10px 0;
     display: block;
