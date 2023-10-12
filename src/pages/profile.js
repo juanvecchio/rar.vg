@@ -7,6 +7,8 @@ import LinklistComponent from "../components/linklist.component";
 
 import './profile.css'
 import '../index.css'
+import SpotifyComponent from "../components/spotify.component";
+import YouTubeComponent from "../components/youtube.component";
 
 export default class Profile extends React.Component
 {
@@ -43,6 +45,10 @@ export default class Profile extends React.Component
                     return <PDFComponent fileId={component.content.fileId} key={key}/>
                 case "linklist":
                     return <LinklistComponent links={component.content.links} key={key}/>
+                case 'spotify':
+                    return <SpotifyComponent id={component.content} key={key}/>
+                case 'youtube':
+                    return <YouTubeComponent id={component.content} key={key}/>
             }
     }
 
