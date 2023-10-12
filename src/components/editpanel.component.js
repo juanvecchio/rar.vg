@@ -613,6 +613,13 @@ export default class EditPanel extends React.Component
         this.props.updateLocallyWithoutCancelling(match[6])
     }
 
+    setLinkListVertical = (vertical) =>
+    {
+        let content = this.props.selectedComponent.content
+        content.vertical = vertical
+        this.props.updateLocallyWithoutCancelling(content)
+    }
+
     saveLocally = (content) =>
     {
         this.props.updateLocally(content)
@@ -749,16 +756,15 @@ export default class EditPanel extends React.Component
                         <button className="inner-mock3" onClick={() => this.addNewLinkItem(component)}>
                             <span className="mm p-no-margin-bottom p-no-margin-top">+</span>
                         </button> : <></>}
-                    {/**
-                     <p className="mm p-no-margin-top p-no-margin-bottom">Change list design</p>
-                     <div className='list-button-container'>
-                     <button className="button unraised link-img" type="button">
-                     <img src={linkH}/>
-                     </button>
-                     <button style={{marginLeft: "10%"}} className="button unraised link-img">
-                     <img src={linkV}/>
-                     </button>
-                     </div> **/}
+                    <p className="mm p-no-margin-top p-no-margin-bottom">Change list design</p>
+                    <div className='list-button-container'>
+                        <button className="button unraised link-img" type="button" onClick={() => this.setLinkListVertical(false)}>
+                            <img src={linkH} alt={'Horizontal'}/>
+                        </button>
+                        <button style={{marginLeft: "10%"}} className="button unraised link-img" onClick={() => this.setLinkListVertical(true)}>
+                            <img src={linkV} alt={'Vertical'}/>
+                        </button>
+                    </div>
                     <div className={"button-container"}>
                         <button className="button delete-button"
                                 onClick={() => this.props.deleteSelectedComponent()}>Delete component
