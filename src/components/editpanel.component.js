@@ -1,5 +1,5 @@
-import linkV from '../static/linklist-type1.png'
-import linkH from '../static/linklist-type2.png'
+import linkH from '../static/linklist-type1.png'
+import linkV from '../static/linklist-type2.png'
 import React from "react";
 import {AiFillEdit, AiOutlineClose, AiOutlineCheck} from "react-icons/ai"
 import {
