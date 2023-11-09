@@ -7,6 +7,8 @@ import LinklistComponent from "../components/linklist.component";
 
 import './profileDesigns/profile1.css'
 import './profileDesigns/profile2.css'
+import {colours, styles} from './profileDesigns/colour.util'
+
 import '../index.css'
 import SpotifyComponent from "../components/spotify.component";
 import YouTubeComponent from "../components/youtube.component";
@@ -62,7 +64,7 @@ export default class Profile extends React.Component
             return <div>Loading...</div>
         }
         else
-            return <div className={"content"}>
+            return <div className={"content"} style={styles(this.state.user.profileDesign.colour || 0)}>
                 <div className="card">
                     <div className={"header-d" + this.state.user.profileDesign.design}>
                         <div className={"banner-d" + this.state.user.profileDesign.design}/>
@@ -82,7 +84,7 @@ export default class Profile extends React.Component
                     {this.state.user.components.map((component, key) => this.component(component, key))}
 
                     <div className={"footer"}>
-                        <a href={"https://rar.vg"} style={{color: "#fff"}}>rar.vg</a> powered 2023
+                        <a href={"https://rar.vg"} style={{color: "var(--profile-text-accent)"}}>rar.vg</a> powered 2023
                     </div>
                 </div>
             </div>

@@ -26,7 +26,7 @@
     margin: 0 10px;
     padding: 10px;
 
-    color: #fff
+    color: var(--profile-text-accent)
 }
 
 .socials-d2 a, .socials-d2 button {

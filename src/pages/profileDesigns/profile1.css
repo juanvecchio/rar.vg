@@ -1,11 +1,6 @@
 html, body {
-
-    /** Define variables */
-    --card-background: #0e0c16;
-
-    background: rgb(37, 37, 37);
-    background: linear-gradient(135deg, rgb(23, 10, 54) 25%, rgb(50, 15, 74) 100%);
-    color: var(--push-text);
+    background: var(--profile-background) !important;
+    color: var(--profile-text-accent) !important;
 }
 
 h1 {
@@ -25,7 +20,8 @@ a:hover {
 }
 
 .content {
-    margin: 70px 0
+    margin: 0;
+    padding: 70px 0
 }
 
 .card {
@@ -64,7 +60,7 @@ a:hover {
 }
 
 .card .header-d1 .username {
-    color: #444;
+    color: var(--username-text);
 }
 
 .card .component {
@@ -124,10 +120,10 @@ a:hover {
     padding: 35px 0;
     margin: 0 50px;
 
-    color: #aaa;
+    color: var(--accent-lines);
 
     text-align: end;
     font-size: 14px;
 
-    border-top: solid 1px #333;
+    border-top: solid 1px var(--accent-lines);
 }
