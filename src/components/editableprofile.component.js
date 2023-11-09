@@ -7,7 +7,7 @@ import LinklistComponent from "../components/linklist.component";
 import ReactDragListView from 'react-drag-listview';
 import {IoIosAdd} from 'react-icons/io'
 
-import '../pages/profile.css'
+import '../pages/profileDesigns/profile1.css'
 import '../index.css'
 import SpotifyComponent from "./spotify.component";
 import YouTubeComponent from "./youtube.component";

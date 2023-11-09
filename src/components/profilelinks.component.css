@@ -8,6 +8,13 @@
     justify-content: center;
 }
 
+.socials-d2 {
+    text-align: left;
+    align-items: start;
+    justify-content: left;
+    margin-left: -12px;
+}
+
 .socials a, .socials button {
     background: transparent;
 
@@ -20,4 +27,14 @@
     padding: 10px;
 
     color: #fff
+}
+
+.socials-d2 a, .socials-d2 button {
+    padding: 5px;
+    margin: 0 7px;
+}
+
+.socials-d2 a svg, .socials-d2 button svg {
+    width: 25px;
+    height: 25px;
 }
