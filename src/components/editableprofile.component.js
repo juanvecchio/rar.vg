@@ -8,9 +8,11 @@ import ReactDragListView from 'react-drag-listview';
 import {IoIosAdd} from 'react-icons/io'
 
 import '../pages/profileDesigns/profile1.css'
+import '../pages/profileDesigns/profile2.css'
 import '../index.css'
 import SpotifyComponent from "./spotify.component";
 import YouTubeComponent from "./youtube.component";
+import {styles} from "../pages/profileDesigns/colour.util";
 
 export default class EditableProfile extends React.Component
 {
@@ -71,21 +73,24 @@ export default class EditableProfile extends React.Component
 
     render()
     {
-        return <div className={"content"}>
+        return <div className={"content"} style={styles(this.props.user.profileDesign.colour || 0)}>
             <div className="card">
-                <div className={"header"}>
-                    <div className={"selectableComponent metadata"} onClick={() => this.selectComponent(-2)}>
-                        <div className={"banner"}/>
+                <div className={"selectableComponent metadata"} onClick={() => this.selectComponent(-2)}>
+                    <div className={"header-d" + this.props.user.profileDesign.design}>
+                        <div className={"banner-d" + this.props.user.profileDesign.design}/>
                         <img
-                            className={"profile-picture"}
-                            src={config('HOST') + "/avatar/" + this.props.user.id + ".png?lr=" + this.props.lastReloaded}
+                            className={"profile-picture-d" + this.props.user.profileDesign.design}
+                            src={config('HOST') + "/avatar/" + this.props.user.id + ".png"}
                             alt={"Profile picture"}
                         />
-                        <h1 className={"p-no-margin-bottom"}>{this.props.user.displayName}</h1>
-                        <h3 className={"username p-no-margin-top p-no-margin-bottom"}>@{this.props.user.username}</h3>
-                    </div>
-                    <div className={"selectableComponent"} onClick={() => this.selectComponent(-1)}>
-                        <ProfileLinks editing={true} socials={this.props.user.sociallinks}/>
+                        <div style={{display: "block"}}>
+                            <h1 className={"p-no-margin-bottom"}>{this.props.user.displayName}</h1>
+                            <h3 className={"username p-no-margin-top"}>@{this.props.user.username}</h3>
+                            <div className={"selectableComponent"} onClick={() => this.selectComponent(-1)}>
+                                <ProfileLinks editing={true} socials={this.props.user.sociallinks}
+                                              design={this.props.user.profileDesign.design}/>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
