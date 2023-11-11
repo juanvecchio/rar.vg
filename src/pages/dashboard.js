@@ -5,6 +5,7 @@ import config from '../utils/config.util'
 import './dashboard.css'
 import EditableProfile from "../components/editableprofile.component";
 import EditPanel from "../components/editpanel.component";
+import {colours} from "./profileDesigns/colour.util";
 
 export default class Dashboard extends React.Component
 {
@@ -68,7 +69,8 @@ export default class Dashboard extends React.Component
 
     updateProfile = () =>
     {
-        updateProfile(this.state.user.displayName, JSON.stringify(this.state.user.components), JSON.stringify(this.state.user.sociallinks))
+        updateProfile(this.state.user.displayName, JSON.stringify(this.state.user.components),
+            JSON.stringify(this.state.user.sociallinks), JSON.stringify(this.state.user.profileDesign))
             .then(response =>
             {
                 if (!response.success)
@@ -117,6 +119,34 @@ export default class Dashboard extends React.Component
         oldUser.components[this.state.component].content = content
         this.setState({user: oldUser})
         this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+    }
+
+    updateProfileDesign = (design) =>
+    {
+        if (design > 0 && design < 3)
+        {
+            this.setState({
+                user: {
+                    ...this.state.user,
+                    profileDesign: {...this.state.user.profileDesign, design: design}
+                }
+            })
+            this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        }
+    }
+
+    updateProfileColours = (theme) =>
+    {
+        if (theme >= 0 && theme < colours.length)
+        {
+            this.setState({
+                user: {
+                    ...this.state.user,
+                    profileDesign: {...this.state.user.profileDesign, colour: theme}
+                }
+            })
+            this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        }
     }
 
     updateDisplayName = (displayName) =>
@@ -372,7 +402,9 @@ export default class Dashboard extends React.Component
                                user={this.state.user} updateDisplayName={this.updateDisplayName}
                                reloadImage={this.reloadImage} ref={this.editPanel}
                                selectedComponent={this.getSelectedComponent(this.state.component)}
-                               deleteSelectedComponent={this.toggleRemoveComponentModal}/>
+                               deleteSelectedComponent={this.toggleRemoveComponentModal}
+                               updateProfileDesign={this.updateProfileDesign}
+                               updateProfileColours={this.updateProfileColours}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">
