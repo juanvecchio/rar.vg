@@ -17,7 +17,7 @@ const colours = [
         username: "#f33d1d",
         accentLines: "#f33d1d",
         linkBackground: "#f7b7b0",
-        selectComponent: "rgba(255, 255, 255, 0.06)"
+        selectComponent: "rgba(0, 0, 0, 0.2)"
     },
     {
         background: "#eee",
@@ -37,6 +37,16 @@ const colours = [
         username: "#2a8c4a",
         accentLines: "#2a8c4a",
         linkBackground: "#9bfab0",
+        selectComponent: "rgba(0, 0, 0, 0.2)"
+    },
+    {
+        background: "#5fa8d3",
+        card: "#cae9ff",
+        accent: "#1b4965",
+        addComponentButton: "#1b4965",
+        username: "#1b4965",
+        accentLines: "#1b4965",
+        linkBackground: "#62b6cb",
         selectComponent: "rgba(0, 0, 0, 0.2)"
     },
 ]
