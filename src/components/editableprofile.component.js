@@ -75,21 +75,27 @@ export default class EditableProfile extends React.Component
     {
         return <div className={"content"} style={styles(this.props.user.profileDesign.colour || 0)}>
             <div className="card">
-                <div className={"selectableComponent metadata"} onClick={() => this.selectComponent(-2)}>
-                    <div className={"header-d" + this.props.user.profileDesign.design}>
+                <div className={"header-d" + this.props.user.profileDesign.design}>
+                    <div className={(this.props.user.profileDesign.design !== 2 ? "selectableComponent" : "")}
+                         onClick={(this.props.user.profileDesign.design !== 2 ? () => this.selectComponent(-2) : () =>
+                         {
+                         })}>
                         <div className={"banner-d" + this.props.user.profileDesign.design}/>
                         <img
                             className={"profile-picture-d" + this.props.user.profileDesign.design}
                             src={config('HOST') + "/avatar/" + this.props.user.id + ".png"}
-                            alt={"Profile picture"}
+                            alt={"Profile picture"} onClick={() => this.selectComponent(-2)}
                         />
-                        <div style={{display: "block"}}>
+                    </div>
+                    <div style={{display: "block"}}>
+                        <div className={"selectableComponent"}
+                             onClick={() => this.selectComponent(-2)}>
                             <h1 className={"p-no-margin-bottom"}>{this.props.user.displayName}</h1>
                             <h3 className={"username p-no-margin-top"}>@{this.props.user.username}</h3>
-                            <div className={"selectableComponent"} onClick={() => this.selectComponent(-1)}>
-                                <ProfileLinks editing={true} socials={this.props.user.sociallinks}
-                                              design={this.props.user.profileDesign.design}/>
-                            </div>
+                        </div>
+                        <div className={"selectableComponent"} onClick={() => this.selectComponent(-1)}>
+                            <ProfileLinks editing={true} socials={this.props.user.sociallinks}
+                                          design={this.props.user.profileDesign.design}/>
                         </div>
                     </div>
                 </div>
