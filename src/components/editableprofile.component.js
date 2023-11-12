@@ -6,6 +6,7 @@ import PDFComponent from "../components/pdf.component";
 import LinklistComponent from "../components/linklist.component";
 import ReactDragListView from 'react-drag-listview';
 import {IoIosAdd} from 'react-icons/io'
+import {FiEdit3} from "react-icons/fi";
 
 import '../pages/profileDesigns/profile1.css'
 import '../pages/profileDesigns/profile2.css'
@@ -90,7 +91,10 @@ export default class EditableProfile extends React.Component
                     <div style={{display: "block"}}>
                         <div className={"selectableComponent"}
                              onClick={() => this.selectComponent(-2)}>
-                            <h1 className={"p-no-margin-bottom"}>{this.props.user.displayName}</h1>
+                            <div style={{display: "flex", alignItems: "center"}}>
+                                <h1 className={"p-no-margin-bottom"}>{this.props.user.displayName}</h1>
+                                <FiEdit3 size={18} style={{marginLeft: "10px", opacity: "70%"}}/>
+                            </div>
                             <h3 className={"username p-no-margin-top"}>@{this.props.user.username}</h3>
                         </div>
                         <div className={"selectableComponent"} onClick={() => this.selectComponent(-1)}>
