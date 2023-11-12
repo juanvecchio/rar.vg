@@ -68,3 +68,14 @@
 .card .component .hitem .title {
     margin: 0 0 0 30px;
 }
+
+@media only screen and (max-width: 480px) {
+    .card .component .hitem {
+        height: 90px !important;
+    }
+
+    .card .component .hitem .image {
+        width: 90px !important;
+        height: 90px !important;
+    }
+}

@@ -127,3 +127,69 @@ a:hover {
 
     border-top: solid 1px var(--accent-lines);
 }
+
+@media only screen and (max-width: 880px) {
+    .content {
+        margin: 0;
+        padding: 40px 0
+    }
+
+    .card {
+        width: 80%;
+        min-width: 550px;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    h1 {
+        font-size: calc(1.3vw + 2vh) !important;
+        font-weight: 800;
+    }
+
+    h2 {
+        font-size: calc(1.4vw + 1.7vh) !important;
+        font-weight: 800;
+    }
+
+    h3 {
+        font-size: calc(1vw + 1.7vh);
+        font-weight: 800;
+    }
+
+    .card .header-d1 .banner-d1 {
+        display: none;
+    }
+
+    .card .header-d1 .profile-picture-d1 {
+        margin-top: 70px;
+        width: 70%;
+        max-width: 280px;
+
+        border-radius: 30px;
+    }
+
+    .content {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .card .component {
+        padding: 5px 0 !important;
+        margin: 0 50px;
+    }
+
+    .card {
+        min-width: 100%;
+        border-radius: 0 !important;
+    }
+
+    @media only screen and (max-width: 480px) {
+        .card .header-d2 {
+            justify-content: space-around;
+        }
+
+        .card .component {
+            margin: 0 20px !important;
+        }
+    }
+}
