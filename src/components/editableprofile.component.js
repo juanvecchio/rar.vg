@@ -88,11 +88,11 @@ export default class EditableProfile extends React.Component
                             alt={"Profile picture"} onClick={() => this.selectComponent(-2)}
                         />
                     </div>
-                    <div style={{display: "block"}}>
+                    <div style={{display: "block", marginTop: (this.props.user.profileDesign.design === 2 ? 0 : "20px")}}>
                         <div className={"selectableComponent"}
                              onClick={() => this.selectComponent(-2)}>
-                            <div style={{display: "flex", alignItems: "center"}}>
-                                <h1 className={"p-no-margin-bottom"}>{this.props.user.displayName}</h1>
+                            <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                                <h1 className={"p-no-margin-bottom p-no-margin-top"}>{this.props.user.displayName}</h1>
                                 <FiEdit3 size={18} style={{marginLeft: "10px", opacity: "70%"}}/>
                             </div>
                             <h3 className={"username p-no-margin-top"}>@{this.props.user.username}</h3>
