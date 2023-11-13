@@ -59,7 +59,16 @@ const colours = [
         linkBackground: "#e5d9f2",
         selectComponent: "rgba(0, 0, 0, 0.2)"
     },
-
+    {
+        background: "#E6AF2E",
+        card: "#ebd690",
+        accent: "#774E24",
+        addComponentButton: "#774E24",
+        username: "#774E24",
+        accentLines: "#774E24",
+        linkBackground: "#cfba76",
+        selectComponent: "rgba(0, 0, 0, 0.2)"
+    },
 ]
 
 let styles = (colour) =>
