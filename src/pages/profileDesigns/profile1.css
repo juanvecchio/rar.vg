@@ -103,7 +103,7 @@ a:hover {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background: #4b4172;
+    background: var(--add-comp-btn-clr);
     border-radius: 20px;
 }
 
