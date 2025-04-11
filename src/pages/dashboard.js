@@ -7,7 +7,7 @@ import EditableProfile from "../components/editableprofile.component";
 import EditPanel from "../components/editpanel.component";
 import {colours} from "./profileDesigns/colour.util";
 
-import { IoMdOpen } from "react-icons/io";
+import {IoMdOpen, IoMdAdd, IoIosList, IoMdCloudUpload} from "react-icons/io";
 
 export default class Dashboard extends React.Component
 {
@@ -368,8 +368,10 @@ export default class Dashboard extends React.Component
                     {this.drawMessage(this.state.unpublished)}
                 </div>
                 <div className="right">
-                    <button className="publish-button" onClick={() => window.open('https://' + this.state.user.username + '.rar.vg','_blank')}
-                            style={{marginRight: "10px"}}><IoMdOpen size={10} style={{marginRight: "5px"}}/>Open profile</button>
+                    <button className="publish-button"
+                            onClick={() => window.open('https://' + this.state.user.username + '.rar.vg', '_blank')}
+                            style={{marginRight: "10px"}}><IoMdOpen size={10} style={{marginRight: "5px"}}/>Open profile
+                    </button>
                     <button className="publish-button" onClick={() => this.updateProfile()}>Publish</button>
                     <button className="profile-button" onClick={() => this.showProfOptions()}
                             style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded}}>.
@@ -405,20 +407,23 @@ export default class Dashboard extends React.Component
                     </div>
                 </dialog>
                 <div className={"floating-publish"}>
-                    <button className={"button"}>Add</button>
-                    <button className={"button"}>Reorder</button>
+                    <button className={"button"}><IoIosList style={{marginRight: "5px"}} size={20}/>Reorder</button>
+                    <button className={"button"}><IoMdAdd style={{marginRight: "5px"}} size={20}/>Add</button>
+                    <button className={"button"}><IoMdCloudUpload style={{marginRight: "5px"}} size={20}/>Upload
+                    </button>
                 </div>
-                <div className="left-component">
-                    <EditPanel updateLocally={this.updateComponentLocally}
-                               updateLocallyWithoutCancelling={this.updateComponentLocallyWithoutCancelling}
-                               cancelSelection={this.cancelSelection}
-                               updateLinks={this.updateLinks} displayMessage={this.displayMessage}
-                               user={this.state.user} updateDisplayName={this.updateDisplayName}
-                               reloadImage={this.reloadImage} ref={this.editPanel}
-                               selectedComponent={this.getSelectedComponent(this.state.component)}
-                               deleteSelectedComponent={this.toggleRemoveComponentModal}
-                               updateProfileDesign={this.updateProfileDesign}
-                               updateProfileColours={this.updateProfileColours}/>
+                <div className={"left-component " + (this.state.component != null ? 'lc-active' : '')}>
+                    <EditPanel
+                        updateLocally={this.updateComponentLocally}
+                        updateLocallyWithoutCancelling={this.updateComponentLocallyWithoutCancelling}
+                        cancelSelection={this.cancelSelection}
+                        updateLinks={this.updateLinks} displayMessage={this.displayMessage}
+                        user={this.state.user} updateDisplayName={this.updateDisplayName}
+                        reloadImage={this.reloadImage} ref={this.editPanel}
+                        selectedComponent={this.getSelectedComponent(this.state.component)}
+                        deleteSelectedComponent={this.toggleRemoveComponentModal}
+                        updateProfileDesign={this.updateProfileDesign}
+                        updateProfileColours={this.updateProfileColours}/>
                 </div>
                 <div className="right-component">
                     <div className="profile-container">
