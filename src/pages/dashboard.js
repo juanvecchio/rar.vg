@@ -364,7 +364,7 @@ export default class Dashboard extends React.Component
                 </dialog>
                 <div className="left">
                     <span
-                        className="mmm p-no-margin-bottom p-no-margin-top welcome">👋 Welcome back, {this.state.user.displayName}!</span>
+                        className="mmm p-no-margin-bottom p-no-margin-top welcome">👋 <span className={'welcome-2'}>Welcome back, {this.state.user.displayName}!</span></span>
                     {this.drawMessage(this.state.unpublished)}
                 </div>
                 <div className="right">
@@ -404,6 +404,10 @@ export default class Dashboard extends React.Component
                         </div>
                     </div>
                 </dialog>
+                <div className={"floating-publish"}>
+                    <button className={"button"}>Add</button>
+                    <button className={"button"}>Reorder</button>
+                </div>
                 <div className="left-component">
                     <EditPanel updateLocally={this.updateComponentLocally}
                                updateLocallyWithoutCancelling={this.updateComponentLocallyWithoutCancelling}
