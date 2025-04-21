@@ -8,6 +8,7 @@ import EditPanel from "../components/editpanel.component";
 import {colours} from "./profileDesigns/colour.util";
 
 import {IoMdOpen, IoMdAdd, IoIosList, IoMdCloudUpload} from "react-icons/io";
+import { BsStars } from "react-icons/bs";
 
 export default class Dashboard extends React.Component
 {
@@ -407,10 +408,10 @@ export default class Dashboard extends React.Component
                     </div>
                 </dialog>
                 <div className={"floating-publish"}>
-                    <button className={"button"}><IoIosList style={{marginRight: "5px"}} size={20}/>Reorder</button>
-                    <button className={"button"}><IoMdAdd style={{marginRight: "5px"}} size={20}/>Add</button>
-                    <button className={"button"}><IoMdCloudUpload style={{marginRight: "5px"}} size={20}/>Upload
-                    </button>
+                    <button className={"button no-margin-left"}><IoIosList size={26}/>Reorder</button>
+                    <button className={"button"}><IoMdCloudUpload size={26}/>Upload</button>
+                    <button className={"button"}><IoMdAdd size={26}/>Add</button>
+                    <button className={"button no-margin-right special-generate"}><BsStars size={26}/>Generate</button>
                 </div>
                 <div className={"left-component " + (this.state.component != null ? 'lc-active' : '')}>
                     <EditPanel

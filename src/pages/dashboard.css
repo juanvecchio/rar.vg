@@ -434,7 +434,7 @@ h3 {
     left: 50%;
     bottom: 15px;
     margin-left: calc(-45% - 5px);
-    height: 60px;
+    height: 70px;
 
     padding: 10px;
     background: white;
@@ -450,16 +450,40 @@ h3 {
     width: calc(33% - 5px);
 
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-evenly;
     align-items: center;
 
+    margin-right: 5px;
+    margin-left: 5px;
+
     font-family: "Poppins", serif;
-    font-size: 17px;
+    font-size: 13px;
     text-align: center;
     border-radius: 15px;
     border-color: transparent;
     background-color: #e3e3e3;
     color: #575757;
+}
+
+.floating-publish .no-margin-right {
+    margin-right: 0;
+}
+
+.floating-publish .no-margin-left {
+    margin-left: 0;
+}
+
+.floating-publish .special-generate {
+    background: #c9639d;
+    background: linear-gradient(299deg,rgba(201, 99, 157, 1) 0%, rgba(99, 172, 255, 1) 100%);
+    color: white;
+}
+
+.floating-publish .special-publish {
+    background: #5d0e7d;
+    background: linear-gradient(118deg, rgba(93, 14, 125, 1) 0%, rgba(186, 107, 191, 1) 100%);
+    color: white;
 }
 
 @media only screen and (max-width: 650px) {
