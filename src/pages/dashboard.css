@@ -476,7 +476,7 @@ h3 {
 
 .floating-publish .special-generate {
     background: #c9639d;
-    background: linear-gradient(299deg,rgba(201, 99, 157, 1) 0%, rgba(99, 172, 255, 1) 100%);
+    background: linear-gradient(299deg, rgba(201, 99, 157, 1) 0%, rgba(99, 172, 255, 1) 100%);
     color: white;
 }
 
@@ -528,6 +528,14 @@ h3 {
         width: 100%;
     }
 
+    .profile-popup {
+        position: fixed;
+        text-align: center;
+        left: 0;
+        width: calc(100% - 46px);
+        display: flex;
+        overflow-x: hidden;
+    }
 
     .profile-container {
         margin: 20px 0 0 0;
