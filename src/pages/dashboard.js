@@ -300,7 +300,7 @@ export default class Dashboard extends React.Component
         return <div className="dashboard-container">
             <dialog className={"remove-component-modal"} ref={ref => this.removeComponentModal = ref}>
                 <div className="question-remove">
-                    <strong>Do you want to delete this component?</strong>
+                    <span className={'m'}>Do you want to delete this component?</span>
                 </div>
                 <div className="remove-component-modal-buttons-container">
                     <button className="remove-component-modal-button cancel"
