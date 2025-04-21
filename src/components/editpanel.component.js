@@ -157,7 +157,6 @@ export default class EditPanel extends React.Component
 
     handleNecessaryUpdates = (component) =>
     {
-        console.log(component)
         switch (component.type)
         {
             case 'generic':
