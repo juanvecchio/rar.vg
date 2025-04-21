@@ -56,7 +56,7 @@ export default class Home extends React.Component
                 </div>
                 <div className="right">
                     <div className={"left-card"}>
-                        <div className={"card purple"}>
+                        <div className={"home-card purple"}>
                             <div className={"top"}>
                                 <h2 className={"l p-no-margin-top p-no-margin-bottom"}>Establish your online
                                     presence</h2><br/>
@@ -72,7 +72,7 @@ export default class Home extends React.Component
                         {this.state.posts.map((post, key) => (
                             <a key={key} href={"/post?p=" + parseMD(post).metadata.id}>
                                 <div style={{backgroundImage: `url(${parseMD(post).metadata.banner})`}}
-                                     className={"card green"}>
+                                     className={"home-card green"}>
                                     <div className={"top"}>
                                         <span className={"m"}>{parseMD(post).metadata.title}</span><br/>
                                         <span
@@ -83,7 +83,7 @@ export default class Home extends React.Component
                             </a>
                         ))}
                         <Link to={'/posts'}>
-                            <div className={"card orange"}>
+                            <div className={"home-card orange"}>
                                 <div className={"top"}>
                                     <span className={"m"}>More posts 👉</span><br/>
                                 </div>
