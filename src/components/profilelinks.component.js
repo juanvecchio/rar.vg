@@ -78,7 +78,7 @@ export default class ProfileLinks extends React.Component
         else
         {
             return (
-                <a href={this.icons[social.name].link + social.content}>{icon.icon}</a>
+                <a href={this.props.editing ? '#' : (this.icons[social.name].link + social.content)}>{icon.icon}</a>
             );
         }
     };
