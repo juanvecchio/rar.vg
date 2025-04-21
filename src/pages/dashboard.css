@@ -486,7 +486,53 @@ h3 {
     color: white;
 }
 
-@media only screen and (max-width: 740px) {
+@media only screen and (max-width: 1200px) {
+    .left-component {
+        width: 40%;
+    }
+
+    .right-component {
+        width: 60%;
+    }
+
+    .profile-container .content .card {
+        width: 80% !important;
+        border-radius: 30px !important;
+    }
+
+    .profile-container {
+        zoom: .7;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .left-component {
+        width: 50%;
+    }
+
+    .right-component {
+        width: 50%;
+    }
+
+    .content {
+        padding: 0;
+    }
+
+    .profile-container .content .card {
+        width: 100% !important;
+    }
+
+    .profile-container {
+        zoom: .7;
+    }
+}
+
+
+@media only screen and (max-width: 780px) {
+    .content {
+        padding: 50px;
+    }
+
     .floating-publish {
         display: flex;
     }
@@ -554,6 +600,7 @@ h3 {
     }
 
     .profile-container {
+        zoom: .9;
         margin: 20px 0 0 0;
         width: 100%;
         height: calc(100% - 20px);
