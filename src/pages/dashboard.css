@@ -486,7 +486,7 @@ h3 {
     color: white;
 }
 
-@media only screen and (max-width: 650px) {
+@media only screen and (max-width: 740px) {
     .floating-publish {
         display: flex;
     }
@@ -537,6 +537,22 @@ h3 {
         overflow-x: hidden;
     }
 
+    .remove-component-modal {
+        padding: 30px;
+        width: calc(100% - 60px);
+    }
+
+    .remove-component-modal-buttons-container {
+        display: flex;
+        align-content: space-around;
+        align-items: center;
+    }
+
+    .remove-component-modal-button {
+        margin: auto !important;
+        width: 40% !important;
+    }
+
     .profile-container {
         margin: 20px 0 0 0;
         width: 100%;
@@ -554,4 +570,8 @@ h3 {
     .welcome-2 {
         display: none;
     }
+}
+
+dialog:-internal-dialog-in-top-layer::backdrop {
+    background: rgba(0, 0, 0, 0.4);
 }
