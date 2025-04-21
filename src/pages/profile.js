@@ -84,7 +84,7 @@ export default class Profile extends React.Component
                     {this.state.user.components.map((component, key) => this.component(component, key))}
 
                     <div className={"footer"}>
-                        <a href={"https://rar.vg"} style={{color: "var(--profile-text-accent)"}}>rar.vg</a> powered 2023
+                        <a href={"https://rar.vg"} style={{color: "var(--profile-text-accent)"}}>rar.vg</a> powered 2025
                     </div>
                 </div>
             </div>
