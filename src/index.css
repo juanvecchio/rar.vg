@@ -91,3 +91,111 @@ button:disabled {
 a {
     cursor: pointer;
 }
+
+@media only screen and (max-width: 740px) {
+    .xxl {
+        font-size: calc(4vw + 2vh);
+    }
+
+    .xl {
+        font-size: calc(3vw + 2vh);
+    }
+
+    .l {
+        font-size: calc(2vw + 2vh);
+    }
+
+
+    .ll {
+        font-size: calc(1.5vw + 2vh);
+    }
+
+
+    .m {
+        font-size: 5vw !important;
+    }
+
+    .mm {
+        font-size: 3vw !important;
+    }
+
+    .s {
+        font-size: 2vw !important;
+    }
+
+    .ss {
+        font-size: 1vw !important;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .xxl {
+        font-size: calc(4vw + 2vh);
+    }
+
+    .xl {
+        font-size: calc(3vw + 2vh);
+    }
+
+    .l {
+        font-size: calc(2vw + 2vh);
+    }
+
+
+    .ll {
+        font-size: calc(1.5vw + 2vh);
+    }
+
+
+    .m {
+        font-size: 6vw !important;
+    }
+
+    .mm {
+        font-size: 5vw !important;
+    }
+
+    .s {
+        font-size: 3vw !important;
+    }
+
+    .ss {
+        font-size: 2vw !important;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .xxl {
+        font-size: calc(4vw + 2vh);
+    }
+
+    .xl {
+        font-size: calc(3vw + 2vh);
+    }
+
+    .l {
+        font-size: calc(2vw + 2vh);
+    }
+
+
+    .ll {
+        font-size: calc(1.5vw + 2vh);
+    }
+
+
+    .m {
+        font-size: 7vw !important;
+    }
+
+    .mm {
+        font-size: 6vw !important;
+    }
+
+    .s {
+        font-size: 5vw !important;
+    }
+
+    .ss {
+        font-size: 4vw !important;
+    }
+}
