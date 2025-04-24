@@ -1,4 +1,9 @@
 html, body {
+
+    --buttonGap: 60px;
+    --dotColor: rgba(127, 127, 127, .7);
+    --dotDistance: 30px;
+
     background: var(--profile-background) !important;
     color: var(--profile-text-accent) !important;
 }
@@ -70,6 +75,29 @@ a:hover {
 
 .editing {
     border-top: solid 1px #333333;
+}
+
+.reordering {
+    background-image: radial-gradient(6px 6px at var(--dotDistance) calc(50% - 30px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at var(--dotDistance) calc(50% - 10px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at var(--dotDistance) calc(50% + 10px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at var(--dotDistance) calc(50% + 30px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at calc(var(--dotDistance) + 20px) calc(50% - 30px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at calc(var(--dotDistance) + 20px) calc(50% - 10px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at calc(var(--dotDistance) + 20px) calc(50% + 10px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at calc(var(--dotDistance) + 20px) calc(50% + 30px),
+    var(--dotColor) 50%, transparent 50%);
+    border-top: none;
+    max-height: 160px;
+    overflow-y: hidden;
+    padding-left: 30px !important;
+    border-radius: 30px;
+    margin: 15px 20px;
+    box-shadow: 0 1px 6px 0 rgba(127, 127, 127, .6), 0 1px 6px 0 rgba(127, 127, 127, .6);
+}
+
+.reordering .editing {
+    border-top: none;
 }
 
 .card .component img {

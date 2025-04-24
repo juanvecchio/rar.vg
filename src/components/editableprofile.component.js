@@ -61,7 +61,7 @@ export default class EditableProfile extends React.Component
         return <ReactDragListView {...dragProps}>
             <ul style={{listStyle: "none", paddingInlineStart: 0}}>
                 {this.props.user.components.map((component, key) => (
-                    <li className={"selectableComponent"}
+                    <li className={"selectableComponent reordering"}
                         onClick={() => this.selectComponent(key)}>{this.component(component, key)}</li>))}
             </ul>
         </ReactDragListView>
