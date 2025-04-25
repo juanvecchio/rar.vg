@@ -79,7 +79,6 @@ export default class Dashboard extends React.Component {
         oldUser.components.splice(to, 0, f);
         this.setState({
             user: oldUser,
-            component: this.state.component === from ? to : this.state.component + 1
         })
         this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
     }
