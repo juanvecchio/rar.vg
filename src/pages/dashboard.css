@@ -113,7 +113,6 @@ body, html {
 
 .profile-container {
     overflow-y: scroll;
-    background: linear-gradient(135deg, rgb(45, 18, 107) 25%, rgb(50, 15, 74) 100%);
     margin: 20px;
     border-radius: 30px;
     box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .2), 0 6px 8px 0 rgba(0, 0, 0, .19);

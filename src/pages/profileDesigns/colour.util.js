@@ -7,7 +7,7 @@ const colours = [
         username: "#444",
         accentLines: "#333",
         linkBackground: "linear-gradient(310deg, #181623, #1e1b2d)",
-        selectComponent: "rgba(255, 255, 255, 0.06)"
+        selectComponent: "rgba(255, 255, 255, 0.3)"
     },
     {
         background: "#fa6450",

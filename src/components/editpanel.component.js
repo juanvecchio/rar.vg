@@ -648,10 +648,16 @@ export default class EditPanel extends React.Component
         this.props.cancelSelection()
     }
 
+    reorder = () =>
+    {
+        this.props.toggleReordering()
+    }
+
     renderFields = (component) =>
     {
         if (!component)
             return <div className={"default"}>
+                <button onClick={() => this.reorder()}>Reorder</button>
                 <div>
                     <span className={"m"}>Start editing</span><br/><br/>
                     <span className={"s"}>Click on a component to begin editing</span><br/>

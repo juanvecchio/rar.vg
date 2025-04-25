@@ -90,10 +90,14 @@ a:hover {
     border-top: none;
     max-height: 160px;
     overflow-y: hidden;
-    padding-left: 30px !important;
     border-radius: 30px;
     margin: 15px 20px;
-    box-shadow: 0 1px 6px 0 rgba(127, 127, 127, .6), 0 1px 6px 0 rgba(127, 127, 127, .6);
+    box-shadow: 0 2px 8px 0 var(--select-component), 0 2px 8px 0 var(--select-component);
+}
+
+.reordering .component {
+    margin-left: 0 !important;
+    padding-left: 80px !important;
 }
 
 .reordering .editing {
@@ -133,6 +137,18 @@ a:hover {
     align-items: center;
     background: var(--add-comp-btn-clr);
     border-radius: 20px;
+}
+
+.card  .reordering {
+    background-image: radial-gradient(6px 6px at var(--dotDistance) calc(50% - 30px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at var(--dotDistance) calc(50% - 10px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at var(--dotDistance) calc(50% + 10px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at var(--dotDistance) calc(50% + 30px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at calc(var(--dotDistance) + 20px) calc(50% - 30px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at calc(var(--dotDistance) + 20px) calc(50% - 10px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at calc(var(--dotDistance) + 20px) calc(50% + 10px),
+    var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at calc(var(--dotDistance) + 20px) calc(50% + 30px),
+    var(--dotColor) 50%, transparent 50%) !important;
 }
 
 .card .selectableComponent:hover {
