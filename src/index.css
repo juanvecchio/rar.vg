@@ -112,55 +112,53 @@ a {
 
 
     .m {
-        font-size: 5vw;
+        font-size: 5vw !important;
     }
 
     .mm {
-        font-size: 3vw;
+        font-size: 3vw !important;
     }
 
     .s {
-        font-size: 2vw;
+        font-size: 2vw !important;
     }
 
     .ss {
-        font-size: 1vw;
+        font-size: 1vw !important;
     }
 }
 
 @media only screen and (max-width: 600px) {
     .xxl {
-        font-size: calc(4vw + 2vh);
+        font-size: 7.5vw !important;
     }
 
     .xl {
-        font-size: calc(3vw + 2vh);
+        font-size: 6.5vw !important;
     }
 
     .l {
-        font-size: calc(2vw + 2vh);
+        font-size: 6vw !important;
     }
-
 
     .ll {
-        font-size: calc(1.5vw + 2vh);
+        font-size: 5vw !important;
     }
 
-
     .m {
-        font-size: 6vw;
+        font-size: 4vw !important;
     }
 
     .mm {
-        font-size: 5vw;
+        font-size: 3vw !important;
     }
 
     .s {
-        font-size: 3vw;
+        font-size: 2vw !important;
     }
 
     .ss {
-        font-size: 2vw;
+        font-size: 1vw !important;
     }
 }
 
@@ -184,18 +182,18 @@ a {
 
 
     .m {
-        font-size: 7vw;
+        font-size: 7vw !important;
     }
 
     .mm {
-        font-size: 6vw;
+        font-size: 6vw !important;
     }
 
     .s {
-        font-size: 5vw;
+        font-size: 5vw !important;
     }
 
     .ss {
-        font-size: 4vw;
+        font-size: 4vw !important;
     }
 }
