@@ -541,6 +541,10 @@ h3 {
         display: none;
     }
 
+    .dashboard-container .dashboard-modal {
+        padding: 25px !important;
+    }
+
     .left-component {
         position: fixed;
         top: 100%;
