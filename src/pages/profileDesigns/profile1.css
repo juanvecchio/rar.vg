@@ -250,6 +250,10 @@ a:hover {
         margin: 0 50px;
     }
 
+    .reordering .editing {
+        padding-left: 80px !important;
+    }
+
     .card {
         min-width: 100%;
         border-radius: 0 !important;
@@ -263,5 +267,10 @@ a:hover {
         .card .component {
             margin: 0 20px !important;
         }
+
+        .reordering .editing {
+            padding-left: 60px !important;
+        }
+
     }
 }
