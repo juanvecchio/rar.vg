@@ -441,6 +441,24 @@ h3 {
     z-index: 13;
 }
 
+.floating-publish .floating-reordering-default {
+    width: 100%;
+    display: inherit;
+}
+
+.floating-publish .floating-reordering-hidden {
+    display: none;
+}
+
+.floating-publish .floating-reordering-default .button-reorder {
+    width: calc(50% - 5px);
+}
+
+.floating-publish .floating-reordering-default .button-coloured {
+    background: #ff9d9d;
+    color: #962e2e;
+}
+
 .floating-publish .button {
     width: calc(33% - 5px);
 

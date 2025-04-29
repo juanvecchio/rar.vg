@@ -416,13 +416,27 @@ export default class Dashboard extends React.Component
                     </div>
                 </dialog>
                 <div className={"floating-publish"}>
-                    <button onClick={() => this.toggleReordering()} className={"button no-margin-left"}><IoIosList
-                        size={26}/>Reorder
-                    </button>
-                    <button onClick={() => this.updateProfile()} className={"button"}><IoMdCloudUpload size={26}/>Publish
-                    </button>
-                    <button onClick={() => this.toggleModal()} className={"button"}><IoMdAdd size={26}/>Add</button>
-                    <button className={"button no-margin-right special-generate"}><BsStars size={26}/>Generate</button>
+                    <div className={this.state.reordering === false
+                        ? "floating-reordering-default" : "floating-reordering-hidden"}>
+                        <button onClick={() => this.toggleReordering()} className={"button no-margin-left"}><IoIosList
+                            size={26}/>Reorder
+                        </button>
+                        <button onClick={() => this.updateProfile()} className={"button"}><IoMdCloudUpload size={26}/>Publish
+                        </button>
+                        <button onClick={() => this.toggleModal()} className={"button"}><IoMdAdd size={26}/>Add</button>
+                        <button className={"button no-margin-right special-generate"}><BsStars size={26}/>Generate
+                        </button>
+                    </div>
+                    <div className={this.state.reordering === true
+                        ? "floating-reordering-default" : "floating-reordering-hidden"}>
+                        <button onClick={() => this.toggleReordering()}
+                                className={"button button-reorder button-coloured no-margin-left"}><IoIosList
+                            size={26}/>Stop reorder
+                        </button>
+                        <button onClick={() => this.updateProfile()}
+                                className={"button button-reorder no-margin-right"}><IoMdCloudUpload size={26}/>Publish
+                        </button>
+                    </div>
                 </div>
                 <div className={"left-component " + (this.state.component != null ? 'lc-active' : '')}>
                     <EditPanel
