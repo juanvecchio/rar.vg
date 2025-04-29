@@ -2,6 +2,7 @@ import React from 'react'
 
 import profileImage from '../static/profile.png'
 import customisationImage from '../static/customisation.png'
+import mobileImage from '../static/mobile.png'
 
 import './home.css'
 import '../index.css'
@@ -38,7 +39,7 @@ export default class Home extends React.Component
                                 <span className={"s"}>Create and design your own personal page, anywhere you go.</span>
                             </div>
                             <div className={"profile-card-image"}>
-                                <img src={profileImage} className={'home-image-1'} alt={"Mobile dashboard screenshot"}/>
+                                <img src={mobileImage} className={'home-image-1'} alt={"Mobile dashboard screenshot"}/>
                             </div>
                         </div>
                     </div>
