@@ -259,6 +259,10 @@ a:hover {
         border-radius: 0 !important;
     }
 
+    .card .add-component-button-container .add-component-button {
+        display: none;
+    }
+
     @media only screen and (max-width: 480px) {
         .card .header-d2 {
             justify-content: space-around;
