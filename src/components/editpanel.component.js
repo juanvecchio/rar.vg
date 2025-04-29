@@ -234,6 +234,21 @@ export default class EditPanel extends React.Component
         this.selectLinkItem(component, content.links.length - 1)
     }
 
+    checkURLValidity(url)
+    {
+        let url_;
+
+        try
+        {
+            url_ = new URL(url);
+        } catch (_)
+        {
+            return false;
+        }
+
+        return url.protocol === "http:" || url.protocol === "https:";
+    }
+
     updateLinkItem = (component, link) =>
     {
         if (this.state.selectedLinkListItem !== null)
@@ -241,6 +256,10 @@ export default class EditPanel extends React.Component
             if (this.state.linkItemURLField === null)
             {
                 return this.displayLinkItemMessage({type: 'error', message: 'Link field must not be empty!'})
+            }
+            if(this.checkURLValidity(this.state.linkItemURLField) === false)
+            {
+                return this.displayLinkItemMessage({type: 'error', message: 'Use the correct link format!'})
             }
             const newLink = {
                 url: this.state.linkItemURLField || link.url,
@@ -653,7 +672,7 @@ export default class EditPanel extends React.Component
                     <span className={"m"}>Reorder mode</span><br/><br/>
                     <span className={"s"}>Drag and drop components to change its position</span><br/>
                     <span className={"s"}>Use the arrows to rearrange each component individually</span>
-                    <br /><br/>
+                    <br/><br/>
                     <button className={'entry stop-reorder'} onClick={() => this.reorder()}>
                         <IoIosList size={20}/>
                         <span className={'s'}>Stop reorder</span>
