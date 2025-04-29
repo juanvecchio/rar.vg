@@ -23,14 +23,14 @@ import {
     BsGithub,
     BsTwitch,
     BsYoutube,
-    BsLinkedin,
+    BsLinkedin, BsStars,
 } from "react-icons/bs";
 import "./editpanel.component.css"
 import {upload} from "../utils/session.util";
 import config from '../utils/config.util'
 import Link from "../router/link";
-import parseMD from "parse-md";
-import {colours} from "../pages/profileDesigns/colour.util";
+import {colours, styles} from "../pages/profileDesigns/colour.util";
+import {IoIosList, IoMdAdd, IoMdCloudUpload} from "react-icons/io";
 
 const importAll = (r) => r.keys().map(r);
 const postFiles = importAll(require.context("../news/", true, /\.md$/))
@@ -112,24 +112,16 @@ export default class EditPanel extends React.Component
         ))
     }
 
-    latestPosts = (posts) =>
+    toggleModal = () =>
     {
-        return <div className={"lp-cont"}>
-            <span className={'m'}>Latest news</span>
-            {posts != null ? posts.map((post, key) => (
-                <a key={key} href={"/post?p=" + parseMD(post).metadata.id}>
-                    <div className={"entry"} style={{backgroundImage: `url(${parseMD(post).metadata.banner})`}}>
-                        <span className={"mm"}>{parseMD(post).metadata.title}</span><br/>
-                    </div>
-                </a>
-            )) : <></>}
-            <a href={"/posts"}>
-                <div className={"entry alternative"}>
-                    <span className={"mm"}>More news 👉</span>
-                </div>
-            </a>
-        </div>
+        this.props.toggleModal()
     }
+
+    editProfile = () =>
+    {
+        this.props.selectComponent(-2)
+    }
+
     clearState = () =>
     {
         this.setState({
@@ -657,14 +649,33 @@ export default class EditPanel extends React.Component
     {
         if (!component)
             return <div className={"default"}>
-                <button onClick={() => this.reorder()}>Reorder</button>
                 <div>
                     <span className={"m"}>Start editing</span><br/><br/>
                     <span className={"s"}>Click on a component to begin editing</span><br/>
-                    <span className={"s"}>Drag a component to change its position</span>
+                    <span className={"s"}>Toggle reorder to change a component's position</span>
                 </div>
-                <div>
-                    {this.latestPosts(this.state.posts)}
+
+                <div className={"lp-cont"}>
+                    <span className={'m'}>Quick actions</span><br/><br/>
+                    <button className={'entry'}
+                            style={{
+                                color: styles(this.props.user.profileDesign.colour || 0)["--profile-text-accent"],
+                                backgroundColor: styles(this.props.user.profileDesign.colour || 0)["--card-background"],
+                            }}
+                            onClick={() => this.editProfile()}>
+                        <span className={'s'}>Change profile design</span>
+                    </button>
+                    <button className={'entry'} onClick={() => this.reorder()}>
+                        <IoIosList size={20}/>
+                        <span className={'s'}>Reorder</span>
+                    </button>
+                    <button className={'entry'} onClick={() => this.toggleModal()}>
+                        <IoMdAdd size={20}/>
+                        <span className={'s'}>Add</span>
+                    </button>
+                    <button className={'entry special-generate'}>
+                        <BsStars size={20}/><span className={'s'}>Generate</span>
+                    </button>
                 </div>
             </div>
         switch (component.type)
@@ -831,7 +842,7 @@ export default class EditPanel extends React.Component
                             width={"100%"} height={400} frameBorder={"0"} allowFullScreen={true}
                             allow={"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"}
                             loading={"lazy"}></iframe>
-                    <div class="margin-button">
+                    <div className="margin-button">
                         <button className="delete-component"
                                 onClick={() => this.props.deleteSelectedComponent()}>Delete component
                         </button>
