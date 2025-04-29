@@ -382,6 +382,8 @@ export default class Dashboard extends React.Component {
                 </div>
                 <div className={"left-component " + (this.state.component != null ? 'lc-active' : '')}>
                     <EditPanel
+                        selectComponent={this.selectComponent}
+                        toggleModal={this.toggleModal}
                         updateLocally={this.updateComponentLocally}
                         updateLocallyWithoutCancelling={this.updateComponentLocallyWithoutCancelling}
                         cancelSelection={this.cancelSelection}
