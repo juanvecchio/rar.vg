@@ -529,6 +529,18 @@ h3 {
 
 
 @media only screen and (max-width: 780px) {
+    .dashboard-container .s {
+        font-size: calc(1.4vw + 1.7vh) !important;
+    }
+
+    .dashboard-container .ss {
+        font-size: 3vw !important;
+    }
+
+    .dashboard-container .mm {
+        font-size: 4vw !important;
+    }
+
     .content {
         padding: 50px;
     }
