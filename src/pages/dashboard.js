@@ -7,7 +7,8 @@ import EditableProfile from "../components/editableprofile.component";
 import EditPanel from "../components/editpanel.component";
 import {colours} from "./profileDesigns/colour.util";
 
-import { IoMdOpen } from "react-icons/io";
+import {IoMdOpen, IoMdAdd, IoIosList, IoMdCloudUpload} from "react-icons/io";
+import {BsStars} from "react-icons/bs";
 
 export default class Dashboard extends React.Component
 {
@@ -20,6 +21,7 @@ export default class Dashboard extends React.Component
             component: null,
             unpublished: null,
             showModal: false,
+            reordering: false,
             lastReloaded: Date.now(),
 
             // Logout options
@@ -66,7 +68,6 @@ export default class Dashboard extends React.Component
             this.setState({user: response.content.user})
         })
         document.addEventListener('click', this.handleClickOutside, true);
-
     }
 
     updateProfile = () =>
@@ -84,21 +85,29 @@ export default class Dashboard extends React.Component
 
     updateComponentOrder = (from, to) =>
     {
+        if (this.state.reordering === false) return
         const oldUser = this.state.user
         let f = oldUser.components.splice(from, 1)[0];
         oldUser.components.splice(to, 0, f);
         this.setState({
             user: oldUser,
-            component: this.state.component === from ? to : this.state.component + 1
         })
         this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
     }
 
     selectComponent = (key) =>
     {
+        if (this.state.reordering === true) return
         this.editPanel.current.clearState()
         this.setState({component: key})
         this.editPanel.current.handleNecessaryUpdates(this.getSelectedComponent(key))
+    }
+
+    toggleReordering = () =>
+    {
+        this.editPanel.current.clearState()
+        const oldOrder = !this.state.reordering
+        this.setState({reordering: oldOrder})
     }
 
     cancelSelection = () =>
@@ -299,7 +308,7 @@ export default class Dashboard extends React.Component
         return <div className="dashboard-container">
             <dialog className={"remove-component-modal"} ref={ref => this.removeComponentModal = ref}>
                 <div className="question-remove">
-                    <strong>Do you want to delete this component?</strong>
+                    <span className={'m'}>Do you want to delete this component?</span>
                 </div>
                 <div className="remove-component-modal-buttons-container">
                     <button className="remove-component-modal-button cancel"
@@ -364,12 +373,14 @@ export default class Dashboard extends React.Component
                 </dialog>
                 <div className="left">
                     <span
-                        className="mmm p-no-margin-bottom p-no-margin-top welcome">👋 Welcome back, {this.state.user.displayName}!</span>
+                        className="mmm p-no-margin-bottom p-no-margin-top welcome">👋 <span className={'welcome-2'}>Welcome back, {this.state.user.displayName}!</span></span>
                     {this.drawMessage(this.state.unpublished)}
                 </div>
                 <div className="right">
-                    <button className="publish-button" onClick={() => window.open('https://' + this.state.user.username + '.rar.vg','_blank')}
-                            style={{marginRight: "10px"}}><IoMdOpen size={10} style={{marginRight: "5px"}}/>Open profile</button>
+                    <button className="publish-button"
+                            onClick={() => window.open('https://' + this.state.user.username + '.rar.vg', '_blank')}
+                            style={{marginRight: "10px"}}><IoMdOpen size={10} style={{marginRight: "5px"}}/>Open profile
+                    </button>
                     <button className="publish-button" onClick={() => this.updateProfile()}>Publish</button>
                     <button className="profile-button" onClick={() => this.showProfOptions()}
                             style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded}}>.
@@ -404,21 +415,36 @@ export default class Dashboard extends React.Component
                         </div>
                     </div>
                 </dialog>
-                <div className="left-component">
-                    <EditPanel updateLocally={this.updateComponentLocally}
-                               updateLocallyWithoutCancelling={this.updateComponentLocallyWithoutCancelling}
-                               cancelSelection={this.cancelSelection}
-                               updateLinks={this.updateLinks} displayMessage={this.displayMessage}
-                               user={this.state.user} updateDisplayName={this.updateDisplayName}
-                               reloadImage={this.reloadImage} ref={this.editPanel}
-                               selectedComponent={this.getSelectedComponent(this.state.component)}
-                               deleteSelectedComponent={this.toggleRemoveComponentModal}
-                               updateProfileDesign={this.updateProfileDesign}
-                               updateProfileColours={this.updateProfileColours}/>
+                <div className={"floating-publish"}>
+                    <button onClick={() => this.toggleReordering()} className={"button no-margin-left"}><IoIosList
+                        size={26}/>Reorder
+                    </button>
+                    <button onClick={() => this.updateProfile()} className={"button"}><IoMdCloudUpload size={26}/>Publish
+                    </button>
+                    <button onClick={() => this.toggleModal()} className={"button"}><IoMdAdd size={26}/>Add</button>
+                    <button className={"button no-margin-right special-generate"}><BsStars size={26}/>Generate</button>
+                </div>
+                <div className={"left-component " + (this.state.component != null ? 'lc-active' : '')}>
+                    <EditPanel
+                        selectComponent={this.selectComponent}
+                        toggleModal={this.toggleModal}
+                        updateLocally={this.updateComponentLocally}
+                        updateLocallyWithoutCancelling={this.updateComponentLocallyWithoutCancelling}
+                        cancelSelection={this.cancelSelection}
+                        updateLinks={this.updateLinks} displayMessage={this.displayMessage}
+                        user={this.state.user} updateDisplayName={this.updateDisplayName}
+                        reloadImage={this.reloadImage} ref={this.editPanel}
+                        selectedComponent={this.getSelectedComponent(this.state.component)}
+                        deleteSelectedComponent={this.toggleRemoveComponentModal}
+                        updateProfileDesign={this.updateProfileDesign}
+                        updateProfileColours={this.updateProfileColours}
+                        toggleReordering={this.toggleReordering}
+                    />
                 </div>
                 <div className="right-component">
                     <div className="profile-container">
-                        <EditableProfile selectComponent={this.selectComponent}
+                        <EditableProfile reordering={this.state.reordering}
+                                         selectComponent={this.selectComponent}
                                          toggleModal={this.toggleModal} user={this.state.user}
                                          lastReloaded={this.state.lastReloaded}
                                          updateComponentOrder={this.updateComponentOrder}/>

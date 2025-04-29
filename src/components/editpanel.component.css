@@ -409,19 +409,42 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     display: flex;
 }
 
+.default .lp-cont {
+    display: block;
+}
+
 .default .entry {
-    color: white;
-    margin: 15px auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: initial;
+    width: 100%;
+    margin: 8px auto;
+    background: #e3e3e3;
+    color: #575757;
     background-size: cover;
-    background-position: center;
-    padding: 25px;
+    padding: 12px;
     box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .2), 0 6px 8px 0 rgba(0, 0, 0, .19);
     border-radius: 20px;
+    border: none;
     text-align: center;
 }
 
-.default .alternative {
-    background: linear-gradient(135deg, rgba(117, 159, 6, 1) 0%, rgba(17, 101, 87, 1) 78%) !important;
+.default .entry svg {
+    margin-right: 5px;
+}
+
+.lp-cont .special-publish {
+    background: #6a28d3;
+    color: white;
+}
+
+.lp-cont .special-generate {
+    /** Remove when that thing is added /shrug */
+    display: none;
+    background: #c9639d;
+    background: linear-gradient(299deg, rgba(201, 99, 157, 1) 0%, rgba(99, 172, 255, 1) 100%);
+    color: white;
 }
 
 .theme-picker-buttons {
