@@ -77,6 +77,10 @@ a:hover {
     border-top: solid 1px #333333;
 }
 
+.reorder-buttons {
+    display: none;
+}
+
 .reordering {
     background-image: radial-gradient(6px 6px at var(--dotDistance) calc(50% - 30px),
     var(--dotColor) 50%, transparent 50%), radial-gradient(6px 6px at var(--dotDistance) calc(50% - 10px),
@@ -93,15 +97,39 @@ a:hover {
     border-radius: 30px;
     margin: 15px 20px;
     box-shadow: 0 2px 8px 0 var(--select-component), 0 2px 8px 0 var(--select-component);
+    display: flex;
+    justify-content: space-between;
 }
 
 .reordering .component {
     margin-left: 0 !important;
     padding-left: 80px !important;
+    width: 100%;
 }
 
 .reordering .editing {
     border-top: none;
+}
+
+.reordering .reorder-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    height: 160px;
+    justify-content: space-evenly;
+}
+
+.reordering .reorder-buttons button {
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 16px;
+    color: var(--profile-text-accent);
+    background: rgb(255, 255, 255, 0.5);
+    border: none;
+    box-shadow: 0 2px 8px 0 var(--select-component), 0 2px 8px 0 var(--select-component);
 }
 
 .card .component img {

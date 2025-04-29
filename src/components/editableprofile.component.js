@@ -5,8 +5,11 @@ import GenericComponent from "../components/generic.component";
 import PDFComponent from "../components/pdf.component";
 import LinklistComponent from "../components/linklist.component";
 import ReactDragListView from 'react-drag-listview';
+
 import {IoIosAdd} from 'react-icons/io'
 import {FiEdit3} from "react-icons/fi";
+import {FaArrowUp, FaArrowDown} from "react-icons/fa";
+
 
 import '../pages/profileDesigns/profile1.css'
 import '../pages/profileDesigns/profile2.css'
@@ -62,7 +65,13 @@ export default class EditableProfile extends React.Component
             <ul style={{listStyle: "none", paddingInlineStart: 0}}>
                 {this.props.user.components.map((component, key) => (
                     <li className={"selectableComponent" + (this.props.reordering ? " reordering" : "")}
-                        onClick={() => this.selectComponent(key)}>{this.component(component, key)}</li>))}
+                        onClick={() => this.selectComponent(key)}>
+                        {this.component(component, key)}
+                        <div className={'reorder-buttons'}>
+                            <button onClick={() => this.updateOrder(key, key - 1)}><FaArrowUp size={20}/></button>
+                            <button onClick={() => this.updateOrder(key, key + 1)}><FaArrowDown size={20}/></button>
+                        </div>
+                    </li>))}
             </ul>
         </ReactDragListView>
     }
@@ -88,7 +97,10 @@ export default class EditableProfile extends React.Component
                             alt={"Profile picture"} onClick={() => this.selectComponent(-2)}
                         />
                     </div>
-                    <div style={{display: "block", marginTop: (this.props.user.profileDesign.design === 2 ? 0 : "20px")}}>
+                    <div style={{
+                        display: "block",
+                        marginTop: (this.props.user.profileDesign.design === 2 ? 0 : "20px")
+                    }}>
                         <div className={"selectableComponent"}
                              onClick={() => this.selectComponent(-2)}>
                             <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
