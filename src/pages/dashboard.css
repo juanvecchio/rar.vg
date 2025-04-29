@@ -232,7 +232,6 @@ h3 {
     left: 78%;
     width: 300px;
     border: none;
-    border: none;
     border-radius: 25px;
     padding-top: 20px;
     padding-bottom: 60px;
@@ -474,6 +473,8 @@ h3 {
 }
 
 .floating-publish .special-generate {
+    /** Remove when that thing is added /shrug */
+    display: none;
     background: #c9639d;
     background: linear-gradient(299deg, rgba(201, 99, 157, 1) 0%, rgba(99, 172, 255, 1) 100%);
     color: white;
@@ -536,7 +537,7 @@ h3 {
         display: flex;
     }
 
-    .publish-button {
+    .dash-container .right .publish-button {
         display: none;
     }
 

@@ -375,9 +375,9 @@ export default class Dashboard extends React.Component {
                     </div>
                 </dialog>
                 <div className={"floating-publish"}>
-                    <button className={"button no-margin-left"}><IoIosList size={26}/>Reorder</button>
-                    <button className={"button"}><IoMdCloudUpload size={26}/>Publish</button>
-                    <button className={"button"}><IoMdAdd size={26}/>Add</button>
+                    <button onClick={() => this.toggleReordering()} className={"button no-margin-left"}><IoIosList size={26}/>Reorder</button>
+                    <button onClick={() => this.updateProfile()} className={"button"}><IoMdCloudUpload size={26}/>Publish</button>
+                    <button onClick={() => this.toggleModal()} className={"button"}><IoMdAdd size={26}/>Add</button>
                     <button className={"button no-margin-right special-generate"}><BsStars size={26}/>Generate</button>
                 </div>
                 <div className={"left-component " + (this.state.component != null ? 'lc-active' : '')}>
