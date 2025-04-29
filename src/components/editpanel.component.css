@@ -413,6 +413,10 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     display: block;
 }
 
+.outer-mock .default .reordering {
+    display: none;
+}
+
 .default .entry {
     display: inline-flex;
     align-items: center;
@@ -439,6 +443,10 @@ TEMPORARLY REMOVING FILE BUTTON STYLE
     color: white;
 }
 
+.outer-mock .default .stop-reorder {
+    background: #ff9d9d;
+    color: #962e2e;
+}
 .lp-cont .special-generate {
     /** Remove when that thing is added /shrug */
     display: none;

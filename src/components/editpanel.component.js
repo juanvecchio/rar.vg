@@ -649,13 +649,24 @@ export default class EditPanel extends React.Component
     {
         if (!component)
             return <div className={"default"}>
-                <div>
+                <div className={(this.props.reordering ? "" : " reordering")}>
+                    <span className={"m"}>Reorder mode</span><br/><br/>
+                    <span className={"s"}>Drag and drop components to change its position</span><br/>
+                    <span className={"s"}>Use the arrows to rearrange each component individually</span>
+                    <br /><br/>
+                    <button className={'entry stop-reorder'} onClick={() => this.reorder()}>
+                        <IoIosList size={20}/>
+                        <span className={'s'}>Stop reorder</span>
+                    </button>
+                </div>
+
+                <div className={(this.props.reordering ? " reordering" : "")}>
                     <span className={"m"}>Start editing</span><br/><br/>
                     <span className={"s"}>Click on a component to begin editing</span><br/>
                     <span className={"s"}>Toggle reorder to change a component's position</span>
                 </div>
 
-                <div className={"lp-cont"}>
+                <div className={"lp-cont" + (this.props.reordering ? " reordering" : "")}>
                     <span className={'m'}>Quick actions</span><br/><br/>
                     <button className={'entry'}
                             style={{

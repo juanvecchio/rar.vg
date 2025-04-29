@@ -439,6 +439,7 @@ export default class Dashboard extends React.Component
                         updateProfileDesign={this.updateProfileDesign}
                         updateProfileColours={this.updateProfileColours}
                         toggleReordering={this.toggleReordering}
+                        reordering={this.state.reordering}
                     />
                 </div>
                 <div className="right-component">
