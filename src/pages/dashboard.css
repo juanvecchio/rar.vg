@@ -214,10 +214,7 @@ h3 {
     height: 100%;
     vertical-align: center;
     text-align: center;
-}
-
-.outer-mock .default div {
-    margin-top: 20px;
+    justify-content: space-evenly;
 }
 
 .unraised {
