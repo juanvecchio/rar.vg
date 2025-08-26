@@ -78,7 +78,7 @@ export default class ProfileLinks extends React.Component
         else
         {
             return (
-                <a href={this.icons[social.name].link + social.content}>{icon.icon}</a>
+                <a href={this.props.editing ? '#' : (this.icons[social.name].link + social.content)}>{icon.icon}</a>
             );
         }
     };
@@ -87,7 +87,7 @@ export default class ProfileLinks extends React.Component
     {
         const socials = this.props.socials;
         return (
-            <div className={"socials"}>
+            <div className={"socials socials-d" + this.props.design}>
                 {socials.map((social) => this.iconLink(social))}
                 {this.props.editing ? <button><IoIosAdd size={30}/></button> : <></>}
             </div>

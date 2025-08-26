@@ -1,5 +1,8 @@
-import linkV from '../static/linklist-type1.png'
-import linkH from '../static/linklist-type2.png'
+import linkH from '../static/linklist-type1.png'
+import linkV from '../static/linklist-type2.png'
+import prof1 from '../static/profile-type1.png'
+import prof2 from '../static/profile-type2.png'
+
 import React from "react";
 import {AiFillEdit, AiOutlineClose, AiOutlineCheck} from "react-icons/ai"
 import {
@@ -20,13 +23,14 @@ import {
     BsGithub,
     BsTwitch,
     BsYoutube,
-    BsLinkedin,
+    BsLinkedin, BsStars,
 } from "react-icons/bs";
 import "./editpanel.component.css"
 import {upload} from "../utils/session.util";
 import config from '../utils/config.util'
 import Link from "../router/link";
-import parseMD from "parse-md";
+import {colours, styles} from "../pages/profileDesigns/colour.util";
+import {IoIosList, IoMdAdd, IoMdCloudUpload} from "react-icons/io";
 
 const importAll = (r) => r.keys().map(r);
 const postFiles = importAll(require.context("../news/", true, /\.md$/))
@@ -93,24 +97,31 @@ export default class EditPanel extends React.Component
         }
     }
 
-    latestPosts = (posts) =>
+
+    colourButton = (theme, key) =>
     {
-        return <div className={"lp-cont"}>
-            <span className={'m'}>Latest news</span>
-            {posts != null ? posts.map((post, key) => (
-                <a key={key} href={"/post?p=" + parseMD(post).metadata.id}>
-                    <div className={"entry"} style={{backgroundImage: `url(${parseMD(post).metadata.banner})`}}>
-                        <span className={"mm"}>{parseMD(post).metadata.title}</span><br/>
-                    </div>
-                </a>
-            )) : <></>}
-            <a href={"/posts"}>
-                <div className={"entry alternative"}>
-                    <span className={"mm"}>More news 👉</span>
-                </div>
-            </a>
-        </div>
+        return <button className={"colour-theme-button"} key={key} style={{
+            background: `linear-gradient(135deg, ${theme.background} 50%, ${theme.card} 50%)`
+        }} onClick={() => this.props.updateProfileColours(key)}/>
     }
+
+    colourButtons = (themes) =>
+    {
+        return themes.map((theme, key) => (
+            this.colourButton(theme, key)
+        ))
+    }
+
+    toggleModal = () =>
+    {
+        this.props.toggleModal()
+    }
+
+    editProfile = () =>
+    {
+        this.props.selectComponent(-2)
+    }
+
     clearState = () =>
     {
         this.setState({
@@ -138,7 +149,6 @@ export default class EditPanel extends React.Component
 
     handleNecessaryUpdates = (component) =>
     {
-        console.log(component)
         switch (component.type)
         {
             case 'generic':
@@ -224,6 +234,21 @@ export default class EditPanel extends React.Component
         this.selectLinkItem(component, content.links.length - 1)
     }
 
+    checkURLValidity(url)
+    {
+        let url_;
+
+        try
+        {
+            url_ = new URL(url);
+        } catch (_)
+        {
+            return false;
+        }
+
+        return url.protocol === "http:" || url.protocol === "https:";
+    }
+
     updateLinkItem = (component, link) =>
     {
         if (this.state.selectedLinkListItem !== null)
@@ -231,6 +256,10 @@ export default class EditPanel extends React.Component
             if (this.state.linkItemURLField === null)
             {
                 return this.displayLinkItemMessage({type: 'error', message: 'Link field must not be empty!'})
+            }
+            if(this.checkURLValidity(this.state.linkItemURLField) === false)
+            {
+                return this.displayLinkItemMessage({type: 'error', message: 'Use the correct link format!'})
             }
             const newLink = {
                 url: this.state.linkItemURLField || link.url,
@@ -630,17 +659,53 @@ export default class EditPanel extends React.Component
         this.props.cancelSelection()
     }
 
+    reorder = () =>
+    {
+        this.props.toggleReordering()
+    }
+
     renderFields = (component) =>
     {
         if (!component)
             return <div className={"default"}>
-                <div>
+                <div className={(this.props.reordering ? "" : " reordering")}>
+                    <span className={"m"}>Reorder mode</span><br/><br/>
+                    <span className={"s"}>Drag and drop components to change its position</span><br/>
+                    <span className={"s"}>Use the arrows to rearrange each component individually</span>
+                    <br/><br/>
+                    <button className={'entry stop-reorder'} onClick={() => this.reorder()}>
+                        <IoIosList size={20}/>
+                        <span className={'s'}>Stop reorder</span>
+                    </button>
+                </div>
+
+                <div className={(this.props.reordering ? " reordering" : "")}>
                     <span className={"m"}>Start editing</span><br/><br/>
                     <span className={"s"}>Click on a component to begin editing</span><br/>
-                    <span className={"s"}>Drag a component to change its position</span>
+                    <span className={"s"}>Toggle reorder to change a component's position</span>
                 </div>
-                <div>
-                    {this.latestPosts(this.state.posts)}
+
+                <div className={"lp-cont" + (this.props.reordering ? " reordering" : "")}>
+                    <span className={'m'}>Quick actions</span><br/><br/>
+                    <button className={'entry'}
+                            style={{
+                                color: styles(this.props.user.profileDesign.colour || 0)["--profile-text-accent"],
+                                backgroundColor: styles(this.props.user.profileDesign.colour || 0)["--card-background"],
+                            }}
+                            onClick={() => this.editProfile()}>
+                        <span className={'s'}>Change profile design</span>
+                    </button>
+                    <button className={'entry'} onClick={() => this.reorder()}>
+                        <IoIosList size={20}/>
+                        <span className={'s'}>Reorder</span>
+                    </button>
+                    <button className={'entry'} onClick={() => this.toggleModal()}>
+                        <IoMdAdd size={20}/>
+                        <span className={'s'}>Add</span>
+                    </button>
+                    <button className={'entry special-generate'}>
+                        <BsStars size={20}/><span className={'s'}>Generate</span>
+                    </button>
                 </div>
             </div>
         switch (component.type)
@@ -680,10 +745,26 @@ export default class EditPanel extends React.Component
                                     onClick={() => this.updateDisplayName(this.state.displayName)}>Done
                             </button>
                         </div>
+                        <h3 style={{marginBottom: "0", paddingBottom: "0"}} className="mm p-no-margin-bottom">Change
+                            profile design</h3>
+                        <div className='list-button-container'>
+                            <button className="button unraised link-img" type="button"
+                                    onClick={() => this.props.updateProfileDesign(1)}>
+                                <img src={prof1} alt={'Profile type 1'}/>
+                            </button>
+                            <button style={{marginLeft: "10%"}} className="button unraised link-img"
+                                    onClick={() => this.props.updateProfileDesign(2)}>
+                                <img src={prof2} alt={'Profile type 2'}/>
+                            </button>
+                        </div>
+                        <div className={"theme-picker-buttons"}>
+                            {this.colourButtons(colours)}
+                        </div>
                         <h4 className={'mm p-no-margin-bottom'}>Danger zone</h4>
                         <Link to={"/delete-account"}>
                             <button className="button delete-button">Delete account</button>
                         </Link>
+                        <br/>
                     </div>
                 </>
             case 'generic':
@@ -791,7 +872,7 @@ export default class EditPanel extends React.Component
                             width={"100%"} height={400} frameBorder={"0"} allowFullScreen={true}
                             allow={"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"}
                             loading={"lazy"}></iframe>
-                    <div class="margin-button">
+                    <div className="margin-button">
                         <button className="delete-component"
                                 onClick={() => this.props.deleteSelectedComponent()}>Delete component
                         </button>
