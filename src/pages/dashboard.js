@@ -51,24 +51,41 @@ export default class Dashboard extends React.Component
         }
     }
 
-    componentWillUnmount()
-    {
-        window.removeEventListener("beforeunload", this.onUnload);
-        document.addEventListener('click', this.handleClickOutside, true);
-    }
-
     componentDidMount()
+{
+    window.addEventListener("beforeunload", this.onUnload);
+    tryUserLoading().then(response =>
     {
-        window.addEventListener("beforeunload", this.onUnload);
-        tryUserLoading().then(response =>
-        {
-            if (!response.success)
-                return window.location.href = "/login"
+        if (!response.success)
+            return window.location.href = "/login"
 
-            this.setState({user: response.content.user})
-        })
-        document.addEventListener('click', this.handleClickOutside, true);
+        this.setState({user: response.content.user})
+    })
+    document.addEventListener('click', this.handleClickOutside, true);
+
+    //Agrega un event listener cuando se monta el componente
+    document.addEventListener('keydown', this.handleKeyDown);
+}
+
+componentWillUnmount()
+{
+    window.removeEventListener("beforeunload", this.onUnload);
+    document.removeEventListener('click', this.handleClickOutside, true);
+
+    //Se borra el listener cuando se desmonta el componente
+    document.removeEventListener('keydown', this.handleKeyDown);
+}
+
+//función que chequea Ctrl+Z o Ctrl+Y
+handleKeyDown = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        
     }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+        
+    }
+}
+
 
     updateProfile = () =>
     {
