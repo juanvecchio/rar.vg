@@ -1,19 +1,17 @@
 import React from "react";
-import {tryLogout, tryUserLoading, updateProfile} from "../utils/session.util";
+import { tryLogout, tryUserLoading, updateProfile } from "../utils/session.util";
 import config from '../utils/config.util'
 
 import './dashboard.css'
 import EditableProfile from "../components/editableprofile.component";
 import EditPanel from "../components/editpanel.component";
-import {colours} from "./profileDesigns/colour.util";
+import { colours } from "./profileDesigns/colour.util";
 
-import {IoMdOpen, IoMdAdd, IoIosList, IoMdCloudUpload} from "react-icons/io";
-import {BsStars} from "react-icons/bs";
+import { IoMdOpen, IoMdAdd, IoIosList, IoMdCloudUpload } from "react-icons/io";
+import { BsStars } from "react-icons/bs";
 
-export default class Dashboard extends React.Component
-{
-    constructor(props)
-    {
+export default class Dashboard extends React.Component {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -34,74 +32,64 @@ export default class Dashboard extends React.Component
 
     }
 
-    handleClickOutside(event)
-    {
-        if (this.profOptions.current && !this.profOptions.current.contains(event.target))
-        {
+    handleClickOutside(event) {
+        if (this.profOptions.current && !this.profOptions.current.contains(event.target)) {
             this.props.onClickOutside && this.props.onClickOutside();
         }
     };
 
-    onUnload = e =>
-    {
-        if (this.state.unpublished)
-        {
+    onUnload = e => {
+        if (this.state.unpublished) {
             e.preventDefault();
             e.returnValue = 'You\'ve got unsaved changes! Are your sure you want to close?';
         }
     }
 
-    componentDidMount()
-{
-    window.addEventListener("beforeunload", this.onUnload);
-    tryUserLoading().then(response =>
-    {
-        if (!response.success)
-            return window.location.href = "/login"
+    componentDidMount() {
+        window.addEventListener("beforeunload", this.onUnload);
+        tryUserLoading().then(response => {
+            if (!response.success)
+                return window.location.href = "/login"
 
-        this.setState({user: response.content.user})
-    })
-    document.addEventListener('click', this.handleClickOutside, true);
+            this.setState({ user: response.content.user })
+        })
+        document.addEventListener('click', this.handleClickOutside, true);
 
-    //Agrega un event listener cuando se monta el componente
-    document.addEventListener('keydown', this.handleKeyDown);
-}
-
-componentWillUnmount()
-{
-    window.removeEventListener("beforeunload", this.onUnload);
-    document.removeEventListener('click', this.handleClickOutside, true);
-
-    //Se borra el listener cuando se desmonta el componente
-    document.removeEventListener('keydown', this.handleKeyDown);
-}
-
-//función que chequea Ctrl+Z o Ctrl+Y
-handleKeyDown = (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-        
+        //Agrega un event listener cuando se monta el componente
+        document.addEventListener('keydown', this.handleKeyDown);
     }
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
-        
+
+    componentWillUnmount() {
+        window.removeEventListener("beforeunload", this.onUnload);
+        document.removeEventListener('click', this.handleClickOutside, true);
+
+        //Se borra el listener cuando se desmonta el componente
+        document.removeEventListener('keydown', this.handleKeyDown);
     }
-}
+
+    //función que chequea Ctrl+Z o Ctrl+Y
+    handleKeyDown = (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+
+        }
+    }
 
 
-    updateProfile = () =>
-    {
+    updateProfile = () => {
         updateProfile(this.state.user.displayName, JSON.stringify(this.state.user.components),
             JSON.stringify(this.state.user.sociallinks), JSON.stringify(this.state.user.profileDesign))
-            .then(response =>
-            {
+            .then(response => {
                 if (!response.success)
                     console.error(response.content)
 
-                this.displayMessage({type: 'success', message: "Changes published successfully!"})
+                this.displayMessage({ type: 'success', message: "Changes published successfully!" })
             })
     }
 
-    updateComponentOrder = (from, to) =>
-    {
+    updateComponentOrder = (from, to) => {
         if (this.state.reordering === false) return
         const oldUser = this.state.user
         let f = oldUser.components.splice(from, 1)[0];
@@ -109,86 +97,74 @@ handleKeyDown = (e) => {
         this.setState({
             user: oldUser,
         })
-        this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
     }
 
-    selectComponent = (key) =>
-    {
+    selectComponent = (key) => {
         if (this.state.reordering === true) return
         this.editPanel.current.clearState()
-        this.setState({component: key})
+        this.setState({ component: key })
         this.editPanel.current.handleNecessaryUpdates(this.getSelectedComponent(key))
     }
 
-    toggleReordering = () =>
-    {
+    toggleReordering = () => {
         this.editPanel.current.clearState()
         const oldOrder = !this.state.reordering
-        this.setState({reordering: oldOrder})
+        this.setState({ reordering: oldOrder })
     }
 
-    cancelSelection = () =>
-    {
+    cancelSelection = () => {
         this.editPanel.current.clearState()
-        this.setState({component: null})
+        this.setState({ component: null })
     }
 
-    updateComponentLocally = (content) =>
-    {
+    updateComponentLocally = (content) => {
         this.updateComponentLocallyWithoutCancelling(content)
         this.cancelSelection()
     }
 
-    updateComponentLocallyWithoutCancelling = (content) =>
-    {
+    updateComponentLocallyWithoutCancelling = (content) => {
         const oldUser = this.state.user
         oldUser.components[this.state.component].content = null
-        this.setState({user: oldUser})
+        this.setState({ user: oldUser })
         oldUser.components[this.state.component].content = content
-        this.setState({user: oldUser})
-        this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        this.setState({ user: oldUser })
+        this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
     }
 
-    updateProfileDesign = (design) =>
-    {
-        if (design > 0 && design < 3)
-        {
+    updateProfileDesign = (design) => {
+        if (design > 0 && design < 3) {
             this.setState({
                 user: {
                     ...this.state.user,
-                    profileDesign: {...this.state.user.profileDesign, design: design}
+                    profileDesign: { ...this.state.user.profileDesign, design: design }
                 }
             })
-            this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
         }
     }
 
-    updateProfileColours = (theme) =>
-    {
-        if (theme >= 0 && theme < colours.length)
-        {
+    updateProfileColours = (theme) => {
+        if (theme >= 0 && theme < colours.length) {
             this.setState({
                 user: {
                     ...this.state.user,
-                    profileDesign: {...this.state.user.profileDesign, colour: theme}
+                    profileDesign: { ...this.state.user.profileDesign, colour: theme }
                 }
             })
-            this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
         }
     }
 
-    updateDisplayName = (displayName) =>
-    {
-        if (displayName !== "")
-        {
-            this.setState({user: {...this.state.user, displayName: displayName}})
-            this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+    updateDisplayName = (displayName) => {
+        if (displayName !== "") {
+            this.setState({ user: { ...this.state.user, displayName: displayName } })
+            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
         }
         this.cancelSelection()
     }
 
-    drawMessage(message)
-    {
+    drawMessage(message) {
         if (message) return (
             <div className={"notice " + message.type}>
                 {message.message}
@@ -196,21 +172,18 @@ handleKeyDown = (e) => {
         )
     }
 
-    deleteSelectedComponent = () =>
-    {
+    deleteSelectedComponent = () => {
         const oldUser = this.state.user;
         oldUser.components.splice(this.state.component, 1);
-        this.setState({user: oldUser});
-        this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        this.setState({ user: oldUser });
+        this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
         this.cancelSelection()
         this.toggleRemoveComponentModal()
     }
 
-    addComponent(type)
-    {
-        let newComponent = {type: type, content: null}
-        switch (type)
-        {
+    addComponent(type) {
+        let newComponent = { type: type, content: null }
+        switch (type) {
             case 'generic':
                 newComponent.content = {
                     title: "This is a generic component",
@@ -218,7 +191,7 @@ handleKeyDown = (e) => {
                 }
                 break
             case 'pdf':
-                newComponent.content = {fileId: null}
+                newComponent.content = { fileId: null }
                 break
             case 'linklist':
                 newComponent.content = {
@@ -240,61 +213,52 @@ handleKeyDown = (e) => {
         }
         const oldUser = this.state.user;
         oldUser.components.push(newComponent)
-        this.setState({user: oldUser})
-        this.displayMessage({type: 'important', message: "You've got unsaved changes!"}, true)
+        this.setState({ user: oldUser })
+        this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
         this.toggleModal()
         this.selectComponent(this.state.user.components.length - 1)
     }
 
-    updateLinks = (links) =>
-    {
+    updateLinks = (links) => {
         const oldUser = this.state.user
         oldUser.sociallinks = links
-        this.setState({user: oldUser})
+        this.setState({ user: oldUser })
     }
 
-    displayMessage = (message, persistent) =>
-    {
-        this.setState({unpublished: message})
-        if (!persistent) setTimeout(() => this.setState({unpublished: null}), 5000)
+    displayMessage = (message, persistent) => {
+        this.setState({ unpublished: message })
+        if (!persistent) setTimeout(() => this.setState({ unpublished: null }), 5000)
     }
 
-    getSelectedComponent(id)
-    {
-        switch (id)
-        {
+    getSelectedComponent(id) {
+        switch (id) {
             case -2:
-                return {type: 'user'}
+                return { type: 'user' }
             case -1:
-                return {type: 'sociallinks'}
+                return { type: 'sociallinks' }
             default:
                 return this.state.user.components[id]
         }
     }
 
-    showProfOptions = () =>
-    {
+    showProfOptions = () => {
         this.profOptions.open ? this.profOptions.close() : this.profOptions.showModal()
     }
 
-    toggleModal = () =>
-    {
+    toggleModal = () => {
         this.dialog.open ? this.dialog.close() : this.dialog.showModal()
     }
 
-    toggleLogOutModal = () =>
-    {
+    toggleLogOutModal = () => {
         this.logoutConfirmation.open ? this.logoutConfirmation.close() : this.logoutConfirmation.showModal()
     }
 
-    toggleRemoveComponentModal = () =>
-    {
+    toggleRemoveComponentModal = () => {
         this.removeComponentModal.open ? this.removeComponentModal.close() : this.removeComponentModal.showModal()
     }
 
-    reloadImage = () =>
-    {
-        this.setState({lastReloaded: Date.now()})
+    reloadImage = () => {
+        this.setState({ lastReloaded: Date.now() })
     }
 
     /*handleClickOutside(event)
@@ -305,39 +269,40 @@ handleKeyDown = (e) => {
         }
     };*/
 
-    changeInputValueRadio(event)
-    {
+    changeInputValueRadio(event) {
         console.log(event.target.value)
-        this.setState({single: event.target.value})
+        this.setState({ single: event.target.value })
     }
 
-    logout()
-    {
-        tryLogout(this.state.single === 'only').then(response =>
-        {
+    logout() {
+        tryLogout(this.state.single === 'only').then(response => {
             window.location.href = '/login?jr=' + (response.content.code || 4)
         })
     }
 
-    render()
-    {
+    render() {
         if (!this.state.user) return 'Loading...'
         return <div className="dashboard-container">
+            
+            <div className="df-toast">
+                <strong>Notificación</strong>
+                </div>
+
             <dialog className={"remove-component-modal"} ref={ref => this.removeComponentModal = ref}>
                 <div className="question-remove">
                     <span className={'m'}>Do you want to delete this component?</span>
                 </div>
                 <div className="remove-component-modal-buttons-container">
                     <button className="remove-component-modal-button cancel"
-                            onClick={() => this.toggleRemoveComponentModal()}>No, keep it
+                        onClick={() => this.toggleRemoveComponentModal()}>No, keep it
                     </button>
                     <button className="remove-component-modal-button done"
-                            onClick={() => this.deleteSelectedComponent()}>Yes, delete
+                        onClick={() => this.deleteSelectedComponent()}>Yes, delete
                     </button>
                 </div>
             </dialog>
             <dialog className={"logout-modal"} onClick={() => this.toggleLogOutModal()}
-                    ref={ref => this.logoutConfirmation = ref}>
+                ref={ref => this.logoutConfirmation = ref}>
                 <div onClick={e => e.stopPropagation()}>
                     <div className="question-logout">
                         <span className={"m"}>Do you want to log out?</span>
@@ -346,14 +311,14 @@ handleKeyDown = (e) => {
                     <div className={"inner-mock2"}>
                         <label className="logout-option">
                             <input onChange={this.changeInputValueRadio} value={"only"}
-                                   checked={this.state.single === "only"} type={"radio"} name={"logout-options"}
-                                   className="circle-opt"></input>
+                                checked={this.state.single === "only"} type={"radio"} name={"logout-options"}
+                                className="circle-opt"></input>
                             <span className={"s"}>Log out of this device only</span>
                         </label>
                         <label className="logout-option">
                             <input onChange={this.changeInputValueRadio} value={"all"}
-                                   checked={this.state.single === "all"}
-                                   type={"radio"} name={"logout-options"} className="circle-opt"></input>
+                                checked={this.state.single === "all"}
+                                type={"radio"} name={"logout-options"} className="circle-opt"></input>
                             <span className={"s"}>Log out of all devices (will close all of your sessions!)</span>
                         </label>
                     </div>
@@ -361,7 +326,7 @@ handleKeyDown = (e) => {
                         <button className="logout-modal-button cancel" onClick={() => this.toggleLogOutModal()}>Cancel
                         </button>
                         <button className="logout-modal-button done"
-                                onClick={() => this.logout()}>Done
+                            onClick={() => this.logout()}>Done
                         </button>
                     </div>
                 </div>
@@ -395,26 +360,25 @@ handleKeyDown = (e) => {
                 </div>
                 <div className="right">
                     <button className="publish-button"
-                            onClick={() => window.open('https://' + this.state.user.username + '.rar.vg', '_blank')}
-                            style={{marginRight: "10px"}}><IoMdOpen size={10} style={{marginRight: "5px"}}/>Open profile
+                        onClick={() => window.open('https://' + this.state.user.username + '.rar.vg', '_blank')}
+                        style={{ marginRight: "10px" }}><IoMdOpen size={10} style={{ marginRight: "5px" }} />Open profile
                     </button>
                     <button className="publish-button" onClick={() => this.updateProfile()}>Publish</button>
                     <button className="profile-button" onClick={() => this.showProfOptions()}
-                            style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded}}>.
+                        style={{ backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded }}>.
                     </button>
                 </div>
             </div>
             <div className="dash-container2">
                 <dialog className="profile-popup" onClick={() => this.showProfOptions()}
-                        ref={ref => this.profOptions = ref}>
+                    ref={ref => this.profOptions = ref}>
                     <div onClick={e => e.stopPropagation()}>
                         <div className="photo-dialog-div">
-                            <button className="profile-button-dialog button unraised" onClick={() =>
-                            {
+                            <button className="profile-button-dialog button unraised" onClick={() => {
                                 this.selectComponent(-2)
                                 this.profOptions.close()
                             }}
-                                    style={{backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded}}>.
+                                style={{ backgroundImage: "url(" + config('HOST') + "/avatar/" + this.state.user.id + ".png?lr=" + this.state.lastReloaded }}>.
                             </button>
                         </div>
                         <br></br>
@@ -422,12 +386,12 @@ handleKeyDown = (e) => {
                             <span className="mm">{this.state.user.displayName}</span>
                             <span className="s">@{this.state.user.username}</span>
                             <span className="ss"
-                                  style={{color: '#666'}}>{this.state.user.email.length < 25 ? this.state.user.email : this.state.user.email.slice(0, 25)}</span>
+                                style={{ color: '#666' }}>{this.state.user.email.length < 25 ? this.state.user.email : this.state.user.email.slice(0, 25)}</span>
                         </div>
-                        <hr style={{width: '100%'}}/>
+                        <hr style={{ width: '100%' }} />
                         <div>
                             <button className="button unraised cancel-button-dialog"
-                                    onClick={() => this.toggleLogOutModal()}>Log out
+                                onClick={() => this.toggleLogOutModal()}>Log out
                             </button>
                         </div>
                     </div>
@@ -436,22 +400,22 @@ handleKeyDown = (e) => {
                     <div className={this.state.reordering === false
                         ? "floating-reordering-default" : "floating-reordering-hidden"}>
                         <button onClick={() => this.toggleReordering()} className={"button no-margin-left"}><IoIosList
-                            size={26}/>Reorder
+                            size={26} />Reorder
                         </button>
-                        <button onClick={() => this.updateProfile()} className={"button"}><IoMdCloudUpload size={26}/>Publish
+                        <button onClick={() => this.updateProfile()} className={"button"}><IoMdCloudUpload size={26} />Publish
                         </button>
-                        <button onClick={() => this.toggleModal()} className={"button"}><IoMdAdd size={26}/>Add</button>
-                        <button className={"button no-margin-right special-generate"}><BsStars size={26}/>Generate
+                        <button onClick={() => this.toggleModal()} className={"button"}><IoMdAdd size={26} />Add</button>
+                        <button className={"button no-margin-right special-generate"}><BsStars size={26} />Generate
                         </button>
                     </div>
                     <div className={this.state.reordering === true
                         ? "floating-reordering-default" : "floating-reordering-hidden"}>
                         <button onClick={() => this.toggleReordering()}
-                                className={"button button-reorder button-coloured no-margin-left"}><IoIosList
-                            size={26}/>Stop reorder
+                            className={"button button-reorder button-coloured no-margin-left"}><IoIosList
+                                size={26} />Stop reorder
                         </button>
                         <button onClick={() => this.updateProfile()}
-                                className={"button button-reorder no-margin-right"}><IoMdCloudUpload size={26}/>Publish
+                            className={"button button-reorder no-margin-right"}><IoMdCloudUpload size={26} />Publish
                         </button>
                     </div>
                 </div>
@@ -476,14 +440,15 @@ handleKeyDown = (e) => {
                 <div className="right-component">
                     <div className="profile-container">
                         <EditableProfile reordering={this.state.reordering}
-                                         selectComponent={this.selectComponent}
-                                         toggleModal={this.toggleModal} user={this.state.user}
-                                         lastReloaded={this.state.lastReloaded}
-                                         updateComponentOrder={this.updateComponentOrder}/>
+                            selectComponent={this.selectComponent}
+                            toggleModal={this.toggleModal} user={this.state.user}
+                            lastReloaded={this.state.lastReloaded}
+                            updateComponentOrder={this.updateComponentOrder} />
                     </div>
                 </div>
             </div>
 
         </div>
+
     }
 }

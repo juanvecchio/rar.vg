@@ -657,3 +657,22 @@ h3 {
 dialog:-internal-dialog-in-top-layer::backdrop {
     background: rgba(0, 0, 0, 0.4);
 }
+
+/* Toast chico, fijo a la izquierda; SIN overlay */
+.df-toast {
+  position: fixed;
+  top: 620px;
+  left: 160px;
+  max-width: 260px;
+  background-color: #fff5f5;   /* fondo claro rojizo */
+  border: 1px solid #dc2626;   /* borde rojo */
+  color: #dc2626;              /* texto rojo */
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,.1);
+  font-size: 14px;
+  z-index: 200;                /* suficiente para verse, sin tapar diálogos */
+  pointer-events: auto;        /* no bloquea interacciones del resto si hacés click fuera */
+}
+
+/* (Opcional) asegúrate de NO tener reglas globales viejas de .notification que pongan overlay */
