@@ -5,6 +5,7 @@ import config from '../utils/config.util'
 import './dashboard.css'
 import EditableProfile from "../components/editableprofile.component";
 import EditPanel from "../components/editpanel.component";
+import AIChatComponent from "../components/aichat.component";
 import {colours} from "./profileDesigns/colour.util";
 
 import {IoMdOpen, IoMdAdd, IoIosList, IoMdCloudUpload} from "react-icons/io";
@@ -23,6 +24,7 @@ export default class Dashboard extends React.Component
             showModal: false,
             reordering: false,
             lastReloaded: Date.now(),
+            showAIChat: false,
 
             // Logout options
             single: "only",
@@ -31,6 +33,7 @@ export default class Dashboard extends React.Component
         this.editPanel = React.createRef()
         this.handleClickOutside = this.handleClickOutside.bind(this)
         this.changeInputValueRadio = this.changeInputValueRadio.bind(this)
+        this.toggleAIChat = this.toggleAIChat.bind(this)
 
     }
 
@@ -68,6 +71,17 @@ export default class Dashboard extends React.Component
             this.setState({user: response.content.user})
         })
         document.addEventListener('click', this.handleClickOutside, true);
+
+        // Auto-open AI chat once per session on any device (desktop and mobile)
+        try {
+            const hasAutoOpened = sessionStorage.getItem('aiChatAutoOpened') === '1';
+            if (!hasAutoOpened) {
+                this.setState({ showAIChat: true });
+                sessionStorage.setItem('aiChatAutoOpened', '1');
+            }
+        } catch (_) {
+            // no-op if storage is unavailable
+        }
     }
 
     updateProfile = () =>
@@ -294,6 +308,11 @@ export default class Dashboard extends React.Component
         this.setState({single: event.target.value})
     }
 
+    toggleAIChat()
+    {
+        this.setState(prevState => ({ showAIChat: !prevState.showAIChat }))
+    }
+
     logout()
     {
         tryLogout(this.state.single === 'only').then(response =>
@@ -454,6 +473,7 @@ export default class Dashboard extends React.Component
                         updateProfileColours={this.updateProfileColours}
                         toggleReordering={this.toggleReordering}
                         reordering={this.state.reordering}
+                        onOpenAIChat={() => this.setState({ showAIChat: true })}
                     />
                 </div>
                 <div className="right-component">
@@ -466,6 +486,11 @@ export default class Dashboard extends React.Component
                     </div>
                 </div>
             </div>
+            <AIChatComponent 
+                isVisible={this.state.showAIChat}
+                onClose={this.toggleAIChat}
+                user={this.state.user}
+            />
 
         </div>
     }
