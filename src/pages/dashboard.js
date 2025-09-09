@@ -24,6 +24,10 @@ export default class Dashboard extends React.Component {
 
             // Logout options
             single: "only",
+
+            // Undo/Redo
+            history: [],
+            redo: [],
         }
 
         this.editPanel = React.createRef()
@@ -32,8 +36,79 @@ export default class Dashboard extends React.Component {
 
     }
 
+    // =========================
+    // UNDO / REDO - CORE
+    // =========================
+    getSnapshot = () => JSON.parse(JSON.stringify({
+        user: this.state.user,
+        component: this.state.component,
+        reordering: this.state.reordering,
+    }));
+
+    pushHistory = () => {
+        // Limita a 50 snapshots (opcional)
+        const MAX = 50;
+        this.setState(prev => {
+            const nextHistory = [...prev.history, this.getSnapshot()];
+            return {
+                history: nextHistory.length > MAX ? nextHistory.slice(nextHistory.length - MAX) : nextHistory,
+                redo: [] // al crear una nueva rama, limpiamos redo
+            };
+        });
+    };
+
+    applySnapshot = (snap) => {
+        if (!snap) return;
+        this.setState({
+            user: snap.user,
+            component: snap.component,
+            reordering: snap.reordering
+        });
+        // mantener en sync el EditPanel cuando se cambia la selección via undo/redo
+        if (snap.component != null && this.editPanel.current) {
+            this.editPanel.current.clearState?.();
+            this.editPanel.current.handleNecessaryUpdates?.(this.getSelectedComponent(snap.component));
+        }
+    };
+
+    handleUndo = () => {
+        const { history, redo } = this.state;
+        if (!history.length) return;
+
+        const current = this.getSnapshot();            // lo actual pasa a REDO
+        const prev = history[history.length - 1];      // sacamos el último de HISTORY
+
+        this.setState({
+            history: history.slice(0, -1),
+            redo: [...redo, current],
+        }, () => {
+            this.applySnapshot(prev);
+            this.displayMessage({ type: 'important', message: "Undid last change (unsaved)." }, true);
+        });
+    };
+
+    handleRedo = () => {
+        const { history, redo } = this.state;
+        if (!redo.length) return;
+
+        const current = this.getSnapshot();            // lo actual pasa a HISTORY
+        const next = redo[redo.length - 1];            // sacamos el último de REDO
+
+        this.setState({
+            history: [...history, current],
+            redo: redo.slice(0, -1),
+        }, () => {
+            this.applySnapshot(next);
+            this.displayMessage({ type: 'important', message: "Redid change (unsaved)." }, true);
+        });
+    };
+
+    // =========================
+    // General
+    // =========================
+
     handleClickOutside(event) {
-        if (this.profOptions.current && !this.profOptions.current.contains(event.target)) {
+        if (this.profOptions?.current && !this.profOptions.current.contains(event.target)) {
             this.props.onClickOutside && this.props.onClickOutside();
         }
     };
@@ -70,13 +145,16 @@ export default class Dashboard extends React.Component {
     //función que chequea Ctrl+Z o Ctrl+Y
     handleKeyDown = (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-
+            e.preventDefault();
+            this.handleUndo();
+            return;
         }
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
-
+            e.preventDefault();
+            this.handleRedo();
+            return;
         }
     }
-
 
     updateProfile = () => {
         updateProfile(this.state.user.displayName, JSON.stringify(this.state.user.components),
@@ -91,30 +169,41 @@ export default class Dashboard extends React.Component {
 
     updateComponentOrder = (from, to) => {
         if (this.state.reordering === false) return
-        const oldUser = this.state.user
-        let f = oldUser.components.splice(from, 1)[0];
-        oldUser.components.splice(to, 0, f);
-        this.setState({
-            user: oldUser,
-        })
-        this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+
+        this.pushHistory(); // snapshot antes de mutar
+
+        const user = JSON.parse(JSON.stringify(this.state.user));
+        const f = user.components.splice(from, 1)[0];
+        user.components.splice(to, 0, f);
+
+        this.setState({ user }, () =>
+            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+        );
     }
 
     selectComponent = (key) => {
         if (this.state.reordering === true) return
-        this.editPanel.current.clearState()
-        this.setState({ component: key })
-        this.editPanel.current.handleNecessaryUpdates(this.getSelectedComponent(key))
+        // guardar selección anterior (para undo/redo de selección)
+        this.pushHistory();
+
+        this.editPanel.current?.clearState?.();
+        this.setState({ component: key }, () => {
+            this.editPanel.current?.handleNecessaryUpdates?.(this.getSelectedComponent(key))
+        });
     }
 
     toggleReordering = () => {
-        this.editPanel.current.clearState()
+        // también trackeamos reordering en la historia
+        this.pushHistory();
         const oldOrder = !this.state.reordering
+        this.editPanel.current?.clearState?.();
         this.setState({ reordering: oldOrder })
     }
 
     cancelSelection = () => {
-        this.editPanel.current.clearState()
+        // si querés que cancelar selección también sea undoable:
+        this.pushHistory();
+        this.editPanel.current?.clearState?.();
         this.setState({ component: null })
     }
 
@@ -124,42 +213,52 @@ export default class Dashboard extends React.Component {
     }
 
     updateComponentLocallyWithoutCancelling = (content) => {
-        const oldUser = this.state.user
-        oldUser.components[this.state.component].content = null
-        this.setState({ user: oldUser })
-        oldUser.components[this.state.component].content = content
-        this.setState({ user: oldUser })
-        this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+        this.pushHistory();
+
+        const user = JSON.parse(JSON.stringify(this.state.user));
+        user.components[this.state.component].content = content;
+
+        this.setState({ user }, () =>
+            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+        );
     }
 
     updateProfileDesign = (design) => {
         if (design > 0 && design < 3) {
-            this.setState({
-                user: {
-                    ...this.state.user,
-                    profileDesign: { ...this.state.user.profileDesign, design: design }
-                }
-            })
-            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+            this.pushHistory();
+
+            const user = JSON.parse(JSON.stringify(this.state.user));
+            user.profileDesign = { ...user.profileDesign, design };
+
+            this.setState({ user }, () =>
+                this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+            );
         }
     }
 
     updateProfileColours = (theme) => {
         if (theme >= 0 && theme < colours.length) {
-            this.setState({
-                user: {
-                    ...this.state.user,
-                    profileDesign: { ...this.state.user.profileDesign, colour: theme }
-                }
-            })
-            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+            this.pushHistory();
+
+            const user = JSON.parse(JSON.stringify(this.state.user));
+            user.profileDesign = { ...user.profileDesign, colour: theme };
+
+            this.setState({ user }, () =>
+                this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+            );
         }
     }
 
     updateDisplayName = (displayName) => {
         if (displayName !== "") {
-            this.setState({ user: { ...this.state.user, displayName: displayName } })
-            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+            this.pushHistory();
+
+            const user = JSON.parse(JSON.stringify(this.state.user));
+            user.displayName = displayName;
+
+            this.setState({ user }, () =>
+                this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+            );
         }
         this.cancelSelection()
     }
@@ -173,15 +272,21 @@ export default class Dashboard extends React.Component {
     }
 
     deleteSelectedComponent = () => {
-        const oldUser = this.state.user;
-        oldUser.components.splice(this.state.component, 1);
-        this.setState({ user: oldUser });
-        this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
-        this.cancelSelection()
-        this.toggleRemoveComponentModal()
+        this.pushHistory();
+
+        const user = JSON.parse(JSON.stringify(this.state.user));
+        user.components.splice(this.state.component, 1);
+
+        this.setState({ user }, () => {
+            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+            this.cancelSelection()
+            this.toggleRemoveComponentModal()
+        });
     }
 
     addComponent(type) {
+        this.pushHistory();
+
         let newComponent = { type: type, content: null }
         switch (type) {
             case 'generic':
@@ -211,18 +316,25 @@ export default class Dashboard extends React.Component {
             default:
                 return;
         }
-        const oldUser = this.state.user;
-        oldUser.components.push(newComponent)
-        this.setState({ user: oldUser })
-        this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
-        this.toggleModal()
-        this.selectComponent(this.state.user.components.length - 1)
+        const user = JSON.parse(JSON.stringify(this.state.user));
+        user.components.push(newComponent)
+
+        this.setState({ user }, () => {
+            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+            this.toggleModal()
+            this.selectComponent(user.components.length - 1)
+        });
     }
 
     updateLinks = (links) => {
-        const oldUser = this.state.user
-        oldUser.sociallinks = links
-        this.setState({ user: oldUser })
+        this.pushHistory();
+
+        const user = JSON.parse(JSON.stringify(this.state.user));
+        user.sociallinks = links;
+
+        this.setState({ user }, () =>
+            this.displayMessage({ type: 'important', message: "You've got unsaved changes!" }, true)
+        );
     }
 
     displayMessage = (message, persistent) => {
@@ -261,16 +373,7 @@ export default class Dashboard extends React.Component {
         this.setState({ lastReloaded: Date.now() })
     }
 
-    /*handleClickOutside(event)
-    {
-        if (this.ref.current && !this.ref.current.contains(event.target))
-        {
-            this.props.onClickOutside && this.props.onClickOutside();
-        }
-    };*/
-
     changeInputValueRadio(event) {
-        console.log(event.target.value)
         this.setState({ single: event.target.value })
     }
 

@@ -661,7 +661,7 @@ dialog:-internal-dialog-in-top-layer::backdrop {
 /* Toast chico, fijo abajo a la izquierda; visible en mobile y desktop */
 .df-toast {
   position: fixed;
-  bottom: 30px;           /* pegado abajo */
+  top: 50px;           /* pegado abajo */
   left: 105px;             /* pegado a la izquierda */
   max-width: 300px;
   background-color: #fff5f5;   /* fondo claro rojizo */
@@ -680,7 +680,7 @@ dialog:-internal-dialog-in-top-layer::backdrop {
   .df-toast {
     left: 15px;
     right: 15px;         /* ocupar ancho casi completo */
-    bottom: 120px;
+    top: 55px;
     max-width: unset;    /* sin límite de ancho */
     font-size: 16px;     /* texto un poco más grande para mobile */
   }
