@@ -283,10 +283,10 @@ export default class Dashboard extends React.Component {
     render() {
         if (!this.state.user) return 'Loading...'
         return <div className="dashboard-container">
-            
+
             <div className="df-toast">
-                <strong>Notificación</strong>
-                </div>
+                <strong>Lorem ipsum dolor sit amet. </strong>
+            </div>
 
             <dialog className={"remove-component-modal"} ref={ref => this.removeComponentModal = ref}>
                 <div className="question-remove">

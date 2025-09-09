@@ -662,7 +662,7 @@ dialog:-internal-dialog-in-top-layer::backdrop {
 .df-toast {
   position: fixed;
   top: 620px;
-  left: 160px;
+  left: 120px;
   max-width: 260px;
   background-color: #fff5f5;   /* fondo claro rojizo */
   border: 1px solid #dc2626;   /* borde rojo */
