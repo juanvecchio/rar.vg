@@ -28,12 +28,15 @@ export default class Dashboard extends React.Component {
             // Undo/Redo
             history: [],
             redo: [],
+
+            // Toast dinámico
+            toast: null,
         }
 
+        this.toastTimer = null; // timer para auto-ocultar toast
         this.editPanel = React.createRef()
         this.handleClickOutside = this.handleClickOutside.bind(this)
         this.changeInputValueRadio = this.changeInputValueRadio.bind(this)
-
     }
 
     // =========================
@@ -46,13 +49,12 @@ export default class Dashboard extends React.Component {
     }));
 
     pushHistory = () => {
-        // Limita a 50 snapshots (opcional)
         const MAX = 50;
         this.setState(prev => {
             const nextHistory = [...prev.history, this.getSnapshot()];
             return {
                 history: nextHistory.length > MAX ? nextHistory.slice(nextHistory.length - MAX) : nextHistory,
-                redo: [] // al crear una nueva rama, limpiamos redo
+                redo: []
             };
         });
     };
@@ -64,7 +66,6 @@ export default class Dashboard extends React.Component {
             component: snap.component,
             reordering: snap.reordering
         });
-        // mantener en sync el EditPanel cuando se cambia la selección via undo/redo
         if (snap.component != null && this.editPanel.current) {
             this.editPanel.current.clearState?.();
             this.editPanel.current.handleNecessaryUpdates?.(this.getSelectedComponent(snap.component));
@@ -75,8 +76,8 @@ export default class Dashboard extends React.Component {
         const { history, redo } = this.state;
         if (!history.length) return;
 
-        const current = this.getSnapshot();            // lo actual pasa a REDO
-        const prev = history[history.length - 1];      // sacamos el último de HISTORY
+        const current = this.getSnapshot();
+        const prev = history[history.length - 1];
 
         this.setState({
             history: history.slice(0, -1),
@@ -84,6 +85,7 @@ export default class Dashboard extends React.Component {
         }, () => {
             this.applySnapshot(prev);
             this.displayMessage({ type: 'important', message: "Undid last change (unsaved)." }, true);
+            this.displayToast("You undid the last change");
         });
     };
 
@@ -91,24 +93,41 @@ export default class Dashboard extends React.Component {
         const { history, redo } = this.state;
         if (!redo.length) return;
 
-        const current = this.getSnapshot();            // lo actual pasa a HISTORY
-        const next = redo[redo.length - 1];            // sacamos el último de REDO
+        const current = this.getSnapshot();
+        const next = redo[redo.length - 1];
 
         this.setState({
             history: [...history, current],
             redo: redo.slice(0, -1),
         }, () => {
             this.applySnapshot(next);
-            this.displayMessage({ type: 'important', message: "Redid change (unsaved)." }, true);
+            
+            this.displayToast("You redid the last change");
         });
+    };
+
+    // =========================
+    // Toast dinámico
+    // =========================
+    displayToast = (text, { duration = 4000 } = {}) => {
+        if (this.toastTimer) clearTimeout(this.toastTimer);
+
+        this.setState({ toast: { text } });
+
+        if (duration > 0) {
+            this.toastTimer = setTimeout(() => {
+                this.setState({ toast: null });
+                this.toastTimer = null;
+            }, duration);
+        }
     };
 
     // =========================
     // General
     // =========================
-
     handleClickOutside(event) {
-        if (this.profOptions?.current && !this.profOptions.current.contains(event.target)) {
+        // ref almacenado como elemento (no .current)
+        if (this.profOptions && !this.profOptions.contains(event.target)) {
             this.props.onClickOutside && this.props.onClickOutside();
         }
     };
@@ -129,17 +148,14 @@ export default class Dashboard extends React.Component {
             this.setState({ user: response.content.user })
         })
         document.addEventListener('click', this.handleClickOutside, true);
-
-        //Agrega un event listener cuando se monta el componente
         document.addEventListener('keydown', this.handleKeyDown);
     }
 
     componentWillUnmount() {
         window.removeEventListener("beforeunload", this.onUnload);
         document.removeEventListener('click', this.handleClickOutside, true);
-
-        //Se borra el listener cuando se desmonta el componente
         document.removeEventListener('keydown', this.handleKeyDown);
+        if (this.toastTimer) clearTimeout(this.toastTimer);
     }
 
     //función que chequea Ctrl+Z o Ctrl+Y
@@ -160,10 +176,13 @@ export default class Dashboard extends React.Component {
         updateProfile(this.state.user.displayName, JSON.stringify(this.state.user.components),
             JSON.stringify(this.state.user.sociallinks), JSON.stringify(this.state.user.profileDesign))
             .then(response => {
-                if (!response.success)
+                if (!response.success) {
                     console.error(response.content)
-
+                    this.displayToast("Error al publicar cambios");
+                    return;
+                }
                 this.displayMessage({ type: 'success', message: "Changes published successfully!" })
+                this.displayToast("Cambios publicados");
             })
     }
 
@@ -193,7 +212,7 @@ export default class Dashboard extends React.Component {
     }
 
     toggleReordering = () => {
-        // también trackeamos reordering en la historia
+        // trackeamos reordering en la historia
         this.pushHistory();
         const oldOrder = !this.state.reordering
         this.editPanel.current?.clearState?.();
@@ -387,9 +406,11 @@ export default class Dashboard extends React.Component {
         if (!this.state.user) return 'Loading...'
         return <div className="dashboard-container">
 
-            <div className="df-toast">
-                <strong>Lorem ipsum dolor sit amet. </strong>
-            </div>
+            {this.state.toast && (
+                <div className="df-toast" role="status" aria-live="polite">
+                    <strong>{this.state.toast.text}</strong>
+                </div>
+            )}
 
             <dialog className={"remove-component-modal"} ref={ref => this.removeComponentModal = ref}>
                 <div className="question-remove">
