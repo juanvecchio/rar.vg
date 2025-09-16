@@ -160,17 +160,23 @@ export default class Dashboard extends React.Component {
 
     //función que chequea Ctrl+Z o Ctrl+Y
     handleKeyDown = (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-            e.preventDefault();
-            this.handleUndo();
-            return;
-        }
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
-            e.preventDefault();
-            this.handleRedo();
-            return;
-        }
+    const key = e.key.toLowerCase();
+    const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+    // Undo → Ctrl+Z / Cmd+Z
+    if (isCtrlOrCmd && key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        this.handleUndo();
+        return;
     }
+
+    // Redo → Ctrl+Y / Cmd+Y, o Ctrl+Shift+Z / Cmd+Shift+Z
+    if ((isCtrlOrCmd && key === 'y') || (isCtrlOrCmd && key === 'z' && e.shiftKey)) {
+        e.preventDefault();
+        this.handleRedo();
+        return;
+    }
+}
 
     updateProfile = () => {
         updateProfile(this.state.user.displayName, JSON.stringify(this.state.user.components),
