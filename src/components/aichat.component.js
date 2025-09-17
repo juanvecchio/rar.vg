@@ -29,7 +29,7 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
         if (error.message && error.message.includes('session')) {
             return 'Your session has expired. Please log in again to continue.';
         }
-        
+
         if (response) {
             if (response.status === 401) {
                 return 'Authentication failed. Please log in again.';
@@ -44,11 +44,11 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                 return 'Request failed. Please check your input and try again.';
             }
         }
-        
+
         if (error.name === 'TypeError' && error.message.includes('fetch')) {
             return 'Connection failed. Please check your internet connection and try again.';
         }
-        
+
         return 'An unexpected error occurred. Please try again.';
     };
 
@@ -198,11 +198,11 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
 
     const acceptSuggestion = async (selectedDesign, optionIndex) => {
         setAcceptingIndex(optionIndex);
-        
+
         try {
             console.log('User object:', user);
             console.log('Selected design:', selectedDesign);
-            
+
             // Validate the selected design structure
             if (!selectedDesign || typeof selectedDesign !== 'object') {
                 throw new Error('Invalid design selection');
@@ -210,10 +210,10 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
 
             // Ensure components array exists and is valid
             const components = Array.isArray(selectedDesign.components) ? selectedDesign.components : [];
-            
+
             // Ensure profileDesign exists and has valid structure
-            const profileDesign = selectedDesign.profileDesign && typeof selectedDesign.profileDesign === 'object' 
-                ? selectedDesign.profileDesign 
+            const profileDesign = selectedDesign.profileDesign && typeof selectedDesign.profileDesign === 'object'
+                ? selectedDesign.profileDesign
                 : { design: 1, colour: 0 };
 
             // Validate profileDesign values
@@ -256,13 +256,13 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
 
         } catch (error) {
             console.error('Error accepting suggestion:', error);
-            
+
             let errorText = 'An error occurred while accepting the design. Please try again.';
-            
+
             if (error.message === 'Invalid design selection') {
                 errorText = 'The selected design is invalid. Please try selecting a different option.';
             }
-            
+
             const errorMessage = {
                 id: Date.now() + 1,
                 text: errorText,
@@ -303,7 +303,7 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                             <p className="s">Try asking me to "create a portfolio for a graphic designer" or "design a profile for a tech professional"</p>
                         </div>
                     )}
-                    
+
                     {messages.map((message) => (
                         <div key={message.id} className={`message ${message.sender} ${message.type || ''}`}>
                             <div className="message-content">
@@ -318,12 +318,12 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                                 ) : (
                                     <p className="s">{message.text}</p>
                                 )}
-                                
+
                                 {/* Error message actions */}
                                 {message.type === 'error' && (
                                     <div className="error-actions">
                                         {message.isSessionError && (
-                                            <button 
+                                            <button
                                                 className="error-action-btn session-error"
                                                 onClick={() => window.location.href = '/login'}
                                             >
@@ -331,7 +331,7 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                                             </button>
                                         )}
                                         {message.canRetry && message.retryAction && (
-                                            <button 
+                                            <button
                                                 className="error-action-btn retry"
                                                 onClick={message.retryAction}
                                             >
@@ -339,7 +339,7 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                                             </button>
                                         )}
                                         {message.canRetry && !message.retryAction && lastFailedRequest && retryCount < 3 && (
-                                            <button 
+                                            <button
                                                 className="error-action-btn retry"
                                                 onClick={retryLastRequest}
                                             >
@@ -348,7 +348,7 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                                         )}
                                     </div>
                                 )}
-                                
+
                                 <span className="message-time ss">{message.timestamp}</span>
                             </div>
                         </div>
@@ -368,8 +368,8 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                                         setPreviewProfile(parsedAlternatives.a1);
                                         previewDialogRef.current?.showModal();
                                     }}><span className="s">Preview Option 1</span></button>
-                                    <button 
-                                        className="accept-btn-small" 
+                                    <button
+                                        className="accept-btn-small"
                                         onClick={() => acceptSuggestion(parsedAlternatives.a1, 1)}
                                         disabled={acceptingIndex === 1}
                                     >
@@ -383,8 +383,8 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                                         setPreviewProfile(parsedAlternatives.a2);
                                         previewDialogRef.current?.showModal();
                                     }}><span className="s">Preview Option 2</span></button>
-                                    <button 
-                                        className="accept-btn-small" 
+                                    <button
+                                        className="accept-btn-small"
                                         onClick={() => acceptSuggestion(parsedAlternatives.a2, 2)}
                                         disabled={acceptingIndex === 2}
                                     >
@@ -398,8 +398,8 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                                         setPreviewProfile(parsedAlternatives.a3);
                                         previewDialogRef.current?.showModal();
                                     }}><span className="s">Preview Option 3</span></button>
-                                    <button 
-                                        className="accept-btn-small" 
+                                    <button
+                                        className="accept-btn-small"
                                         onClick={() => acceptSuggestion(parsedAlternatives.a3, 3)}
                                         disabled={acceptingIndex === 3}
                                     >
@@ -411,7 +411,7 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                             </div>
                         </div>
                     )}
-                    
+
                     {isLoading && (
                         <div className="message ai">
                             <div className="message-content">
@@ -428,7 +428,7 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                             </div>
                         </div>
                     )}
-                    
+
                     <div ref={messagesEndRef} />
                 </div>
 
@@ -440,8 +440,8 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                         placeholder="Describe the profile design you want me to create..."
                         disabled={isLoading}
                     />
-                    <button 
-                        onClick={() => sendMessage()} 
+                    <button
+                        onClick={() => sendMessage()}
                         disabled={!inputMessage.trim() || isLoading}
                         className="send-btn"
                     >
@@ -466,9 +466,9 @@ const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
                                 profileDesign: previewProfile.profileDesign || user.profileDesign,
                             }}
                             reordering={false}
-                            selectComponent={() => {}}
-                            toggleModal={() => {}}
-                            updateComponentOrder={() => {}}
+                            selectComponent={() => { }}
+                            toggleModal={() => { }}
+                            updateComponentOrder={() => { }}
                         />
                     )}
                 </div>

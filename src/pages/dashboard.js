@@ -192,11 +192,10 @@ export default class Dashboard extends React.Component {
             .then(response => {
                 if (!response.success) {
                     console.error(response.content)
-                    this.displayToast("Error al publicar cambios");
+                    this.displayToast("There was an error publishing changes");
                     return;
                 }
                 this.displayMessage({ type: 'success', message: "Changes published successfully!" })
-                this.displayToast("Cambios publicados");
             })
     }
 
@@ -418,6 +417,9 @@ export default class Dashboard extends React.Component {
     handleAcceptDesign = (acceptedDesign) => {
         console.log('Accepting design in Dashboard:', acceptedDesign);
         
+        // Save current state for undo/redo
+        this.pushHistory();
+        
         // Update local state with the accepted design
         const updatedUser = {
             ...this.state.user,
@@ -427,8 +429,11 @@ export default class Dashboard extends React.Component {
 
         this.setState({ user: updatedUser });
         
-        // Show message that changes are ready to be saved
-        this.displayMessage({type: 'important', message: "AI design loaded! You've got unsaved changes - use Publish to save them."}, true);
+        // Show toast notification for AI design loaded
+        this.displayToast("AI design loaded!");
+        
+        // Show persistent message that changes are ready to be saved
+        this.displayMessage({type: 'important', message: "You've got unsaved changes."}, true);
         
         // Cancel any current component selection to show the full updated profile
         this.cancelSelection();
