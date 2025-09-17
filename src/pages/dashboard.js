@@ -5,7 +5,8 @@ import config from '../utils/config.util'
 import './dashboard.css'
 import EditableProfile from "../components/editableprofile.component";
 import EditPanel from "../components/editpanel.component";
-import { colours } from "./profileDesigns/colour.util";
+import AIChatComponent from "../components/aichat.component";
+import {colours} from "./profileDesigns/colour.util";
 
 import { IoMdOpen, IoMdAdd, IoIosList, IoMdCloudUpload } from "react-icons/io";
 import { BsStars } from "react-icons/bs";
@@ -21,6 +22,7 @@ export default class Dashboard extends React.Component {
             showModal: false,
             reordering: false,
             lastReloaded: Date.now(),
+            showAIChat: false,
 
             // Logout options
             single: "only",
@@ -37,6 +39,7 @@ export default class Dashboard extends React.Component {
         this.editPanel = React.createRef()
         this.handleClickOutside = this.handleClickOutside.bind(this)
         this.changeInputValueRadio = this.changeInputValueRadio.bind(this)
+        this.toggleAIChat = this.toggleAIChat.bind(this)
     }
 
     // =========================
@@ -149,6 +152,17 @@ export default class Dashboard extends React.Component {
         })
         document.addEventListener('click', this.handleClickOutside, true);
         document.addEventListener('keydown', this.handleKeyDown);
+      
+        // Auto-open AI chat once per session on any device (desktop and mobile)
+        try {
+            const hasAutoOpened = sessionStorage.getItem('aiChatAutoOpened') === '1';
+            if (!hasAutoOpened) {
+                this.setState({ showAIChat: true });
+                sessionStorage.setItem('aiChatAutoOpened', '1');
+            }
+        } catch (_) {
+            // no-op if storage is unavailable
+        }
     }
 
     componentWillUnmount() {
@@ -178,11 +192,10 @@ export default class Dashboard extends React.Component {
             .then(response => {
                 if (!response.success) {
                     console.error(response.content)
-                    this.displayToast("Error al publicar cambios");
+                    this.displayToast("There was an error publishing changes");
                     return;
                 }
                 this.displayMessage({ type: 'success', message: "Changes published successfully!" })
-                this.displayToast("Cambios publicados");
             })
     }
 
@@ -396,8 +409,40 @@ export default class Dashboard extends React.Component {
         this.setState({ single: event.target.value })
     }
 
-    logout() {
-        tryLogout(this.state.single === 'only').then(response => {
+    toggleAIChat()
+    {
+        this.setState(prevState => ({ showAIChat: !prevState.showAIChat }))
+    }
+
+    handleAcceptDesign = (acceptedDesign) => {
+        console.log('Accepting design in Dashboard:', acceptedDesign);
+        
+        // Save current state for undo/redo
+        this.pushHistory();
+        
+        // Update local state with the accepted design
+        const updatedUser = {
+            ...this.state.user,
+            components: acceptedDesign.components || [],
+            profileDesign: acceptedDesign.profileDesign || this.state.user.profileDesign
+        };
+
+        this.setState({ user: updatedUser });
+        
+        // Show toast notification for AI design loaded
+        this.displayToast("AI design loaded!");
+        
+        // Show persistent message that changes are ready to be saved
+        this.displayMessage({type: 'important', message: "You've got unsaved changes."}, true);
+        
+        // Cancel any current component selection to show the full updated profile
+        this.cancelSelection();
+    }
+
+    logout()
+    {
+        tryLogout(this.state.single === 'only').then(response =>
+        {
             window.location.href = '/login?jr=' + (response.content.code || 4)
         })
     }
@@ -559,6 +604,7 @@ export default class Dashboard extends React.Component {
                         updateProfileColours={this.updateProfileColours}
                         toggleReordering={this.toggleReordering}
                         reordering={this.state.reordering}
+                        onOpenAIChat={() => this.setState({ showAIChat: true })}
                     />
                 </div>
                 <div className="right-component">
@@ -571,6 +617,12 @@ export default class Dashboard extends React.Component {
                     </div>
                 </div>
             </div>
+            <AIChatComponent 
+                isVisible={this.state.showAIChat}
+                onClose={this.toggleAIChat}
+                user={this.state.user}
+                onAcceptDesign={this.handleAcceptDesign}
+            />
 
         </div>
 
