@@ -313,6 +313,25 @@ export default class Dashboard extends React.Component
         this.setState(prevState => ({ showAIChat: !prevState.showAIChat }))
     }
 
+    handleAcceptDesign = (acceptedDesign) => {
+        console.log('Accepting design in Dashboard:', acceptedDesign);
+        
+        // Update local state with the accepted design
+        const updatedUser = {
+            ...this.state.user,
+            components: acceptedDesign.components || [],
+            profileDesign: acceptedDesign.profileDesign || this.state.user.profileDesign
+        };
+
+        this.setState({ user: updatedUser });
+        
+        // Show message that changes are ready to be saved
+        this.displayMessage({type: 'important', message: "AI design loaded! You've got unsaved changes - use Publish to save them."}, true);
+        
+        // Cancel any current component selection to show the full updated profile
+        this.cancelSelection();
+    }
+
     logout()
     {
         tryLogout(this.state.single === 'only').then(response =>
@@ -490,6 +509,7 @@ export default class Dashboard extends React.Component
                 isVisible={this.state.showAIChat}
                 onClose={this.toggleAIChat}
                 user={this.state.user}
+                onAcceptDesign={this.handleAcceptDesign}
             />
 
         </div>

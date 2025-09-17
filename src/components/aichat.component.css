@@ -153,6 +153,44 @@
     box-shadow: none;
 }
 
+.error-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.error-action-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.error-action-btn:hover {
+    background: #b91c1c;
+}
+
+.error-action-btn.retry {
+    background: #f59e0b;
+}
+
+.error-action-btn.retry:hover {
+    background: #d97706;
+}
+
+.error-action-btn.session-error {
+    background: #7c3aed;
+}
+
+.error-action-btn.session-error:hover {
+    background: #6d28d9;
+}
+
 .message-time {
     font-size: 0.75rem;
     opacity: 0.7;
@@ -181,9 +219,43 @@
 
 .loading-indicator {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 10px;
+    gap: 8px;
+}
+
+.loading-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.loading-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #666;
+    animation: loading-bounce 1.4s ease-in-out infinite both;
+}
+
+.loading-dots span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes loading-bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .typing-dots {
@@ -307,6 +379,13 @@
     font-size: 1.1rem;
 }
 
+.accepting-status {
+    color: #f59e0b;
+    font-style: italic;
+    margin: 5px 0 0 0;
+    font-size: 0.9rem;
+}
+
 .alternatives-buttons {
     display: flex;
     gap: 15px;
@@ -356,6 +435,15 @@
 
 .accept-btn-small:hover {
     background: #059669;
+}
+
+.accept-btn-small:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+.accept-btn-small:disabled:hover {
+    background: #9ca3af;
 }
 
 .ai-chat-preview-dialog {

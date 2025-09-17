@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
+import config from "../utils/config.util"
 import './aichat.component.css';
 import EditableProfile from './editableprofile.component';
 
-const AIChatComponent = ({ isVisible, onClose, user }) => {
+const AIChatComponent = ({ isVisible, onClose, user, onAcceptDesign }) => {
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [chatType, setChatType] = useState('chat'); // 'chat', 'design', 'suggestion'
+    const [acceptingIndex, setAcceptingIndex] = useState(null); // Track which suggestion is being accepted
+    const [retryCount, setRetryCount] = useState(0);
+    const [lastFailedRequest, setLastFailedRequest] = useState(null);
+
     const messagesEndRef = useRef(null);
     const previewDialogRef = useRef(null);
     const [parsedAlternatives, setParsedAlternatives] = useState(null); // {a1, a2, a3}
@@ -20,32 +24,72 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
         scrollToBottom();
     }, [messages]);
 
-    const sendMessage = async () => {
-        if (!inputMessage.trim() || isLoading) return;
+    const getErrorMessage = (error, response) => {
+        // Handle different types of errors with specific messages
+        if (error.message && error.message.includes('session')) {
+            return 'Your session has expired. Please log in again to continue.';
+        }
+        
+        if (response) {
+            if (response.status === 401) {
+                return 'Authentication failed. Please log in again.';
+            }
+            if (response.status === 429) {
+                return 'Too many requests. Please wait a moment before trying again.';
+            }
+            if (response.status === 500) {
+                return 'Server error occurred. Please try again in a few moments.';
+            }
+            if (response.status >= 400 && response.status < 500) {
+                return 'Request failed. Please check your input and try again.';
+            }
+        }
+        
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            return 'Connection failed. Please check your internet connection and try again.';
+        }
+        
+        return 'An unexpected error occurred. Please try again.';
+    };
+
+    const sendMessage = async (messageText = null, isRetry = false) => {
+        const messageToSend = messageText || inputMessage;
+        if (!messageToSend.trim() || isLoading) return;
+
+        // Store request for potential retry
+        if (!isRetry) {
+            setLastFailedRequest({ message: messageToSend, context: messages.slice(-5) });
+            setRetryCount(0);
+        }
 
         const userMessage = {
             id: Date.now(),
-            text: inputMessage,
+            text: messageToSend,
             sender: 'user',
             timestamp: new Date().toLocaleTimeString()
         };
 
-        setMessages(prev => [...prev, userMessage]);
-        setInputMessage('');
+        if (!isRetry) {
+            setMessages(prev => [...prev, userMessage]);
+            setInputMessage('');
+        }
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://localhost:1300/ai/chat', {
+            const response = await fetch(config('HOST') + '/ai/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    message: inputMessage,
-                    context: messages.slice(-5), // Last 5 messages for context
-                    type: 'chat'
+                    message: messageToSend,
+                    context: messages.slice(-5) // Last 5 messages for context
                 })
             });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
 
             const data = await response.json();
 
@@ -61,6 +105,8 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
                 };
 
                 setMessages(prev => [...prev, aiMessage]);
+                setRetryCount(0); // Reset retry count on success
+                setLastFailedRequest(null);
 
                 // Try to parse structured JSON with three alternatives
                 try {
@@ -84,7 +130,8 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
                     text: data.error || 'Sorry, I encountered an error. Please try again.',
                     sender: 'ai',
                     timestamp: new Date().toLocaleTimeString(),
-                    type: 'error'
+                    type: 'error',
+                    canRetry: true
                 };
 
                 setMessages(prev => [...prev, errorMessage]);
@@ -93,15 +140,24 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
             console.error('Error sending message:', error);
             const errorMessage = {
                 id: Date.now() + 1,
-                text: 'Sorry, I encountered an error. Please try again.',
+                text: getErrorMessage(error, error.response),
                 sender: 'ai',
                 timestamp: new Date().toLocaleTimeString(),
-                type: 'error'
+                type: 'error',
+                canRetry: !error.message.includes('session') && !error.message.includes('Authentication'),
+                isSessionError: error.message.includes('session') || (error.response && error.response.status === 401)
             };
 
             setMessages(prev => [...prev, errorMessage]);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const retryLastRequest = () => {
+        if (lastFailedRequest && retryCount < 3) {
+            setRetryCount(prev => prev + 1);
+            sendMessage(lastFailedRequest.message, true);
         }
     };
 
@@ -112,156 +168,113 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
         }
     };
 
-    const generateDesign = async (prompt) => {
-        setIsLoading(true);
-        try {
-            const response = await fetch('http://localhost:1300/ai/design', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ prompt })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                const designMessage = {
-                    id: Date.now(),
-                    text: `Generated design for: "${prompt}"`,
-                    sender: 'ai',
-                    timestamp: new Date().toLocaleTimeString(),
-                    type: 'design',
-                    image: data.image,
-                    prompt: prompt
-                };
-
-                setMessages(prev => [...prev, designMessage]);
-            } else {
-                const errorMessage = {
-                    id: Date.now() + 1,
-                    text: data.error || 'Failed to generate design',
-                    sender: 'ai',
-                    timestamp: new Date().toLocaleTimeString(),
-                    type: 'error'
-                };
-
-                setMessages(prev => [...prev, errorMessage]);
-            }
-        } catch (error) {
-            console.error('Error generating design:', error);
-            const errorMessage = {
-                id: Date.now() + 1,
-                text: 'Failed to generate design',
-                sender: 'ai',
-                timestamp: new Date().toLocaleTimeString(),
-                type: 'error'
-            };
-
-            setMessages(prev => [...prev, errorMessage]);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     const clearChat = () => {
         setMessages([]);
+        setParsedAlternatives(null);
+        setRetryCount(0);
+        setLastFailedRequest(null);
     };
 
-    const acceptSuggestion = async (selectedDesign) => {
+    const checkSession = () => {
+        const token = localStorage.getItem('__rvst');
+        const clientToken = localStorage.getItem('__rarvg_client');
+        return token && clientToken;
+    };
+
+    // Check session on component mount and when becoming visible
+    useEffect(() => {
+        if (isVisible && !checkSession()) {
+            const sessionErrorMessage = {
+                id: Date.now(),
+                text: 'Your session has expired. Please log in again to use the AI chat.',
+                sender: 'ai',
+                timestamp: new Date().toLocaleTimeString(),
+                type: 'error',
+                isSessionError: true
+            };
+            setMessages([sessionErrorMessage]);
+        }
+    }, [isVisible]);
+
+    const acceptSuggestion = async (selectedDesign, optionIndex) => {
+        setAcceptingIndex(optionIndex);
+        
         try {
             console.log('User object:', user);
             console.log('Selected design:', selectedDesign);
             
-            // Get tokens from localStorage
-            const token = localStorage.getItem('__rvst');
-            const clientToken = localStorage.getItem('__rarvg_client');
-            
-            console.log('Tokens from localStorage:', { token: token ? 'present' : 'missing', clientToken: clientToken ? 'present' : 'missing' });
-            
-            if (!token || !clientToken) {
-                throw new Error('No active session found. Please log in again.');
+            // Validate the selected design structure
+            if (!selectedDesign || typeof selectedDesign !== 'object') {
+                throw new Error('Invalid design selection');
             }
 
-            // Update the user's profile with the selected design
-            const requestBody = {
-                token: token,
-                clientToken: clientToken,
-                displayName: user?.displayName || 'User',
-                components: selectedDesign.components || [],
-                sociallinks: user?.sociallinks || [],
-                profileDesign: selectedDesign.profileDesign || { design: 1, colour: 0 }
+            // Ensure components array exists and is valid
+            const components = Array.isArray(selectedDesign.components) ? selectedDesign.components : [];
+            
+            // Ensure profileDesign exists and has valid structure
+            const profileDesign = selectedDesign.profileDesign && typeof selectedDesign.profileDesign === 'object' 
+                ? selectedDesign.profileDesign 
+                : { design: 1, colour: 0 };
+
+            // Validate profileDesign values
+            if (!profileDesign.design || profileDesign.design < 1 || profileDesign.design > 2) {
+                profileDesign.design = 1;
+            }
+            if (profileDesign.colour === undefined || profileDesign.colour < 0 || profileDesign.colour > 6) {
+                profileDesign.colour = 0;
+            }
+
+            const designToApply = {
+                components: components,
+                profileDesign: profileDesign
             };
-            
-            // Ensure all required fields are present and not empty
-            if (!requestBody.displayName || requestBody.displayName.trim() === '') {
-                requestBody.displayName = 'User';
-            }
-            if (!Array.isArray(requestBody.components)) {
-                requestBody.components = [];
-            }
-            if (!Array.isArray(requestBody.sociallinks)) {
-                requestBody.sociallinks = [];
-            }
-            if (!requestBody.profileDesign || typeof requestBody.profileDesign !== 'object') {
-                requestBody.profileDesign = { design: 1, colour: 0 };
-            }
-            if (!requestBody.profileDesign.design || !requestBody.profileDesign.colour) {
-                requestBody.profileDesign = { design: 1, colour: 0 };
-            }
-            
-            console.log('Sending update request:', requestBody);
-            
-            const response = await fetch('http://localhost:1300/update', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestBody)
-            });
 
-            const data = await response.json();
+            console.log('Applying design to local state:', designToApply);
 
-            if (data.success) {
-                // Add success message to chat
-                const successMessage = {
-                    id: Date.now() + 1,
-                    text: 'Design accepted successfully! Your profile has been updated with the new design.',
-                    sender: 'ai',
-                    timestamp: new Date().toLocaleTimeString(),
-                    type: 'success'
-                };
-                setMessages(prev => [...prev, successMessage]);
-
-                // Clear the alternatives since one was accepted
-                setParsedAlternatives(null);
-
-                // Close the chat after a short delay
-                setTimeout(() => {
-                    onClose();
-                }, 2000);
-            } else {
-                // Add error message to chat
-                const errorMessage = {
-                    id: Date.now() + 1,
-                    text: `Failed to accept design: ${data.content || 'Unknown error'}. Status: ${response.status}. Please try again.`,
-                    sender: 'ai',
-                    timestamp: new Date().toLocaleTimeString(),
-                    type: 'error'
-                };
-                setMessages(prev => [...prev, errorMessage]);
-                console.error('Update failed:', data);
+            // Pass the accepted design to parent component for editor integration
+            if (onAcceptDesign && typeof onAcceptDesign === 'function') {
+                onAcceptDesign(designToApply);
             }
-        } catch (error) {
-            console.error('Error accepting suggestion:', error);
-            const errorMessage = {
+
+            // Add success message to chat
+            const successMessage = {
                 id: Date.now() + 1,
-                text: 'An error occurred while accepting the design. Please try again.',
+                text: 'Design accepted successfully! The design has been loaded in your editor. You can now modify it and use the existing save functionality to persist your changes.',
                 sender: 'ai',
                 timestamp: new Date().toLocaleTimeString(),
-                type: 'error'
+                type: 'success'
+            };
+            setMessages(prev => [...prev, successMessage]);
+
+            // Clear the alternatives since one was accepted
+            setParsedAlternatives(null);
+
+            // Close the chat after a short delay
+            setTimeout(() => {
+                onClose();
+            }, 2000);
+
+        } catch (error) {
+            console.error('Error accepting suggestion:', error);
+            
+            let errorText = 'An error occurred while accepting the design. Please try again.';
+            
+            if (error.message === 'Invalid design selection') {
+                errorText = 'The selected design is invalid. Please try selecting a different option.';
+            }
+            
+            const errorMessage = {
+                id: Date.now() + 1,
+                text: errorText,
+                sender: 'ai',
+                timestamp: new Date().toLocaleTimeString(),
+                type: 'error',
+                canRetry: true,
+                retryAction: () => acceptSuggestion(selectedDesign, optionIndex)
             };
             setMessages(prev => [...prev, errorMessage]);
+        } finally {
+            setAcceptingIndex(null);
         }
     };
 
@@ -292,7 +305,7 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
                     )}
                     
                     {messages.map((message) => (
-                        <div key={message.id} className={`message ${message.sender}`}>
+                        <div key={message.id} className={`message ${message.sender} ${message.type || ''}`}>
                             <div className="message-content">
                                 {message.image && (
                                     <div className="design-image">
@@ -305,6 +318,37 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
                                 ) : (
                                     <p className="s">{message.text}</p>
                                 )}
+                                
+                                {/* Error message actions */}
+                                {message.type === 'error' && (
+                                    <div className="error-actions">
+                                        {message.isSessionError && (
+                                            <button 
+                                                className="error-action-btn session-error"
+                                                onClick={() => window.location.href = '/login'}
+                                            >
+                                                <span className="s">Go to Login</span>
+                                            </button>
+                                        )}
+                                        {message.canRetry && message.retryAction && (
+                                            <button 
+                                                className="error-action-btn retry"
+                                                onClick={message.retryAction}
+                                            >
+                                                <span className="s">Retry</span>
+                                            </button>
+                                        )}
+                                        {message.canRetry && !message.retryAction && lastFailedRequest && retryCount < 3 && (
+                                            <button 
+                                                className="error-action-btn retry"
+                                                onClick={retryLastRequest}
+                                            >
+                                                <span className="s">Retry ({3 - retryCount} attempts left)</span>
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+                                
                                 <span className="message-time ss">{message.timestamp}</span>
                             </div>
                         </div>
@@ -314,6 +358,9 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
                         <div className="ai-chat-alternatives">
                             <div className="alternatives-header">
                                 <h4 className="mm">Choose Your Design:</h4>
+                                {acceptingIndex && (
+                                    <p className="s accepting-status">Applying design changes...</p>
+                                )}
                             </div>
                             <div className="alternatives-buttons">
                                 <div className="option-container">
@@ -321,10 +368,14 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
                                         setPreviewProfile(parsedAlternatives.a1);
                                         previewDialogRef.current?.showModal();
                                     }}><span className="s">Preview Option 1</span></button>
-                                    <button className="accept-btn-small" onClick={() => {
-                                        acceptSuggestion(parsedAlternatives.a1);
-                                    }}>
-                                        <span className="s">Accept</span>
+                                    <button 
+                                        className="accept-btn-small" 
+                                        onClick={() => acceptSuggestion(parsedAlternatives.a1, 1)}
+                                        disabled={acceptingIndex === 1}
+                                    >
+                                        <span className="s">
+                                            {acceptingIndex === 1 ? 'Accepting...' : 'Accept'}
+                                        </span>
                                     </button>
                                 </div>
                                 <div className="option-container">
@@ -332,10 +383,14 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
                                         setPreviewProfile(parsedAlternatives.a2);
                                         previewDialogRef.current?.showModal();
                                     }}><span className="s">Preview Option 2</span></button>
-                                    <button className="accept-btn-small" onClick={() => {
-                                        acceptSuggestion(parsedAlternatives.a2);
-                                    }}>
-                                        <span className="s">Accept</span>
+                                    <button 
+                                        className="accept-btn-small" 
+                                        onClick={() => acceptSuggestion(parsedAlternatives.a2, 2)}
+                                        disabled={acceptingIndex === 2}
+                                    >
+                                        <span className="s">
+                                            {acceptingIndex === 2 ? 'Accepting...' : 'Accept'}
+                                        </span>
                                     </button>
                                 </div>
                                 <div className="option-container">
@@ -343,10 +398,14 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
                                         setPreviewProfile(parsedAlternatives.a3);
                                         previewDialogRef.current?.showModal();
                                     }}><span className="s">Preview Option 3</span></button>
-                                    <button className="accept-btn-small" onClick={() => {
-                                        acceptSuggestion(parsedAlternatives.a3);
-                                    }}>
-                                        <span className="s">Accept</span>
+                                    <button 
+                                        className="accept-btn-small" 
+                                        onClick={() => acceptSuggestion(parsedAlternatives.a3, 3)}
+                                        disabled={acceptingIndex === 3}
+                                    >
+                                        <span className="s">
+                                            {acceptingIndex === 3 ? 'Accepting...' : 'Accept'}
+                                        </span>
                                     </button>
                                 </div>
                             </div>
@@ -357,7 +416,14 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
                         <div className="message ai">
                             <div className="message-content">
                                 <div className="loading-indicator">
-                                    <span className="s">Loading…</span>
+                                    <span className="s">
+                                        {retryCount > 0 ? `Retrying... (attempt ${retryCount + 1})` : 'AI is thinking...'}
+                                    </span>
+                                    <div className="loading-dots">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -375,7 +441,7 @@ const AIChatComponent = ({ isVisible, onClose, user }) => {
                         disabled={isLoading}
                     />
                     <button 
-                        onClick={sendMessage} 
+                        onClick={() => sendMessage()} 
                         disabled={!inputMessage.trim() || isLoading}
                         className="send-btn"
                     >
